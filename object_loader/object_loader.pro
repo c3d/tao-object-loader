@@ -24,5 +24,17 @@ TBL_SOURCES = object_loader.tbl
 OTHER_FILES = module.xl object_loader.tbl traces.tbl
 OTHER_FILES = module.xl object_loader.tbl
 
-QT       += core
-INSTALLS += thismod_icon
+INCLUDEPATH += ../glc-lib/include \
+               ../glc-lib
+DEPENDPATH  += ../glc-lib/include \
+               ../glc-lib
+QT          += core \
+               gui \
+               opengl
+win32 {
+    LIBS += -L../glc-lib/release -L../glc-lib/debug -lGLC_lib2
+}
+unix {
+    LIBS += -L../glc-lib -lGLC_lib
+}
+INSTALLS    += thismod_icon

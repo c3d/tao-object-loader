@@ -6,7 +6,7 @@
 //
 //   File Description:
 //
-//    Load a 3D model file and render it using OpenGL.
+//    Load a 3D model file and render it using GLC_Lib.
 //
 //
 //
@@ -25,6 +25,7 @@
 
 #include "tao/coords3d.h"
 #include <vector>
+#include <GLC_World>
 
 
 struct Object3D
@@ -49,7 +50,7 @@ struct Object3D
 
 public:
     // Representation of an object
-    void *      glc_world;
+    GLC_World   glcWorld;
 };
 
 #endif // OBJECT3D_H

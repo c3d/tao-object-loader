@@ -24,6 +24,7 @@
 #include "object3d.h"
 #include <QString>
 #include <QFileInfo>
+#include <GLC_Factory>
 
 
 void Object3D::render_callback(void *arg)
@@ -39,7 +40,7 @@ Object3D::Object3D(kstring name)
 // ----------------------------------------------------------------------------
 //   Initialize an object. If a name is given, load the file
 // ----------------------------------------------------------------------------
-    : glc_world(NULL)
+    : glcWorld()
 {
     if (name)
         Load(name);
@@ -59,7 +60,8 @@ void Object3D::Load(kstring name)
 //    Load a 3D object file from disk
 // ----------------------------------------------------------------------------
 {
-    (void)name;
+    QFile file(name);
+    glcWorld = GLC_Factory::instance()->createWorldFromFile(file);
 }
 
 
@@ -68,6 +70,7 @@ void Object3D::Draw()
 //   Draw the 3D object
 // ----------------------------------------------------------------------------
 {
+    glcWorld.render(0, glc::ShadingFlag);
 }
 
 
