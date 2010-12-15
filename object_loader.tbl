@@ -1,0 +1,33 @@
+// ****************************************************************************
+//  object_loader.tbl                                              Tao project
+// ****************************************************************************
+// 
+//   File Description:
+// 
+//     Interface for the Object Loader module
+//     This file defines the object primitive
+// 
+// 
+// 
+// 
+// 
+// 
+// 
+// 
+// ****************************************************************************
+// This document is released under the GNU General Public License.
+// See http://www.gnu.org/copyleft/gpl.html and Matthew 25:22 for details
+//  (C) 1992-2010 Christophe de Dinechin <christophe@taodyne.com>
+//  (C) 2010 Jérôme Forissier <jerome@taodyne.com>
+//  (C) 2010 Catherine Burvelle <cathy@taodyne.com>
+//  (C) 2010 Lionel Schaffhauser <lionel@taodyne.com>
+//  (C) 2010 Taodyne SAS
+// ****************************************************************************
+
+#include "tree.h"
+
+PREFIX(object_loader, tree, "object", PARM(file, text, "Name of the file to import"), return new XL::Text("Hello, World!"),
+       GROUP(3D)
+       SYNOPSIS("Import a 3D model from a file")
+       DESCRIPTION("Import a 3D model from a file. Supported formats are: "
+                   "Collada V1.4, 3DXML ASCII V3 and V4, OBJ, 3DS, STL (ASCII and binary), OFF and COFF"))

@@ -1,0 +1,11 @@
+  glc-lib
+
+Source code for the GLC_Lib library (http://www.glc-lib.net/)
+License: LGPL
+This is a SVN checkout of:
+https://glc-lib.svn.sourceforge.net/svnroot/glc-lib/glc-lib/tags/Version_2_0_1
+
+Note: glc-lib contains 2 project files (.pro):
+ * GLC_lib.pro: the real one (from the GLC lib source repository)
+ * glc-lib.pro: the project file used by the Tao module. Includes GLC_lib.pro
+   and redefines some variables so that "make install" does the right thing.
