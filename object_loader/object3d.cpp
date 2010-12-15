@@ -60,6 +60,9 @@ void Object3D::Load(kstring name)
 //    Load a 3D object file from disk
 // ----------------------------------------------------------------------------
 {
+    IFTRACE(objloader)
+        std::cerr << "Load " << name << "\n";
+
     QFile file(name);
     glcWorld = GLC_Factory::instance()->createWorldFromFile(file);
 }
