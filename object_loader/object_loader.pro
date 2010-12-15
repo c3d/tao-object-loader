@@ -16,10 +16,13 @@ TAO_SDK = ../../..
 
 include($${TAO_SDK}/modules/modules.pri)
 
-HEADERS     = object_loader.h
-SOURCES     = object_loader.cpp
+HEADERS     = object_loader.h \
+              object3d.h
+SOURCES     = object_loader.cpp \
+              object3d.cpp
 TBL_SOURCES = object_loader.tbl
 OTHER_FILES = module.xl object_loader.tbl traces.tbl
 OTHER_FILES = module.xl object_loader.tbl
 
+QT       += core
 INSTALLS += thismod_icon
