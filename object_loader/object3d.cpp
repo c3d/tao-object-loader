@@ -100,6 +100,20 @@ Object3D *Object3D::Object(text name)
 {
     typedef std::map<text, Object3D *> file_map;
     static file_map loaded;
+    static int use_vbo = -1;
+
+    if (use_vbo == -1)
+    {
+        // Enable Vertex Buffer Objects only if they're supported, otherwise
+        // GLC may crash
+        use_vbo = GLC_State::vboSupported();
+        GLC_State::setVboUsage(use_vbo);
+        IFTRACE(objloader)
+        {
+            const char * nt = use_vbo ? "" : "not ";
+            debug() << " Info: VBOs " << nt << "supported\n";
+        }
+    }
 
     file_map::iterator found = loaded.find(name);
     if (found == loaded.end())
@@ -134,4 +148,14 @@ Object3D *Object3D::Object(text name)
     }
 
     return (*found).second;
+}
+
+
+std::ostream& Object3D::debug()
+// ----------------------------------------------------------------------------
+//   Convenience method to log with a common prefix
+// ----------------------------------------------------------------------------
+{
+    std::cerr << "[ObjLoader] ";
+    return std::cerr;
 }

@@ -25,6 +25,7 @@
 
 #include "tao/coords3d.h"
 #include <vector>
+#include <iostream>
 #include <GLC_World>
 
 
@@ -40,15 +41,20 @@ struct Object3D
     // Loading an objet file
     void Load(kstring name);
 
-    // Draw interface (called from Object3DDrawing)
+    // Draw interface
     void Draw();
 
+    // Object3D cache
     static Object3D *Object(text name);
 
     // Call ((Object3D *)arg)->Draw()
     static void render_callback(void *arg);
 
 public:
+    // Debug trace
+    static std::ostream& debug();
+
+private:
     // Representation of an object
     GLC_World   glcWorld;
 };
