@@ -29,6 +29,7 @@
 #include "base.h"
 #include "object3d.h"
 #include "tao/module_api.h"
+#include <GLC_Exception>
 
 
 using namespace XL;
@@ -37,7 +38,7 @@ XL_DEFINE_TRACES
 
 static const Tao::ModuleApi *tao = NULL;
 
-Tree_p object(Tree_p /*self*/,
+Tree_p object(Tree_p self,
               Real_p /*x*/, Real_p /*y*/, Real_p /*z*/,
               Real_p /*w*/, Real_p /*h*/, Real_p /*d*/,
               Text_p name)
@@ -49,11 +50,18 @@ Tree_p object(Tree_p /*self*/,
         return XL::xl_false;
 
     // Try to load the 3D object in memory and graphic card
-    Object3D *obj = Object3D::Object(name);
-    if (!obj)
-        return XL::xl_false;
+    try
+    {
+        Object3D *obj = Object3D::Object(name);
+        if (!obj)
+            return XL::xl_false;
 
-    tao->scheduleRender(Object3D::render_callback, obj);
+        tao->scheduleRender(Object3D::render_callback, obj);
+    }
+    catch (GLC_Exception e)
+    {
+        return XL::Ooops(e.what(), self);
+    }
 
     return XL::xl_true;
 }
