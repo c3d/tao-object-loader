@@ -5,3 +5,5 @@ include(../../modules_defs.pri)
 
 target.path = $${MODINSTPATH}/lib
 INSTALLS = target
+
+win32:QMAKE_MKDIR = mkdir -p

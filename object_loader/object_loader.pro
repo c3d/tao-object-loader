@@ -37,4 +37,6 @@ win32 {
 unix {
     LIBS += -L../glc-lib -lGLC_lib
 }
+QMAKE_CXXFLAGS -= -Werror  # REVISIT: Avoid errors from GL redefinitions
+
 INSTALLS    += thismod_icon
