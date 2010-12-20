@@ -22,6 +22,7 @@
 
 
 #include "object3d.h"
+#include "load_thread.h"
 #include <QString>
 #include <QFileInfo>
 #include <GLC_Factory>
@@ -40,7 +41,7 @@ Object3D::Object3D(kstring name)
 // ----------------------------------------------------------------------------
 //   Initialize an object. If a name is given, load the file
 // ----------------------------------------------------------------------------
-    : glcWorld()
+    : glcWorld(), loadThread(NULL), status(NotStarted)
 {
     if (name)
         Load(name);
@@ -61,14 +62,82 @@ void Object3D::Load(kstring name)
 // ----------------------------------------------------------------------------
 {
     IFTRACE(objloader)
-        std::cerr << "Load " << name << "\n";
+        debug() << "Start loading " << name << "\n";
 
-    QFile file(name);
-    glcWorld = GLC_Factory::instance()->createWorldFromFile(file);
+    if (!loadThread)
+    {
+        status = InProgress;
+        loadThread = new LoadThread(name);
+        connect(loadThread, SIGNAL(percentComplete(int)),
+                this,       SLOT(percentComplete(int)));
+        connect(loadThread, SIGNAL(finished()),
+                this,       SLOT(loadFinished()));
+        connect(loadThread, SIGNAL(failed()),
+                this,       SLOT(loadFailed()));
+        loadThread->start();
+    }
+}
+
+
+void Object3D::percentComplete(int p)
+// ----------------------------------------------------------------------------
+//   Show loading progress
+// ----------------------------------------------------------------------------
+{
+    IFTRACE(objloader)
+        std::cerr << p << "%...";
+}
+
+
+void Object3D::loadFinished()
+// ----------------------------------------------------------------------------
+//   Activate display of object
+// ----------------------------------------------------------------------------
+{
+    IFTRACE(objloader)
+        std::cerr << "done!\n";
+    glcWorld = loadThread->world;
+    if (status != LoadFailed && !glcWorld.isEmpty())
+        status = LoadSuccess;
+    delete loadThread;
+    loadThread = NULL;
+}
+
+
+void Object3D::loadFailed()
+// ----------------------------------------------------------------------------
+//   Show load error
+// ----------------------------------------------------------------------------
+{
+    IFTRACE(objloader)
+        debug() << "Load error: " << loadThread->error.toStdString() << "\n";
+    status = LoadFailed;
 }
 
 
 void Object3D::Draw()
+// ----------------------------------------------------------------------------
+//   Draw the 3D object or a placeholder
+// ----------------------------------------------------------------------------
+{
+    switch (status)
+    {
+    case NotStarted:
+    case InProgress:
+        DrawPlaceHolder();      break;
+
+    case LoadFailed:
+        DrawErrorPlaceHolder(); break;
+
+    case LoadSuccess:
+        DrawObject();           break;
+
+    default:                    break;
+    }
+}
+
+
+void Object3D::DrawObject()
 // ----------------------------------------------------------------------------
 //   Draw the 3D object
 // ----------------------------------------------------------------------------
@@ -90,6 +159,23 @@ void Object3D::Draw()
     glPopAttrib();
     glPopAttrib();
     glPopAttrib();
+}
+
+
+void Object3D::DrawPlaceHolder()
+// ----------------------------------------------------------------------------
+//   Draw a placeholder object
+// ----------------------------------------------------------------------------
+{
+}
+
+
+void Object3D::DrawErrorPlaceHolder()
+// ----------------------------------------------------------------------------
+//   Draw a placeholder object
+// ----------------------------------------------------------------------------
+{
+    std::cerr << "DrawErrorPlaceHolder\n";
 }
 
 

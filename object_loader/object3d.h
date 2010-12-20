@@ -24,12 +24,15 @@
 
 
 #include "tao/coords3d.h"
+#include <QObject>
 #include <vector>
 #include <iostream>
 #include <GLC_World>
 
 
-struct Object3D
+class LoadThread;
+
+struct Object3D : public QObject
 // ----------------------------------------------------------------------------
 //   Representation of a complete 3D object
 // ----------------------------------------------------------------------------
@@ -39,24 +42,48 @@ struct Object3D
     ~Object3D();
 
     // Loading an objet file
-    void Load(kstring name);
+    void              Load(kstring name);
 
     // Draw interface
-    void Draw();
+    void              Draw();
 
     // Object3D cache
-    static Object3D *Object(text name);
+    static Object3D * Object(text name);
 
     // Call ((Object3D *)arg)->Draw()
-    static void render_callback(void *arg);
+    static void       render_callback(void *arg);
+
+public slots:
+    void              percentComplete(int p);
+    void              loadFinished();
+    void              loadFailed();
 
 public:
     // Debug trace
     static std::ostream& debug();
 
 private:
+    enum Status {
+        NotStarted = 0,
+        InProgress,
+        LoadFailed,
+        LoadSuccess,
+    };
+
+private:
+    void              DrawObject();
+    void              DrawPlaceHolder();
+    void              DrawErrorPlaceHolder();
+
+private:
     // Representation of an object
-    GLC_World   glcWorld;
+    GLC_World     glcWorld;
+    // Thread to load file asynchronously
+    LoadThread *  loadThread;
+    //
+    Status        status;
+
+    Q_OBJECT
 };
 
 #endif // OBJECT3D_H
