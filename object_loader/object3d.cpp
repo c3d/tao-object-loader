@@ -23,6 +23,7 @@
 
 #include "object3d.h"
 #include "load_thread.h"
+#include "raster_text.h"
 #include <QString>
 #include <QFileInfo>
 #include <GLC_Factory>
@@ -41,7 +42,7 @@ Object3D::Object3D(kstring name)
 // ----------------------------------------------------------------------------
 //   Initialize an object. If a name is given, load the file
 // ----------------------------------------------------------------------------
-    : glcWorld(), loadThread(NULL), status(NotStarted)
+    : glcWorld(), loadThread(NULL), status(NotStarted), complete(0)
 {
     if (name)
         Load(name);
@@ -86,6 +87,7 @@ void Object3D::percentComplete(int p)
 {
     IFTRACE(objloader)
         std::cerr << p << "%...";
+    complete = p;
 }
 
 
@@ -167,6 +169,7 @@ void Object3D::DrawPlaceHolder()
 //   Draw a placeholder object
 // ----------------------------------------------------------------------------
 {
+    RasterText::printf("%d%%", complete);
 }
 
 
@@ -175,7 +178,6 @@ void Object3D::DrawErrorPlaceHolder()
 //   Draw a placeholder object
 // ----------------------------------------------------------------------------
 {
-    std::cerr << "DrawErrorPlaceHolder\n";
 }
 
 

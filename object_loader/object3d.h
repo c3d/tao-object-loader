@@ -80,8 +80,10 @@ private:
     GLC_World     glcWorld;
     // Thread to load file asynchronously
     LoadThread *  loadThread;
-    //
+    // File load status
     Status        status;
+    // During load, percent complete
+    int           complete;
 
     Q_OBJECT
 };
