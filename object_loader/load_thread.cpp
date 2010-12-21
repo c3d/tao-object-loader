@@ -21,28 +21,10 @@
 // ****************************************************************************
 
 #include "load_thread.h"
+#include "file_to_world.h"
 #include <GLC_Factory>
 #include <GLC_World>
 #include <GLC_Exception>
-
-
-LoadThread::LoadThread(QString path)
-// ----------------------------------------------------------------------------
-//   Prepare thread to load one file
-// ----------------------------------------------------------------------------
-    : path(path), factory(GLC_Factory::instance())
-{
-    connect(factory, SIGNAL(currentQuantum(int)),
-            this,    SIGNAL(percentComplete(int)), Qt::QueuedConnection);
-}
-
-
-LoadThread::~LoadThread()
-// ----------------------------------------------------------------------------
-//   Destruction
-// ----------------------------------------------------------------------------
-{
-}
 
 
 void LoadThread::run()
@@ -52,8 +34,11 @@ void LoadThread::run()
 {
     try
     {
+        FileToWorld loader;
+        connect(&loader, SIGNAL(currentQuantum(int)),
+                this,    SIGNAL(percentComplete(int)));
         QFile file(path);
-        world = factory->createWorldFromFile(file);
+        world = loader.createWorldFromFile(file);
     }
     catch (GLC_Exception e)
     {

@@ -34,8 +34,8 @@ class LoadThread : public QThread
 // ----------------------------------------------------------------------------
 {
 public:
-    LoadThread(QString path);
-    ~LoadThread();
+    LoadThread(QString path) : path(path) {}
+    ~LoadThread() {}
 
     // Load the file
     virtual void   run();
@@ -46,7 +46,6 @@ signals:
 
 public:
     QString        path;
-    GLC_Factory *  factory;
     GLC_World      world;
     QString        error;
 
