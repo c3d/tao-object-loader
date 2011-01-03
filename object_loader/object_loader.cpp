@@ -36,8 +36,6 @@ using namespace XL;
 
 XL_DEFINE_TRACES
 
-static const Tao::ModuleApi *tao = NULL;
-
 Tree_p object(Tree_p self,
               Real_p /*x*/, Real_p /*y*/, Real_p /*z*/,
               Real_p /*w*/, Real_p /*h*/, Real_p /*d*/,
@@ -46,7 +44,7 @@ Tree_p object(Tree_p self,
 //   Primitive to load a 3D object
 // ----------------------------------------------------------------------------
 {
-    if (!tao)
+    if (!Object3D::tao)
         return XL::xl_false;
 
     // Try to load the 3D object in memory and graphic card
@@ -56,7 +54,7 @@ Tree_p object(Tree_p self,
         if (!obj)
             return XL::xl_false;
 
-        tao->scheduleRender(Object3D::render_callback, obj);
+        Object3D::tao->scheduleRender(Object3D::render_callback, obj);
     }
     catch (GLC_Exception e)
     {
@@ -73,7 +71,7 @@ int module_init(const Tao::ModuleApi *api, const Tao::ModuleInfo *)
 // ----------------------------------------------------------------------------
 {
     XL_INIT_TRACES();
-    tao = api;
+    Object3D::tao = api;
     return 0;
 }
 

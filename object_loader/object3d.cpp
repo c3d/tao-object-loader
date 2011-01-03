@@ -29,6 +29,9 @@
 #include <GLC_Factory>
 
 
+const Tao::ModuleApi *Object3D::tao = NULL;
+
+
 void Object3D::render_callback(void *arg)
 // ----------------------------------------------------------------------------
 //   Rendering callback: call the render function for the object
@@ -170,6 +173,8 @@ void Object3D::DrawPlaceHolder()
 // ----------------------------------------------------------------------------
 {
     RasterText::printf("%d%%", complete);
+    // Request refresh on next time interval
+    tao->refreshOn(QEvent::Timer);
 }
 
 

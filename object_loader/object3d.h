@@ -24,6 +24,7 @@
 
 
 #include "tao/coords3d.h"
+#include "tao/module_api.h"
 #include <QObject>
 #include <vector>
 #include <iostream>
@@ -84,6 +85,10 @@ private:
     Status        status;
     // During load, percent complete
     int           complete;
+
+public:
+    // Pointer to Tao functions
+    static const Tao::ModuleApi *tao;
 
     Q_OBJECT
 };
