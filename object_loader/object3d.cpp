@@ -28,8 +28,10 @@
 #include <QFileInfo>
 #include <GLC_Factory>
 
+using namespace Tao;
 
-const Tao::ModuleApi *Object3D::tao = NULL;
+
+const ModuleApi *Object3D::tao = NULL;
 
 
 void Object3D::render_callback(void *arg)
@@ -183,6 +185,20 @@ void Object3D::DrawErrorPlaceHolder()
 //   Draw a placeholder object
 // ----------------------------------------------------------------------------
 {
+}
+
+
+Box3 Object3D::Bounds()
+// ----------------------------------------------------------------------------
+//   Return object's bounding box. IsEmpty() is true when bounds are unknown.
+// ----------------------------------------------------------------------------
+{
+    if (status != LoadSuccess)
+        return Box3();
+
+    GLC_BoundingBox b = glcWorld.boundingBox();
+    GLC_Point3d     l = b.lowerCorner();
+    return Box3(l.x(), l.y(), l.z(), b.xLength(), b.yLength(), b.zLength());
 }
 
 

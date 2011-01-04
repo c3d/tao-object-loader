@@ -48,6 +48,9 @@ struct Object3D : public QObject
     // Draw interface
     void              Draw();
 
+    // Object bounding box
+    Tao::Box3         Bounds();
+
     // Object3D cache
     static Object3D * Object(text name);
 
