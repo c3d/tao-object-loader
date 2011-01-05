@@ -80,7 +80,7 @@ void Object3D::Load(kstring name)
                 this,       SLOT(loadFinished()));
         connect(loadThread, SIGNAL(failed()),
                 this,       SLOT(loadFailed()));
-        loadThread->start();
+        loadThread->start(QThread::LowPriority);
     }
 }
 
