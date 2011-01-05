@@ -53,8 +53,11 @@ GLC_World FileToWorld::createWorldFromFile(QFile & file,
 // ----------------------------------------------------------------------------
 {
 #if defined(USE_GLC_PRIVATE)
-
-    //  NB: This code is copied verbatim from GLC_Factory::createWorldFromFile
+#if defined(Q_OS_WIN)
+#define connect(snd, sig, rcv, memb) \
+        connect(snd, sig, rcv, memb, Qt::DirectConnection)
+#endif
+    //  NB: Below code is copied verbatim from GLC_Factory::createWorldFromFile
 
     GLC_World* pWorld= NULL;
     if (QFileInfo(file).suffix().toLower() == "obj")
