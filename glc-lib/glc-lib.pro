@@ -1,4 +1,5 @@
-CONFIG(debug, debug|release):FORCE_NO_RELEASE=1
+!CONFIG(debug,   debug|release):NO_DEBUG=1
+!CONFIG(release, debug|release):NO_RELEASE=1
 
 include(GLC_lib.pro)
 
@@ -14,8 +15,9 @@ win32 {
     DEFINES += GL_NV_geometry_program4
 }
 
-# GLC_lib.pro forces a release build (CONFIG += release).
-# We don't want that, because when Tao is built in debug mode, both the debug
-# AND the release versions of the Qt DLLs would be loaded. This is bad (see
+# GLC_lib.pro may force a build mode (for instance: CONFIG += release).
+# We don't want that, because if Tao is in a different mode than GLC_Lib,
+# both the debug and release Qt DLLs would be loaded. This is bad (see
 # bug#651).
-!isEmpty(FORCE_NO_RELEASE):CONFIG -= release
+!isEmpty(NO_RELEASE):CONFIG -= release
+!isEmpty(NO_DEBUG):CONFIG -= debug
