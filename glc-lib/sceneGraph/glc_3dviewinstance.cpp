@@ -303,6 +303,12 @@ void GLC_3DViewInstance::render(glc::RenderFlag renderFlag, bool useLod, GLC_Vie
 	// Save current OpenGL Matrix
 	glPushMatrix();
 	OpenglVisProperties();
+
+	// Change front face orientation if this instance absolute matrix is indirect
+	if (m_AbsoluteMatrix.type() == GLC_Matrix4x4::Indirect)
+	{
+		glFrontFace(GL_CW);
+	}
 	if(GLC_State::isInSelectionMode())
 	{
 		glColor3ubv(m_colorId); // D'ont use Alpha component
@@ -347,6 +353,13 @@ void GLC_3DViewInstance::render(glc::RenderFlag renderFlag, bool useLod, GLC_Vie
 	}
 	// Restore OpenGL Matrix
 	glPopMatrix();
+
+	// Restore front face orientation if this instance absolute matrix is indirect
+	if (m_AbsoluteMatrix.type() == GLC_Matrix4x4::Indirect)
+	{
+		glFrontFace(GL_CCW);
+	}
+
 }
 
 // Display the instance in Body selection mode

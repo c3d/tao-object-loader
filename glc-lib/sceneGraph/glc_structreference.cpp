@@ -92,8 +92,7 @@ GLC_StructReference::~GLC_StructReference()
 // Get Functions
 //////////////////////////////////////////////////////////////////////
 
-// Return the list of occurence of this reference
-QList<GLC_StructOccurence*> GLC_StructReference::listOfStructOccurence() const
+QSet<GLC_StructOccurence*> GLC_StructReference::setOfStructOccurence() const
 {
 	QList<GLC_StructInstance*> instanceList= listOfStructInstances();
 	QSet<GLC_StructOccurence*> occurenceSet;
@@ -107,7 +106,7 @@ QList<GLC_StructOccurence*> GLC_StructReference::listOfStructOccurence() const
 			occurenceSet.insert(occurenceList.at(occIndex));
 		}
 	}
-	return occurenceSet.toList();
+	return occurenceSet;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -122,15 +121,20 @@ void GLC_StructReference::setRepresentation(const GLC_3DRep& rep)
 	// Update all occurence of this reference if exist
 	if (hasStructInstance())
 	{
-		GLC_StructInstance* pInstance= firstInstanceHandle();
-		if (pInstance->hasStructOccurence())
+		QSet<GLC_StructInstance*>::iterator iInstance= m_SetOfInstance.begin();
+		while (m_SetOfInstance.constEnd() != iInstance)
 		{
-			QList<GLC_StructOccurence*> occurenceList= pInstance->listOfStructOccurences();
-			const int size= occurenceList.size();
-			for (int i= 0; i < size; ++i)
+			GLC_StructInstance* pInstance= *iInstance;
+			if (pInstance->hasStructOccurence())
 			{
-				occurenceList[i]->checkForRepresentation();
+				QList<GLC_StructOccurence*> occurenceList= pInstance->listOfStructOccurences();
+				const int size= occurenceList.size();
+				for (int i= 0; i < size; ++i)
+				{
+					occurenceList[i]->checkForRepresentation();
+				}
 			}
+			++iInstance;
 		}
 	}
 }

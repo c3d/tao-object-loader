@@ -5,7 +5,7 @@ QT += opengl \
 
 
 CONFIG += exceptions \
-    release \
+    debug \
     warn_on
 TARGET = GLC_lib
 VERSION = 2.0.0
@@ -76,7 +76,8 @@ HEADERS_GLC_IO +=		io/glc_objmtlloader.h \
 						io/glc_3dxmltoworld.h \
 						io/glc_colladatoworld.h \
 						io/glc_worldto3dxml.h \
-						io/glc_bsreptoworld.h
+						io/glc_bsreptoworld.h \
+						io/glc_xmlutil.h
 
 HEADERS_GLC_SCENEGRAPH +=	sceneGraph/glc_3dviewcollection.h \
 							sceneGraph/glc_3dviewinstance.h \
@@ -148,7 +149,11 @@ HEADERS_GLC += glc_global.h \
            glc_state.h \
            glc_config.h \
            glc_cachemanager.h \
-           glc_renderstatistics.h
+           glc_renderstatistics.h \
+           glc_log.h \
+           glc_errorlog.h \
+           glc_tracelog.h \
+           glc_openglstate.h
            
 HEADERS_GLC_3DWIDGET += 3DWidget/glc_3dwidget.h \
 						3DWidget/glc_cuttingplane.h \
@@ -288,7 +293,11 @@ SOURCES +=	glc_global.cpp \
 			glc_ext.cpp \
 			glc_state.cpp \
 			glc_cachemanager.cpp \
-			glc_renderstatistics.cpp
+			glc_renderstatistics.cpp \
+			glc_log.cpp \
+			glc_errorlog.cpp \
+			glc_tracelog.cpp \
+			glc_openglstate.cpp
 
 SOURCES +=	3DWidget/glc_3dwidget.cpp \
 			3DWidget/glc_cuttingplane.cpp \
@@ -348,7 +357,7 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_RepCrossMover \
     		   include/GLC_RepTrackBallMover \
     		   include/GLC_TurnTableMover \
-    		   include/GLC_Attribute \
+    		   include/GLC_Attributes \
     		   include/GLC_Rectangle \
     		   include/GLC_Mesh \
     		   include/GLC_StructOccurence \
@@ -386,7 +395,12 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_Ext \
     		   include/GLC_Cone \
     		   include/GLC_Sphere \
-    		   include/GLC_Axis
+    		   include/GLC_Axis \
+    		   include/GLC_Log \
+    		   include/GLC_ErrorLog \
+    		   include/GLC_TraceLog \
+    		   include/glcXmlUtil \
+    		   include/GLC_OpenGLState
     		   
     			   
 # Linux and macx install configuration
@@ -412,8 +426,8 @@ unix {
 # Windows Install configuration
 win32 { 
     # Location of HEADERS and library
-    LIB_DIR = C:\GLC_lib\lib
-    INCLUDE_DIR = C:\GLC_lib\include
+    LIB_DIR = C:/GLC_lib/lib
+    INCLUDE_DIR = C:/GLC_lib/include
     include.path = $${INCLUDE_DIR}
     include_lib3ds.path = $${INCLUDE_DIR}/3rdparty/lib3ds
     include_glext.path = $${INCLUDE_DIR}/3rdparty/glext
