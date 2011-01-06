@@ -21,3 +21,6 @@ win32 {
 # bug#651).
 !isEmpty(NO_RELEASE):CONFIG -= release
 !isEmpty(NO_DEBUG):CONFIG -= debug
+
+# Silence qWarning/qDebug in release mode
+CONFIG(release, debug|release):DEFINES += QT_NO_WARNING_OUTPUT QT_NO_DEBUG_OUTPUT
