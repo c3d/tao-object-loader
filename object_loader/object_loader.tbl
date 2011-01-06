@@ -25,7 +25,7 @@
 
 #include "object_loader.h"
 
-PREFIX(ObjectLoader_object_centered,  tree,  "glc_object",
+PREFIX(ObjectLoader_object_centered,  tree,  "object",
        PARM(x, real, "x-coordinate of object center")
        PARM(y, real, "y-coordinate of object center")
        PARM(z, real, "z-coordinate of object center")
@@ -48,7 +48,7 @@ PREFIX(ObjectLoader_object_centered,  tree,  "glc_object",
                    "Collada V1.4, 3DXML ASCII V3 and V4, OBJ, 3DS, "
                    "STL (ASCII and binary), OFF and COFF."))
 
-PREFIX(ObjectLoader_object,  tree,  "glc_object",
+PREFIX(ObjectLoader_object,  tree,  "object",
        PARM(f, text, "filename"),
        return object(self, f),
        GROUP(3D)
