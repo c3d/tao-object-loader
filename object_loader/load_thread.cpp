@@ -21,8 +21,8 @@
 // ****************************************************************************
 
 #include "load_thread.h"
+#include "file_to_world.h"
 #include <GLC_Factory>
-#include <GLC_FileLoader>
 #include <GLC_World>
 #include <GLC_Exception>
 
@@ -34,12 +34,11 @@ void LoadThread::run()
 {
     try
     {
-        GLC_FileLoader * loader = GLC_Factory::instance()->createFileLoader();
-        connect(loader, SIGNAL(currentQuantum(int)),
-                this,   SIGNAL(percentComplete(int)));
+        FileToWorld loader;
+        connect(&loader, SIGNAL(currentQuantum(int)),
+                this,    SIGNAL(percentComplete(int)));
         QFile file(path);
-        world = loader->createWorldFromFile(file);
-        delete loader;
+        world = loader.createWorldFromFile(file);
     }
     catch (GLC_Exception e)
     {

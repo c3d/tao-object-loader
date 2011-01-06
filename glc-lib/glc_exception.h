@@ -29,7 +29,6 @@
 
 #include <exception>
 #include <QString>
-#include "glc_errorlog.h"
 
 #include "glc_config.h"
 

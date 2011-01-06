@@ -179,12 +179,19 @@ int RasterText::printf(const char *format...)
     vsprintf(text, format, ap);
     va_end(ap);
 
-    // Use changing shades of gray for visibility on any background
-    QTime now = QTime::currentTime();
-    int ms = now.second() * 1000 + now.msec();
-    float f = 0.002;
+    // Use changing colors for visibility on any background
+    // So 80s ;-)
+    int ms = QTime::currentTime().msec();
+    int r, g, b;
+    float f = 0.006;
+    r = sin(f * ms + 0) * 127 + 128;
+    g = sin(f * ms + 2) * 127 + 128;
+    b = sin(f * ms + 4) * 127 + 128;
     GLfloat color[3];
-    color[0] = color[1] = color[2] = (sin(f * ms) * 127 + 128) / 255.0;
+    color[0] = r / 255.0;
+    color[1] = g / 255.0;
+    color[2] = b / 255.0;
+
     glPushAttrib(GL_LIGHTING_BIT);
     glDisable(GL_LIGHTING);
     glColor3fv(color);

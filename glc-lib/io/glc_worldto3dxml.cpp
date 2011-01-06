@@ -140,20 +140,6 @@ bool GLC_WorldTo3dxml::exportTo3dxml(const QString& filename, GLC_WorldTo3dxml::
 	return isExported;
 }
 
-bool GLC_WorldTo3dxml::exportReferenceTo3DRep(const GLC_3DRep* p3DRep, const QString& fullFileName)
-{
-	m_3dxmlFileSet.clear();
-	m_ListOfOverLoadedOccurence.clear();
-	m_FileNameIncrement= 0;
-	m_ExportMaterial= false;
-
-	m_AbsolutePath= QFileInfo(fullFileName).absolutePath() + QDir::separator();
-
-	write3DRep(p3DRep, QFileInfo(fullFileName).fileName());
-
-	return true;
-}
-
 void GLC_WorldTo3dxml::setInterupt(QReadWriteLock* pReadWriteLock, bool* pInterupt)
 {
 	m_pReadWriteLock= pReadWriteLock;
@@ -421,22 +407,22 @@ QString GLC_WorldTo3dxml::matrixString(const GLC_Matrix4x4& matrix)
 	QString resultMatrix;
 	const QChar spaceChar(' ');
 	// Rotation
-	resultMatrix+= QString::number(matrix.getData()[0]) + spaceChar;
-	resultMatrix+= QString::number(matrix.getData()[1]) + spaceChar;
-	resultMatrix+= QString::number(matrix.getData()[2]) + spaceChar;
+	resultMatrix+= QString::number(matrix.data()[0]) + spaceChar;
+	resultMatrix+= QString::number(matrix.data()[1]) + spaceChar;
+	resultMatrix+= QString::number(matrix.data()[2]) + spaceChar;
 
-	resultMatrix+= QString::number(matrix.getData()[4]) + spaceChar;
-	resultMatrix+= QString::number(matrix.getData()[5]) + spaceChar;
-	resultMatrix+= QString::number(matrix.getData()[6]) + spaceChar;
+	resultMatrix+= QString::number(matrix.data()[4]) + spaceChar;
+	resultMatrix+= QString::number(matrix.data()[5]) + spaceChar;
+	resultMatrix+= QString::number(matrix.data()[6]) + spaceChar;
 
-	resultMatrix+= QString::number(matrix.getData()[8]) + spaceChar;
-	resultMatrix+= QString::number(matrix.getData()[9]) + spaceChar;
-	resultMatrix+= QString::number(matrix.getData()[10]) + spaceChar;
+	resultMatrix+= QString::number(matrix.data()[8]) + spaceChar;
+	resultMatrix+= QString::number(matrix.data()[9]) + spaceChar;
+	resultMatrix+= QString::number(matrix.data()[10]) + spaceChar;
 
 	// Translation
-	resultMatrix+= QString::number(matrix.getData()[12]) + spaceChar;
-	resultMatrix+= QString::number(matrix.getData()[13]) + spaceChar;
-	resultMatrix+= QString::number(matrix.getData()[14]);
+	resultMatrix+= QString::number(matrix.data()[12]) + spaceChar;
+	resultMatrix+= QString::number(matrix.data()[13]) + spaceChar;
+	resultMatrix+= QString::number(matrix.data()[14]);
 
 	return resultMatrix;
 }
@@ -480,21 +466,18 @@ QString GLC_WorldTo3dxml::representationFileName(const GLC_3DRep* pRep)
 	if (m_ExportType == StructureOnly)
 	{
 		QString newFileName= pRep->fileName();
-		// Test if the file name is encoded by GLC_Lib (Structure only loaded)
-		if (glc::isFileString(newFileName))
-		{
-			newFileName= glc::archiveEntryFileName(newFileName);
-		}
 		if (newFileName.isEmpty() || (glc::isArchiveString(newFileName)))
 		{
 			fileName= "urn:3DXML:NoFile_0.3DRep";
 		}
 		else
 		{
+			qDebug() << m_FileName;
 			// Compute the relative fileName from the structure
 			QDir structureDir(m_AbsolutePath);
 			QString relativeFilePath= structureDir.relativeFilePath(newFileName);
 			fileName= "urn:3DXML:" + relativeFilePath;
+			qDebug() << relativeFilePath;
 		}
 	}
 	else if (repName.isEmpty())

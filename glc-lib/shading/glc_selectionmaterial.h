@@ -33,8 +33,6 @@
 
 #include "../glc_config.h"
 
-class GLC_Material;
-
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_SelectionMaterial
 /*! \brief GLC_SelectionMaterial : Material used for selection feedback*/
@@ -46,21 +44,6 @@ class GLC_LIB_EXPORT GLC_SelectionMaterial
 private:
 	GLC_SelectionMaterial();
 
-
-//////////////////////////////////////////////////////////////////////
-/*! \name Set Functions*/
-//@{
-//////////////////////////////////////////////////////////////////////
-public:
-	//! Use the given material as selection material
-	static void useMaterial(GLC_Material* pMaterial);
-
-	//! Use the default selection color
-	/*! if a selection material is used, unused it*/
-	static void useDefautSelectionColor();
-
-//@}
-
 //////////////////////////////////////////////////////////////////////
 /*! \name OpenGL Functions*/
 //@{
@@ -69,15 +52,16 @@ public:
 	//! Execute OpenGL Material
 	static void glExecute();
 	//! Init shader
-	static void initShader();
+	inline static void initShader() {m_SelectionShader.createAndCompileProgrammShader();}
 	//! delete shader
 	static void deleteShader();
 	//! Set shader
-	static void setShaders(QFile& vertex, QFile& fragment);
+	inline static void setShaders(QFile& vertex, QFile& fragment)
+	{m_SelectionShader.setVertexAndFragmentShader(vertex, fragment);}
 	//! Use shader
-	inline static void useShader() {m_pSelectionShader->use();}
+	inline static void useShader() {m_SelectionShader.use();}
 	//! Unused shader
-	inline static void unUseShader() {m_pSelectionShader->unuse();}
+	inline static void unUseShader() {m_SelectionShader.unuse();}
 
 //@}
 
@@ -87,13 +71,7 @@ public:
 
 private:
 		//! Selection Shader
-		static GLC_Shader* m_pSelectionShader;
-
-		//! Selection material id
-		static GLC_uint m_SelectionMaterialId;
-
-		//! Material of this selection material
-		static GLC_Material* m_pMaterial;
+		static GLC_Shader m_SelectionShader;
 
 };
 

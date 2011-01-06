@@ -608,18 +608,10 @@ GLC_3DViewInstance* GLC_3DViewCollection::instanceHandle(GLC_uint Key)
 }
 
 // return the entire collection Bounding Box
-GLC_BoundingBox GLC_3DViewCollection::boundingBox(bool allObject)
+GLC_BoundingBox GLC_3DViewCollection::boundingBox(void)
 {
 	// If the bounding box is not valid delete it
-	if (allObject)
-	{
-		delete m_pBoundingBox;
-		m_pBoundingBox= NULL;
-	}
-	else
-	{
-		setBoundingBoxValidity();
-	}
+	setBoundingBoxValidity();
 
 	// Check if the bounding box have to be updated
 	if ((m_pBoundingBox == NULL) && !m_3DViewInstanceHash.isEmpty())
@@ -630,7 +622,7 @@ GLC_BoundingBox GLC_3DViewCollection::boundingBox(bool allObject)
 		ViewInstancesHash::iterator iEntry= m_3DViewInstanceHash.begin();
 	    while (iEntry != m_3DViewInstanceHash.constEnd())
 	    {
-	        if(allObject || iEntry.value().isVisible() == m_IsInShowSate)
+	        if(iEntry.value().isVisible() == m_IsInShowSate)
 	        {
 	        	// Combine Collection BoundingBox with element Bounding Box
 	        	m_pBoundingBox->combine(iEntry.value().boundingBox());
@@ -638,26 +630,13 @@ GLC_BoundingBox GLC_3DViewCollection::boundingBox(bool allObject)
 	        ++iEntry;
 	    }
 	}
-
-	if (allObject)
-	{
-		qDebug() << "allObject";
-		GLC_BoundingBox allBoundingBox(*m_pBoundingBox);
-		delete m_pBoundingBox;
-		m_pBoundingBox= NULL;
-		return allBoundingBox;
-	}
 	else if (NULL == m_pBoundingBox)
 	{
 		// The collection is empty and m_pBoundingBox == NULL
-		// OR all object are used
-		m_pBoundingBox= new GLC_BoundingBox;
-		return *m_pBoundingBox;
+		m_pBoundingBox= new GLC_BoundingBox();
 	}
-	else
-	{
-		return *m_pBoundingBox;
-	}
+
+	return *m_pBoundingBox;
 }
 
 // Return the number of drawable objects

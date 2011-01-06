@@ -159,7 +159,6 @@ void GLC_State::init()
 void GLC_State::setVboSupport()
 {
 	m_VboSupported= glc::extensionIsSupported("ARB_vertex_buffer_object") && glc::loadVboExtension();
-	setVboUsage(m_UseVbo);
 }
 
 void GLC_State::setVboUsage(const bool vboUsed)
@@ -170,7 +169,6 @@ void GLC_State::setVboUsage(const bool vboUsed)
 void GLC_State::setGlslSupport()
 {
 	m_GlslSupported= glc::extensionIsSupported("GL_ARB_shading_language_100") && glc::loadGlSlExtension();
-	setGlslUsage(m_UseShader);
 }
 
 void GLC_State::setPointSpriteSupport()

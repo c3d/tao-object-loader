@@ -54,19 +54,16 @@ typedef QVector<GLuint> OffsetVectori;
 namespace glc
 {
 	//! Simple ID generation
-	GLC_LIB_EXPORT GLC_uint GLC_GenID();
+	GLC_LIB_EXPORT GLC_uint GLC_GenID(void);
 
 	//! Simple Geom ID generation
-	GLC_LIB_EXPORT GLC_uint GLC_GenGeomID();
+	GLC_LIB_EXPORT GLC_uint GLC_GenGeomID(void);
 
 	//! Simple User ID generation
-	GLC_LIB_EXPORT GLC_uint GLC_GenUserID();
+	GLC_LIB_EXPORT GLC_uint GLC_GenUserID(void);
 
 	//! Simple 3D widget ID generation
-	GLC_LIB_EXPORT GLC_uint GLC_Gen3DWidgetID();
-
-	//! Simple shading group generation
-	GLC_LIB_EXPORT GLC_uint GLC_GenShaderGroupID();
+	GLC_LIB_EXPORT GLC_uint GLC_Gen3DWidgetID(void);
 
 	//! Return the GLC_uint decoded ID from RGB encoded ID
 	inline GLC_uint decodeRgbId(const GLubyte*);
@@ -81,7 +78,6 @@ namespace glc
 	extern QMutex geomIdMutex;
 	extern QMutex userIdMutex;
 	extern QMutex widget3dIdMutex;
-	extern QMutex shadingGroupIdMutex;
 
 	//! 3D widget event flag
 	enum WidgetEventFlag
@@ -97,33 +93,17 @@ namespace glc
 	//! Return GLC_lib Archive infix string
 	GLC_LIB_EXPORT const QString archiveInfix();
 
-	//! Return GLC_lib File prefix string
-	GLC_LIB_EXPORT const QString filePrefix();
-
-	//! Return GLC_lib File infix string
-	GLC_LIB_EXPORT const QString fileInfix();
-
 	//! Return true if the given file name is in a archive string
 	GLC_LIB_EXPORT bool isArchiveString(const QString& fileName);
 
-	//! Return true if the given file name is in a File string
-	GLC_LIB_EXPORT bool isFileString(const QString& fileName);
-
 	//! Return archive string form the given archive fileName and fileName entry
 	GLC_LIB_EXPORT QString builtArchiveString(const QString& Archive, const QString& entry);
-
-	//! Return archive string form the given archive fileName and fileName entry
-	GLC_LIB_EXPORT QString builtFileString(const QString& File, const QString& entry);
 
 	//! Return Archive filename from the given archive string
 	GLC_LIB_EXPORT QString archiveFileName(const QString& archiveString);
 
 	//! Return Archive entry filname from the given archive string
 	GLC_LIB_EXPORT QString archiveEntryFileName(const QString& archiveString);
-
-	// GLC_Lib version
-	const QString version("2.0.0");
-	const QString description("GLC_lib is a Open Source C++ class library that enables the quick creation of an OpenGL application based on QT4.");
 
 };
 
@@ -148,6 +128,11 @@ void glc::encodeRgbId(GLC_uint id, GLubyte* colorId)
 	colorId[2]= static_cast<GLubyte>((id >> (2 * 8)) & 0xFF);
 	colorId[3]= static_cast<GLubyte>((id >> (3 * 8)) & 0xFF);
 }
+
+// GLC_Lib version
+
+#define GLC_VERSION "2.0.0"
+#define GLC_DESCRIPTION "GLC_lib is a Open Source C++ class library that enables the quick creation of an OpenGL application based on QT4."
 
 
 #endif //GLC_GLOBAL_H_

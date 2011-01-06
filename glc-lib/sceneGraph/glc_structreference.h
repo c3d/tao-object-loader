@@ -80,12 +80,8 @@ public:
 	inline QList<GLC_StructInstance*> listOfStructInstances() const
 	{ return m_SetOfInstance.toList();}
 
-	//! Return the Set of occurence of this reference
-	QSet<GLC_StructOccurence*> setOfStructOccurence() const;
-
 	//! Return the list of occurence of this reference
-	inline QList<GLC_StructOccurence*> listOfStructOccurence() const
-	{return setOfStructOccurence().toList();}
+	QList<GLC_StructOccurence*> listOfStructOccurence() const;
 
 	//! Return true if this reference has a representation
 	inline bool hasRepresentation() const

@@ -77,17 +77,12 @@ public:
 
 	//! Return the list of attribute name
 	inline QList<QString> names() const
-	{return m_AttributesList;}
+	{return m_AttributesHash.keys();}
 
 	//! Return the value of the specified attributes
 	/*! Return NULL String if attribute doesn't exist*/
 	inline QString value(const QString& name) const
 	{return m_AttributesHash.value(name);}
-
-	//! Return the name of the specified attributes index
-	/*! Return empty String if attribute doesn't exist*/
-	inline QString name(int at) const
-	{return m_AttributesList.value(at);}
 
 //@}
 
@@ -96,27 +91,13 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Insert an attribute (if the attribute exists, it's updated)
+	//! Insert an attribute
 	inline void insert(const QString& name, const QString& value)
-	{
-		if ((!m_AttributesHash.contains(name))) m_AttributesList.append(name);
-		m_AttributesHash.insert(name, value);
-	}
+	{m_AttributesHash.insert(name, value);}
 
 	//! Remove an attribute
 	inline void remove(const QString& name)
-	{
-		Q_ASSERT(m_AttributesHash.contains(name));
-		m_AttributesHash.remove(name);
-		m_AttributesList.removeOne(name);
-	}
-
-	//! Clear the content of this attribute
-	inline void clear()
-	{
-		m_AttributesHash.clear();
-		m_AttributesList.clear();
-	}
+	{m_AttributesHash.remove(name);}
 
 //@}
 
@@ -137,10 +118,6 @@ public:
 private:
 	//! Attributes Hash table
 	QHash<QString, QString> m_AttributesHash;
-
-	//! the list of attribute name
-	QList<QString> m_AttributesList;
-
 };
 
 #endif /* GLC_ATTRIBUTES_H_ */

@@ -24,9 +24,7 @@
 
 
 #include "tao/coords3d.h"
-#include "tao/module_api.h"
 #include <QObject>
-#include <QTime>
 #include <vector>
 #include <iostream>
 #include <GLC_World>
@@ -48,9 +46,6 @@ struct Object3D : public QObject
 
     // Draw interface
     void              Draw();
-
-    // Object bounding box
-    Tao::Box3         Bounds();
 
     // Object3D cache
     static Object3D * Object(text name);
@@ -89,12 +84,6 @@ private:
     Status        status;
     // During load, percent complete
     int           complete;
-    // Load start time
-    QTime         loadTime;
-
-public:
-    // Pointer to Tao functions
-    static const Tao::ModuleApi *tao;
 
     Q_OBJECT
 };

@@ -67,8 +67,6 @@ GLC_Matrix4x4& GLC_Matrix4x4::setColumn(int index, const GLC_Vector3d& vector)
 	m_Matrix[index + 1]= vector.y();
 	m_Matrix[index + 2]= vector.z();
 
-	m_Type= General;
-
 	return *this;
 }
 //////////////////////////////////////////////////////////////////////

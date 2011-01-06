@@ -70,15 +70,15 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Return this Occurence id
+	//! Return the Occurence id
 	inline GLC_uint id() const
 	{return m_Uid;}
 
-	//! Return the instance name of this occurence
+	//! Return Occurence instance name
 	inline const QString name() const
 	{return m_pStructInstance->name();}
 
-	//! Return the absolute matrix of this occurence
+	//! Return the absolute matrix
 	inline GLC_Matrix4x4 absoluteMatrix() const
 	{ return m_AbsoluteMatrix;}
 
@@ -86,16 +86,9 @@ public:
 	inline bool isOrphan() const
 	{ return NULL == m_pParent;}
 
-	//! Return true if this occurence has parent
-	inline bool hasParent() const
-	{ return NULL != m_pParent;}
-
 	//! Return true if this occurence has a representation
 	inline bool hasRepresentation() const
 	{ return m_HasRepresentation;}
-
-	//! Return true if this occurence has 3DViewInstance
-	bool has3DViewInstance() const;
 
 	//! Return the instance of this occurence
 	inline GLC_StructInstance* structInstance() const
@@ -116,41 +109,35 @@ public:
 	inline bool hasChild() const
 	{return childCount() > 0;}
 
-	//! Return true if the given occurence can be added to this occurence children
-	bool canBeAddedToChildren(GLC_StructOccurence* pOccurence) const;
-
-	//! Return The parent of this occurence
+	//! Return The parent
 	inline GLC_StructOccurence* parent() const
 	{return m_pParent;}
 
-	//! Return a child of this occurence
+	//! Return a child
 	/*! The index must exist*/
 	inline GLC_StructOccurence* child(const int index) const
 	{return m_Childs.at(index);}
 
-	//! Return the list of children of this occurence
+	//! Return the list of children
 	inline QList<GLC_StructOccurence*> children() const
-	{return m_Childs;}
+	{ return m_Childs;}
 
-	//! Return the list of all accurence under this occurence
-	QList<GLC_StructOccurence*> subOccurenceList() const;
-
-	//! Return the number of faces of the representation of this occurence
+	//! Get number of faces
 	unsigned int numberOfFaces() const;
 
-	//! Return the number of vertex of the representation of this occurence
+	//! Get number of vertex
 	unsigned int numberOfVertex() const;
 
-	//! Return the number of materials of the representation of this occurence
+	//! Get number of materials
 	unsigned int numberOfMaterials() const;
 
-	//! Return the materials List of the representation of this occurence
+	//! Get materials List
 	QSet<GLC_Material*> materialSet() const;
 
-	//! Return a clone this occurence
+	//! Clone the occurence
 	GLC_StructOccurence* clone(GLC_WorldHandle*, bool shareInstance) const;
 
-	//! Return true if this occurence is visible
+	//! Return true if the occurence is visible
 	bool isVisible() const;
 
 	//! Return the occurence Bounding Box
@@ -166,16 +153,6 @@ public:
 
 	//! Return the number of node of this branch
 	unsigned int nodeCount() const;
-
-	//! Return the world handle of this occurence
-	inline GLC_WorldHandle* worldHandle() const
-	{return m_pWorldHandle;}
-
-	//! Return the Set of children references of this occurence
-	QSet<GLC_StructReference*> childrenReferences() const;
-
-	//! Return the set of parents references of the given occurence
-	static QSet<GLC_StructReference*> parentsReferences(const GLC_StructOccurence* pOccurence);
 
 
 //@}
@@ -214,7 +191,7 @@ public:
 	//! Check the presence of representation
 	void checkForRepresentation();
 
-	//! Set this occurence world Handle
+	//! Set the occurence world Handle
 	void setWorldHandle(GLC_WorldHandle*);
 
 	//! Load the representation and return true if success
@@ -238,9 +215,6 @@ public:
 
 	//! Remove empty children
 	void removeEmptyChildren();
-
-	//! Set the given reference to this occurence
-	void setReference(GLC_StructReference* pRef);
 
 //@}
 

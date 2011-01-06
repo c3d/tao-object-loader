@@ -68,7 +68,7 @@ public:
 	{return m_NumberOfWorld == 0;}
 
 	//! Return true if the specified occurence id is in this world
-	inline bool containsOccurence(GLC_uint id) const
+	inline bool contains(GLC_uint id) const
 	{return m_OccurenceHash.contains(id);}
 
 	//! Return the occurence specified by an id
@@ -95,9 +95,6 @@ public:
 
 	//! Return the number of body
 	int numberOfBody() const;
-
-	//! Return the number of representation
-	int representationCount() const;
 
 	//! Return the world Up vector
 	inline GLC_Vector3d upVector() const

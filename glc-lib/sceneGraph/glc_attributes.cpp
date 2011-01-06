@@ -28,7 +28,6 @@
 // Default constructor
 GLC_Attributes::GLC_Attributes()
 : m_AttributesHash()
-, m_AttributesList()
 {
 
 }
@@ -36,7 +35,6 @@ GLC_Attributes::GLC_Attributes()
 // Copy Constructor
 GLC_Attributes::GLC_Attributes(const GLC_Attributes& attr)
 : m_AttributesHash(attr.m_AttributesHash)
-, m_AttributesList(attr.m_AttributesList)
 {
 
 }
@@ -47,7 +45,6 @@ GLC_Attributes& GLC_Attributes::operator=(const GLC_Attributes& attr)
 	if (this != &attr)
 	{
 		m_AttributesHash= attr.m_AttributesHash;
-		m_AttributesList= attr.m_AttributesList;
 	}
 	return *this;
 }

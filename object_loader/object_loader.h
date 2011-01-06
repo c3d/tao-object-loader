@@ -30,6 +30,4 @@ XL::Tree_p object(XL::Tree_p self,
                   XL::Real_p w, XL::Real_p h, XL::Real_p d,
                   XL::Text_p name);
 
-XL::Tree_p object(XL::Tree_p self, XL::Text_p name);
-
 #endif // OBJECT_LOADER_H
