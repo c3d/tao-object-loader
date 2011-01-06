@@ -52,6 +52,7 @@ void Object3DDrawing::Draw()
 {
     Box3 bounds = object->Bounds();
 
+    glPushMatrix();
     if (bounds.IsEmpty())
     {
         // When object load is in progress, bound are not yet knwon. We just
@@ -63,13 +64,13 @@ void Object3DDrawing::Draw()
         // Update object dimensions if we didn't specify them
         scale k = 1.0;
         if (w <= 0)
-            w = bounds.Width();
+            w->value = bounds.Width();
         else
             k = w / bounds.Width();
-        if (h <= 0)
-            h = bounds.Height() * k;
-        if (d <= 0)
-            d = bounds.Depth() * k;
+        if (h->value <= 0)
+            h->value = bounds.Height() * k;
+        if (d->value <= 0)
+            d->value = bounds.Depth() * k;
 
         // Translate and scale object
         coord ox = x - bounds.Center().x;
@@ -84,4 +85,5 @@ void Object3DDrawing::Draw()
     }
 
     object->Draw();
+    glPopMatrix();
 }
