@@ -12,7 +12,7 @@ INSTALLS = target
 win32 {
     QMAKE_MKDIR = mkdir -p
     # Quick fix for in redefinition warnings in glext.h
-    DEFINES += GL_NV_geometry_program4
+    DEFINES += GL_EXT_geometry_shader4
 }
 
 # GLC_lib.pro may force a build mode (for instance: CONFIG += release).
