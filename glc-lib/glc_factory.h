@@ -49,6 +49,7 @@
 #include "glc_boundingbox.h"
 #include "viewport/glc_movercontroller.h"
 #include "viewport/glc_viewport.h"
+#include "io/glc_fileloader.h"
 
 // end of class to built
 
@@ -128,6 +129,9 @@ public:
 
 	//! Create 3DRep from 3dxml or 3DRep file
 	GLC_3DRep create3DRepFromFile(const QString&) const;
+
+	//! Create a GLC_FileLoader
+	GLC_FileLoader* createFileLoader() const;
 
 	//! Create default material
 	GLC_Material* createMaterial() const;
