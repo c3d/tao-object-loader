@@ -26,6 +26,7 @@
 #include "tao/coords3d.h"
 #include "tao/module_api.h"
 #include <QObject>
+#include <QTime>
 #include <vector>
 #include <iostream>
 #include <GLC_World>
@@ -88,6 +89,8 @@ private:
     Status        status;
     // During load, percent complete
     int           complete;
+    // Load start time
+    QTime         loadTime;
 
 public:
     // Pointer to Tao functions

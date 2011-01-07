@@ -73,6 +73,7 @@ void Object3D::Load(kstring name)
     if (!loadThread)
     {
         status = InProgress;
+        loadTime.start();
         loadThread = new LoadThread(name);
         connect(loadThread, SIGNAL(percentComplete(int)),
                 this,       SLOT(percentComplete(int)));
@@ -174,9 +175,11 @@ void Object3D::DrawPlaceHolder()
 //   Draw a placeholder object
 // ----------------------------------------------------------------------------
 {
+    tao->refreshOn(QEvent::Timer);
+    if (loadTime.elapsed() < 2000)
+        return;
     RasterText::printf("%d%%", complete);
     // Request refresh on next time interval
-    tao->refreshOn(QEvent::Timer);
 }
 
 
