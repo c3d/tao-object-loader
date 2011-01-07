@@ -2,8 +2,14 @@
 
 Source code for the GLC_Lib library (http://www.glc-lib.net/)
 License: LGPL
-This is a SVN checkout of:
-https://glc-lib.svn.sourceforge.net/svnroot/glc-lib/glc-lib/tags/Version_2_0_1
+SVN repository is at:
+https://glc-lib.svn.sourceforge.net/svnroot/glc-lib/glc-lib/trunk
+
+Current version is:
+    r2606
+  + Modification to add GLC_FileLoader class (commit 52beabf), patch submitted
+    to author.
+    See http://www.glc-lib.net/forum/viewtopic.php?f=6&t=131&start=0.
 
 Note: glc-lib contains 2 project files (.pro):
  * GLC_lib.pro: the real one (from the GLC lib source repository)
