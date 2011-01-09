@@ -80,8 +80,8 @@ void Object3DDrawing::Draw()
         scale sy = h / bounds.Height();
         scale sz = d / bounds.Depth();
 
-        glTranslatef(ox, oy, oz);
         glScalef(sx, sy, sz);
+        glTranslatef(ox, oy, oz);
     }
 
     object->Draw();
