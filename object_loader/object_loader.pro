@@ -18,14 +18,14 @@ include($${TAO_SDK}/modules/modules.pri)
 
 HEADERS     = object_loader.h \
               object3d.h \
+              object3d_drawing.h \
               load_thread.h \
-              raster_text.h \
-              file_to_world.h
+              raster_text.h
 SOURCES     = object_loader.cpp \
               object3d.cpp \
+              object3d_drawing.cpp \
               load_thread.cpp \
-              raster_text.cpp \
-              file_to_world.cpp
+              raster_text.cpp
 TBL_SOURCES = object_loader.tbl
 OTHER_FILES = module.xl object_loader.tbl traces.tbl
 OTHER_FILES = module.xl object_loader.tbl

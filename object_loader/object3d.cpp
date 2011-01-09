@@ -28,6 +28,11 @@
 #include <QFileInfo>
 #include <GLC_Factory>
 
+using namespace Tao;
+
+
+const ModuleApi *Object3D::tao = NULL;
+
 
 void Object3D::render_callback(void *arg)
 // ----------------------------------------------------------------------------
@@ -68,6 +73,7 @@ void Object3D::Load(kstring name)
     if (!loadThread)
     {
         status = InProgress;
+        loadTime.start();
         loadThread = new LoadThread(name);
         connect(loadThread, SIGNAL(percentComplete(int)),
                 this,       SLOT(percentComplete(int)));
@@ -75,7 +81,7 @@ void Object3D::Load(kstring name)
                 this,       SLOT(loadFinished()));
         connect(loadThread, SIGNAL(failed()),
                 this,       SLOT(loadFailed()));
-        loadThread->start();
+        loadThread->start(QThread::LowPriority);
     }
 }
 
@@ -144,22 +150,19 @@ void Object3D::DrawObject()
 //   Draw the 3D object
 // ----------------------------------------------------------------------------
 {
-    glPushAttrib(GL_ENABLE_BIT);
+    glPushAttrib(GL_ENABLE_BIT | GL_LIGHTING_BIT | GL_TRANSFORM_BIT);
+
     glDisable(GL_POLYGON_OFFSET_FILL);
     glDisable(GL_POLYGON_OFFSET_LINE);
     glDisable(GL_POLYGON_OFFSET_POINT);
 
-    glPushAttrib(GL_LIGHTING_BIT);
     glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
 
-    glPushAttrib(GL_TRANSFORM_BIT);
     glEnable(GL_NORMALIZE);
 
     glcWorld.render(0, glc::ShadingFlag);
     glcWorld.render(0, glc::TransparentRenderFlag);
 
-    glPopAttrib();
-    glPopAttrib();
     glPopAttrib();
 }
 
@@ -169,7 +172,11 @@ void Object3D::DrawPlaceHolder()
 //   Draw a placeholder object
 // ----------------------------------------------------------------------------
 {
+    tao->refreshOn(QEvent::Timer);
+    if (loadTime.elapsed() < 2000)
+        return;
     RasterText::printf("%d%%", complete);
+    // Request refresh on next time interval
 }
 
 
@@ -178,6 +185,20 @@ void Object3D::DrawErrorPlaceHolder()
 //   Draw a placeholder object
 // ----------------------------------------------------------------------------
 {
+}
+
+
+Box3 Object3D::Bounds()
+// ----------------------------------------------------------------------------
+//   Return object's bounding box. IsEmpty() is true when bounds are unknown.
+// ----------------------------------------------------------------------------
+{
+    if (status != LoadSuccess)
+        return Box3();
+
+    GLC_BoundingBox b = glcWorld.boundingBox();
+    GLC_Point3d     l = b.lowerCorner();
+    return Box3(l.x(), l.y(), l.z(), b.xLength(), b.yLength(), b.zLength());
 }
 
 

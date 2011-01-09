@@ -31,6 +31,7 @@
 #include <QDataStream>
 #include <QUuid>
 #include <QDateTime>
+#include <QMutex>
 
 #include "../glc_config.h"
 #include "glc_3drep.h"
@@ -65,8 +66,8 @@ public:
 	inline QString absoluteFileName() const
 	{return m_FileInfo.fileName();}
 
-	//! Return true if the binary rep is up to date
-	bool repIsUpToDate(const QDateTime&);
+	//! Return true if the binary rep is usable
+	bool isUsable(const QDateTime&);
 
 	//! Load the binary rep
 	GLC_3DRep loadRep();
@@ -147,8 +148,8 @@ private:
 	//! The compression level
 	int m_CompressionLevel;
 
-	//! Flag to know if the version is compatible
-	bool m_VersionIsCompatible;
+	//! Compression Mutex
+	static QMutex m_CompressionMutex;
 
 };
 

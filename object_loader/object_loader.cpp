@@ -28,6 +28,7 @@
 #include "runtime.h"
 #include "base.h"
 #include "object3d.h"
+#include "object3d_drawing.h"
 #include "tao/module_api.h"
 #include <GLC_Exception>
 
@@ -36,27 +37,52 @@ using namespace XL;
 
 XL_DEFINE_TRACES
 
-static const Tao::ModuleApi *tao = NULL;
-
 Tree_p object(Tree_p self,
-              Real_p /*x*/, Real_p /*y*/, Real_p /*z*/,
-              Real_p /*w*/, Real_p /*h*/, Real_p /*d*/,
+              Real_p x, Real_p y, Real_p z,
+              Real_p w, Real_p h, Real_p d,
               Text_p name)
 // ----------------------------------------------------------------------------
-//   Primitive to load a 3D object
+//   Primitive to load a 3D object and show it centered at (x, y, z)
 // ----------------------------------------------------------------------------
 {
-    if (!tao)
+    if (!Object3D::tao)
         return XL::xl_false;
 
-    // Try to load the 3D object in memory and graphic card
     try
     {
         Object3D *obj = Object3D::Object(name);
         if (!obj)
             return XL::xl_false;
 
-        tao->scheduleRender(Object3D::render_callback, obj);
+        Object3DDrawing *drawing = new Object3DDrawing(obj, x, y, z, w, h, d);
+        Object3D::tao->addToLayout(Object3DDrawing::render_callback, drawing,
+                                   Object3DDrawing::delete_callback);
+        Object3D::tao->addControlBox(x, y, z, w, h, d);
+    }
+    catch (GLC_Exception e)
+    {
+        return XL::Ooops(e.what(), self);
+    }
+
+    return XL::xl_true;
+}
+
+
+Tree_p object(Tree_p self, Text_p name)
+// ----------------------------------------------------------------------------
+//   Load a 3D object and show it as-is (not coordinate manipulation)
+// ----------------------------------------------------------------------------
+{
+    if (!Object3D::tao)
+        return XL::xl_false;
+
+    try
+    {
+        Object3D *obj = Object3D::Object(name);
+        if (!obj)
+            return XL::xl_false;
+
+        Object3D::tao->scheduleRender(Object3D::render_callback, obj);
     }
     catch (GLC_Exception e)
     {
@@ -69,18 +95,18 @@ Tree_p object(Tree_p self,
 
 int module_init(const Tao::ModuleApi *api, const Tao::ModuleInfo *)
 // ----------------------------------------------------------------------------
-//   Initialize the Tao module: instantiate all CanIViz modules
+//   Initialize the Tao module
 // ----------------------------------------------------------------------------
 {
     XL_INIT_TRACES();
-    tao = api;
+    Object3D::tao = api;
     return 0;
 }
 
 
 int module_exit()
 // ----------------------------------------------------------------------------
-//   Uninitialize the Tao module: free all CanIViz modules
+//   Uninitialize the Tao module
 // ----------------------------------------------------------------------------
 {
     return 0;

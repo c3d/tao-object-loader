@@ -27,6 +27,12 @@
 #include "../glc_fileformatexception.h"
 #include "../maths/glc_geomtools.h"
 #include "../glc_factory.h"
+#include "glc_xmlutil.h"
+
+static QString prefixNodeId= "GLC_LIB_COLLADA_ID_";
+static int currentNodeId= 0;
+
+using namespace glcXmlUtil;
 
 // Default constructor
 GLC_ColladaToWorld::GLC_ColladaToWorld(const QGLContext* pContext)
@@ -43,6 +49,7 @@ GLC_ColladaToWorld::GLC_ColladaToWorld(const QGLContext* pContext)
 , m_pCurrentMaterial(NULL)
 , m_TextureToMaterialHash()
 , m_BulkDataHash()
+, m_DataAccessorHash()
 , m_VerticesSourceHash()
 , m_pMeshInfo(NULL)
 , m_GeometryHash()
@@ -57,7 +64,7 @@ GLC_ColladaToWorld::GLC_ColladaToWorld(const QGLContext* pContext)
 , m_ListOfAttachedFileName()
 , m_TransparentIsRgbZero(false)
 {
-
+	currentNodeId= 0;
 }
 
 // Destructor
@@ -100,7 +107,7 @@ GLC_World* GLC_ColladaToWorld::CreateWorldFromCollada(QFile &file)
 
 	// Go to the asset Element to get the Up vector
 	goToElement("asset");
-	while (endElementNotReached("asset"))
+	while (endElementNotReached(m_pStreamReader, "asset"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -116,7 +123,7 @@ GLC_World* GLC_ColladaToWorld::CreateWorldFromCollada(QFile &file)
 		m_pStreamReader->readNext();
 	}
 
-	while (endElementNotReached("COLLADA"))
+	while (endElementNotReached(m_pStreamReader, "COLLADA"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -153,7 +160,7 @@ GLC_World* GLC_ColladaToWorld::CreateWorldFromCollada(QFile &file)
 // Go to Element
 void GLC_ColladaToWorld::goToElement(const QString& elementName)
 {
-	while(startElementNotReached(elementName))
+	while(startElementNotReached(m_pStreamReader, elementName))
 	{
 		m_pStreamReader->readNext();
 	}
@@ -163,7 +170,7 @@ void GLC_ColladaToWorld::goToElement(const QString& elementName)
 // Go to the end Element of a xml
 void GLC_ColladaToWorld::goToEndElement(const QString& elementName)
 {
-	while(endElementNotReached(elementName))
+	while(endElementNotReached(m_pStreamReader, elementName))
 	{
 		m_pStreamReader->readNext();
 	}
@@ -174,7 +181,7 @@ void GLC_ColladaToWorld::goToEndElement(const QString& elementName)
 QString GLC_ColladaToWorld::getContent(const QString& element)
 {
 	QString Content;
-	while(endElementNotReached(element))
+	while(endElementNotReached(m_pStreamReader, element))
 	{
 		m_pStreamReader->readNext();
 		if (m_pStreamReader->isCharacters() && !m_pStreamReader->text().isEmpty())
@@ -193,7 +200,6 @@ QString GLC_ColladaToWorld::readAttribute(const QString& name, bool required)
 	if (required && !m_pStreamReader->attributes().hasAttribute(name))
 	{
 		QString message(QString("required attribute ") + name + QString(" Not found"));
-		qDebug() << message;
 		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 		clear();
 		throw(fileFormatException);
@@ -210,7 +216,6 @@ void GLC_ColladaToWorld::checkForXmlError(const QString& info)
 {
 	if (m_pStreamReader->atEnd() || m_pStreamReader->hasError())
 	{
-		qDebug() << info << " " << m_FileName;
 		GLC_FileFormatException fileFormatException(info, m_FileName, GLC_FileFormatException::WrongFileFormat);
 		clear();
 		throw(fileFormatException);
@@ -219,7 +224,6 @@ void GLC_ColladaToWorld::checkForXmlError(const QString& info)
 // Throw an exception with the specified text
 void GLC_ColladaToWorld::throwException(const QString& message)
 {
-	qDebug() << message;
 	GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::WrongFileFormat);
 	clear();
 	throw(fileFormatException);
@@ -256,6 +260,7 @@ void GLC_ColladaToWorld::clear()
 	m_TextureToMaterialHash.clear();
 
 	m_BulkDataHash.clear();
+	m_DataAccessorHash.clear();
 
 	m_VerticesSourceHash.clear();
 
@@ -306,7 +311,7 @@ void GLC_ColladaToWorld::clear()
 // Load library_images element
 void GLC_ColladaToWorld::loadLibraryImage()
 {
-	while (endElementNotReached("library_images"))
+	while (endElementNotReached(m_pStreamReader, "library_images"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -328,7 +333,7 @@ void GLC_ColladaToWorld::loadImage()
 	m_CurrentId= readAttribute("id", true);
 	QString fileName;
 	// Trying to find external image fileName
-	while (endElementNotReached("image"))
+	while (endElementNotReached(m_pStreamReader, "image"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -353,7 +358,7 @@ void GLC_ColladaToWorld::loadImage()
 // Load library_materials element
 void GLC_ColladaToWorld::loadLibraryMaterials()
 {
-	while (endElementNotReached("library_materials"))
+	while (endElementNotReached(m_pStreamReader, "library_materials"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -381,7 +386,7 @@ void GLC_ColladaToWorld::loadMaterial()
 	//qDebug() << "instance effect URL : " << url;
 
 	// Read instance effect parameters
-	while (endElementNotReached("instance_effect"))
+	while (endElementNotReached(m_pStreamReader, "instance_effect"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -408,7 +413,7 @@ void GLC_ColladaToWorld::loadMaterial()
 // Load library_effects element
 void GLC_ColladaToWorld::loadLibraryEffects()
 {
-	while (endElementNotReached("library_effects"))
+	while (endElementNotReached(m_pStreamReader, "library_effects"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -432,7 +437,7 @@ void GLC_ColladaToWorld::loadEffect()
 	m_pCurrentMaterial= new GLC_Material();
 	m_pCurrentMaterial->setName(id);
 
-	while (endElementNotReached("effect"))
+	while (endElementNotReached(m_pStreamReader, "effect"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -453,7 +458,7 @@ void GLC_ColladaToWorld::loadEffect()
 void GLC_ColladaToWorld::loadProfileCommon()
 {
 	//qDebug() << "GLC_ColladaToWorld::loadProfileCommon";
-	while (endElementNotReached("profile_COMMON"))
+	while (endElementNotReached(m_pStreamReader, "profile_COMMON"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -473,7 +478,7 @@ void GLC_ColladaToWorld::loadNewParam()
 	//qDebug() << "GLC_ColladaToWorld::loadNewParam";
 	// load param sid
 	const QString sid= m_CurrentId + "::" + readAttribute("sid", true);
-	while (endElementNotReached("newparam"))
+	while (endElementNotReached(m_pStreamReader, "newparam"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -490,7 +495,7 @@ void GLC_ColladaToWorld::loadNewParam()
 void GLC_ColladaToWorld::loadSurface(const QString& sid)
 {
 	//qDebug() << "GLC_ColladaToWorld::loadSurface sid=" << sid ;
-	while (endElementNotReached("surface"))
+	while (endElementNotReached(m_pStreamReader, "surface"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -510,7 +515,7 @@ void GLC_ColladaToWorld::loadSurface(const QString& sid)
 void GLC_ColladaToWorld::loadSampler2D(const QString& sid)
 {
 	//qDebug() << "GLC_ColladaToWorld::loadSampler2D sid= " << sid;
-	while (endElementNotReached("sampler2D"))
+	while (endElementNotReached(m_pStreamReader, "sampler2D"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -530,7 +535,7 @@ void GLC_ColladaToWorld::loadSampler2D(const QString& sid)
 void GLC_ColladaToWorld::loadTechnique()
 {
 	//qDebug() << "GLC_ColladaToWorld::loadTechnique";
-	while (endElementNotReached("technique"))
+	while (endElementNotReached(m_pStreamReader, "technique"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -548,7 +553,7 @@ void GLC_ColladaToWorld::loadTechnique()
 void GLC_ColladaToWorld::loadMaterialTechnique(const QString& elementName)
 {
 	//qDebug() << "GLC_ColladaToWorld::loadMaterialTechnique";
-	while (endElementNotReached(elementName))
+	while (endElementNotReached(m_pStreamReader, elementName))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -573,7 +578,7 @@ void GLC_ColladaToWorld::loadCommonColorOrTexture(const QString& name)
 	//qDebug() << "GLC_ColladaToWorld::loadCommonColorOrTexture " << name;
 	Q_ASSERT(NULL != m_pCurrentMaterial);
 
-	while (endElementNotReached(name))
+	while (endElementNotReached(m_pStreamReader, name))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -610,7 +615,7 @@ void GLC_ColladaToWorld::loadTransparency(const QString& name)
 {
 	//qDebug() << "GLC_ColladaToWorld::loadTransparency";
 	Q_ASSERT(NULL != m_pCurrentMaterial);
-	while (endElementNotReached(name))
+	while (endElementNotReached(m_pStreamReader, name))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -645,7 +650,7 @@ void GLC_ColladaToWorld::loadShininess(const QString& name)
 {
 	//qDebug() << "GLC_ColladaToWorld::loadShininess";
 	Q_ASSERT(NULL != m_pCurrentMaterial);
-	while (endElementNotReached(name))
+	while (endElementNotReached(m_pStreamReader, name))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -655,7 +660,12 @@ void GLC_ColladaToWorld::loadShininess(const QString& name)
 				bool stringToFloatOk= false;
 				const QString shininessString= getContent("float");
 				const float shininess= shininessString.toFloat(&stringToFloatOk);
-				if (!stringToFloatOk) qDebug() << QString("Error while trying to convert :" + shininessString + " to float");
+				if (!stringToFloatOk)
+				{
+					QStringList stringList(m_FileName);
+					stringList.append("Error while trying to convert :" + shininessString + " to float");
+					GLC_ErrorLog::addError(stringList);
+				}
 				else m_pCurrentMaterial->setShininess(shininess);
 			}
 		}
@@ -710,7 +720,7 @@ QColor GLC_ColladaToWorld::readXmlColor()
 // Load library_geometries element
 void GLC_ColladaToWorld::loadLibraryGeometries()
 {
-	while (endElementNotReached("library_geometries"))
+	while (endElementNotReached(m_pStreamReader, "library_geometries"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -744,7 +754,7 @@ void GLC_ColladaToWorld::loadGeometry()
 		qDebug() << "Geometry without id found !!";
 	}
 
-	while (endElementNotReached("geometry"))
+	while (endElementNotReached(m_pStreamReader, "geometry"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -767,7 +777,7 @@ void GLC_ColladaToWorld::loadGeometry()
 // Load a mesh
 void GLC_ColladaToWorld::loadMesh()
 {
-	while (endElementNotReached("mesh"))
+	while (endElementNotReached(m_pStreamReader, "mesh"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -795,7 +805,7 @@ void GLC_ColladaToWorld::loadVertexBulkData()
 	//qDebug() << "id=" << m_CurrentId;
 	QList<float> vertices;
 
-	while (endElementNotReached("source"))
+	while (endElementNotReached(m_pStreamReader, "source"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -813,10 +823,7 @@ void GLC_ColladaToWorld::loadVertexBulkData()
 					vertices.append(list.at(i).toFloat());
 				}
 			}
-			else if (currentElementName == "technique_common")
-			{
-
-			}
+			else if (currentElementName == "technique_common") loadTechniqueCommon();
 		}
 
 		m_pStreamReader->readNext();
@@ -825,6 +832,54 @@ void GLC_ColladaToWorld::loadVertexBulkData()
 	m_BulkDataHash.insert(m_CurrentId, vertices);
 
 	updateProgressBar();
+}
+
+void GLC_ColladaToWorld::loadTechniqueCommon()
+{
+	//qDebug() << "GLC_ColladaToWorld::loadTechniqueCommon()";
+
+	while (endElementNotReached(m_pStreamReader, "technique_common"))
+	{
+		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
+		{
+			const QStringRef currentElementName= m_pStreamReader->name();
+			if ((currentElementName == "accessor")) loadAccessor();
+		}
+
+		m_pStreamReader->readNext();
+	}
+	checkForXmlError("Error occur while loading element : technique_common");
+
+}
+
+void GLC_ColladaToWorld::loadAccessor()
+{
+	//qDebug() << "GLC_ColladaToWorld::loadAccessor()";
+	Accessor accessor;
+	const QString count= readAttribute("count", true);
+	const QString offset= readAttribute("offset", false);
+	const QString stride= readAttribute("stride", false);
+	bool conversionOk;
+	accessor.m_Count= count.toUInt(&conversionOk);
+	if (conversionOk)
+	{
+		if (!offset.isEmpty())
+		{
+			accessor.m_Offset= offset.toUInt(&conversionOk);
+		}
+		if (!stride.isEmpty())
+		{
+			accessor.m_Stride= stride.toUInt(&conversionOk);
+		}
+	}
+
+	while (endElementNotReached(m_pStreamReader, "accessor"))
+	{
+		m_pStreamReader->readNext();
+	}
+	checkForXmlError("Error occur while loading element : technique_common");
+
+	m_DataAccessorHash.insert(m_CurrentId, accessor);
 }
 
 // Load attributes and identity of mesh vertices
@@ -859,7 +914,7 @@ void GLC_ColladaToWorld::loadPolylist()
 	// Polygon index list
 	QList<int> polyIndexList;
 
-	while (endElementNotReached("polylist"))
+	while (endElementNotReached(m_pStreamReader, "polylist"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -937,7 +992,7 @@ void GLC_ColladaToWorld::loadPolygons()
 	int inputCount= 0;
 	// Polygon index list
 	QList<int> polyIndexList;
-	while (endElementNotReached("polygons"))
+	while (endElementNotReached(m_pStreamReader, "polygons"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -1000,7 +1055,7 @@ void GLC_ColladaToWorld::addPolylistToCurrentMesh(const QList<InputData>& inputD
 
 	// Flag to know if the polylist has normal
 	bool hasNormals= false;
-
+	bool hasTexture= false;
 	// Check the existance of data source
 	for (int dataIndex= 0; dataIndex < inputDataCount; ++dataIndex)
 	{
@@ -1010,6 +1065,7 @@ void GLC_ColladaToWorld::addPolylistToCurrentMesh(const QList<InputData>& inputD
 			throwException(" Source : " + source + " Not found");
 		}
 		if (inputDataList.at(dataIndex).m_Semantic == NORMAL) hasNormals= true;
+		if (inputDataList.at(dataIndex).m_Semantic == TEXCOORD) hasTexture= true;
 	}
 
 	int maxOffset= 0;
@@ -1055,7 +1111,11 @@ void GLC_ColladaToWorld::addPolylistToCurrentMesh(const QList<InputData>& inputD
 				// QHash iterator on the right QList<float>
 				BulkDataHash::const_iterator iBulkHash= m_BulkDataHash.find(currentInputData.m_Source);
 				int stride;
-				if (currentInputData.m_Semantic != TEXCOORD) stride= 3; else stride= 2;
+				if (m_DataAccessorHash.contains(currentInputData.m_Source))
+				{
+					stride= m_DataAccessorHash.value(currentInputData.m_Source).m_Stride;
+				}
+				else if (currentInputData.m_Semantic != TEXCOORD) stride= 3; else stride= 2;
 				// Firts value
 				m_pMeshInfo->m_Datas[currentInputData.m_Semantic].append(iBulkHash.value().at(polyIndexList.at(i + currentInputData.m_Offset) * stride));
 				// Second value
@@ -1066,6 +1126,12 @@ void GLC_ColladaToWorld::addPolylistToCurrentMesh(const QList<InputData>& inputD
 					m_pMeshInfo->m_Datas[currentInputData.m_Semantic].append(iBulkHash.value().at(polyIndexList.at(i + currentInputData.m_Offset) * stride + 2));
 				}
 			}
+			// Avoid problem wich occur with mesh containing materials with and without texture
+			if (!hasTexture)
+			{
+				m_pMeshInfo->m_Datas[TEXCOORD].append(0.0);
+			}
+
 		}
 	}
 
@@ -1095,8 +1161,9 @@ void GLC_ColladaToWorld::addPolylistToCurrentMesh(const QList<InputData>& inputD
 		}
 		else
 		{
-			qDebug() << QString("Unable to triangulate a polygon of " + m_pMeshInfo->m_pMesh->name());
-			//throwException("Unable to triangulate a polygon of " + m_pMeshInfo->m_pMesh->name());
+			QStringList stringList(m_FileName);
+			stringList.append("Unable to triangulate a polygon of " + m_pMeshInfo->m_pMesh->name());
+			GLC_ErrorLog::addError(stringList);
 		}
 		onePolygonIndex.clear();
 	}
@@ -1181,7 +1248,7 @@ void  GLC_ColladaToWorld::loadTriangles()
 	// triangle index list
 	QList<int> trianglesIndexList;
 
-	while (endElementNotReached("triangles"))
+	while (endElementNotReached(m_pStreamReader, "triangles"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -1243,6 +1310,7 @@ void GLC_ColladaToWorld::addTrianglesToCurrentMesh(const QList<InputData>& input
 
 	// Flag to know if the polylist has normal
 	bool hasNormals= false;
+	bool hasTexture= false;
 
 	// Check the existance of data source
 	for (int dataIndex= 0; dataIndex < inputDataCount; ++dataIndex)
@@ -1253,6 +1321,7 @@ void GLC_ColladaToWorld::addTrianglesToCurrentMesh(const QList<InputData>& input
 			throwException(" Source : " + source + " Not found");
 		}
 		if (inputDataList.at(dataIndex).m_Semantic == NORMAL) hasNormals= true;
+		if (inputDataList.at(dataIndex).m_Semantic == TEXCOORD) hasTexture= true;
 	}
 
 	int maxOffset= 0;
@@ -1298,7 +1367,11 @@ void GLC_ColladaToWorld::addTrianglesToCurrentMesh(const QList<InputData>& input
 				// QHash iterator on the right QList<float>
 				BulkDataHash::const_iterator iBulkHash= m_BulkDataHash.find(currentInputData.m_Source);
 				int stride;
-				if (currentInputData.m_Semantic != TEXCOORD) stride= 3; else stride= 2;
+				if (m_DataAccessorHash.contains(currentInputData.m_Source))
+				{
+					stride= m_DataAccessorHash.value(currentInputData.m_Source).m_Stride;
+				}
+				else if (currentInputData.m_Semantic != TEXCOORD) stride= 3; else stride= 2;
 				// Firts value
 				m_pMeshInfo->m_Datas[currentInputData.m_Semantic].append(iBulkHash.value().at(trianglesIndexList.at(i + currentInputData.m_Offset) * stride));
 				// Second value
@@ -1307,6 +1380,11 @@ void GLC_ColladaToWorld::addTrianglesToCurrentMesh(const QList<InputData>& input
 				if (currentInputData.m_Semantic != TEXCOORD)
 				{
 					m_pMeshInfo->m_Datas[currentInputData.m_Semantic].append(iBulkHash.value().at(trianglesIndexList.at(i + currentInputData.m_Offset) * stride + 2));
+				}
+				// Avoid problem wich occur with mesh containing materials with and without texture
+				if (!hasTexture)
+				{
+					m_pMeshInfo->m_Datas[TEXCOORD].append(0.0);
 				}
 			}
 		}
@@ -1337,7 +1415,7 @@ void GLC_ColladaToWorld::loadLibraryNodes()
 {
 	//qDebug() << "GLC_ColladaToWorld::loadLibraryNodes";
 
-	while (endElementNotReached("library_nodes"))
+	while (endElementNotReached(m_pStreamReader, "library_nodes"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -1364,7 +1442,7 @@ void GLC_ColladaToWorld::loadLibraryContollers()
 {
 	//qDebug() << "GLC_ColladaToWorld::loadLibraryContollers";
 
-	while (endElementNotReached("library_controllers"))
+	while (endElementNotReached(m_pStreamReader, "library_controllers"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -1386,7 +1464,7 @@ void GLC_ColladaToWorld::loadVisualScenes()
 	// The element library visual scene must contains a visual scene element
 	goToElement("visual_scene");
 
-	while (endElementNotReached("visual_scene"))
+	while (endElementNotReached(m_pStreamReader, "visual_scene"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -1416,7 +1494,7 @@ void GLC_ColladaToWorld::loadInstanceGeometry(ColladaNode* pNode)
 	const QString url= readAttribute("url", true).remove('#');
 	pNode->m_InstanceGeometryIDs.append(url);
 
-	while (endElementNotReached("instance_geometry"))
+	while (endElementNotReached(m_pStreamReader, "instance_geometry"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -1448,7 +1526,7 @@ void GLC_ColladaToWorld::loadInstanceController(ColladaNode* pNode)
 	const QString url= readAttribute("url", true).remove('#');
 	pNode->m_InstanceOffNodeIds.append(url);
 
-	while (endElementNotReached("instance_controller"))
+	while (endElementNotReached(m_pStreamReader, "instance_controller"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -1470,7 +1548,7 @@ void GLC_ColladaToWorld::loadController()
 {
 
 	m_CurrentId= readAttribute("id", true);
-	while (endElementNotReached("controller"))
+	while (endElementNotReached(m_pStreamReader, "controller"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -1493,11 +1571,19 @@ void GLC_ColladaToWorld::loadController()
 GLC_ColladaToWorld::ColladaNode* GLC_ColladaToWorld::loadNode(ColladaNode* pParent)
 {
 	//qDebug() << "GLC_ColladaToWorld::loadNode";
+
+
 	QString id= readAttribute("id", false);
 	if (id.isEmpty())
 	{
-		id= readAttribute("name", true);
+		id= readAttribute("name", false);
 	}
+	if (id.isEmpty())
+	{
+		id= prefixNodeId + QString::number(++currentNodeId);
+	}
+
+	qint64 currentOffset= m_pStreamReader->characterOffset();
 	//qDebug() << "Load Node " << id;
 	m_CurrentId= id;
 	// The node
@@ -1505,7 +1591,7 @@ GLC_ColladaToWorld::ColladaNode* GLC_ColladaToWorld::loadNode(ColladaNode* pPare
 	// To avoid infinite call
 	//m_pStreamReader->readNext();
 
-	while (endElementNotReached("node"))
+	while (endElementNotReached(m_pStreamReader, "node"))
 	{
 		if (QXmlStreamReader::StartElement == m_pStreamReader->tokenType())
 		{
@@ -1520,14 +1606,14 @@ GLC_ColladaToWorld::ColladaNode* GLC_ColladaToWorld::loadNode(ColladaNode* pPare
 			else if ((currentElementName == "instance_controller")) loadInstanceController(pNode);
 			else if ((currentElementName == "node"))
 			{
-				QString newId= readAttribute("id", false);
-				if (newId.isEmpty())
+				if (currentOffset != m_pStreamReader->characterOffset())
 				{
-					//qDebug() << "Child ReadAttribute name";
-					newId= readAttribute("name", true);
-				}
-				if (newId != id)
-				{
+					QString newId= readAttribute("id", false);
+					if (newId.isEmpty())
+					{
+						//qDebug() << "Child ReadAttribute name";
+						newId= readAttribute("name", false);
+					}
 					//qDebug() << "New ID = " << newId;
 					GLC_ColladaToWorld::ColladaNode* pChildNode= loadNode(pNode);
 					if (NULL != pNode)
@@ -1603,6 +1689,7 @@ void GLC_ColladaToWorld::scaleNode(ColladaNode* pNode)
 	// Built the translation matrix
 	GLC_Matrix4x4 scaleMatrix;
 	scaleMatrix.setMatScaling(scale[0], scale[1], scale[2]);
+	scaleMatrix.optimise();
 	// Update the node matrix
 	pNode->m_Matrix= pNode->m_Matrix * scaleMatrix;
 }
@@ -1663,6 +1750,8 @@ void GLC_ColladaToWorld::composeMatrixNode(ColladaNode* pNode)
 	}
 	// Built the matrix
 	GLC_Matrix4x4 currentMatrix(matrix);
+	currentMatrix.optimise();
+
 	// Update the node matrix
 	pNode->m_Matrix= pNode->m_Matrix * currentMatrix;
 }
@@ -1671,7 +1760,7 @@ void GLC_ColladaToWorld::composeMatrixNode(ColladaNode* pNode)
 void GLC_ColladaToWorld::loadScene()
 {
 	//qDebug() << "GLC_ColladaToWorld::loadScene";
-	while (endElementNotReached("scene"))
+	while (endElementNotReached(m_pStreamReader, "scene"))
 	{
 		// Nothing to do
 		m_pStreamReader->readNext();
@@ -1720,18 +1809,24 @@ void GLC_ColladaToWorld::linkTexturesToMaterials()
 				}
 				else
 				{
-					qDebug() << imageFileName << " Not found";
+					QStringList stringList(m_FileName);
+					stringList.append(imageFileName + " Not found");
+					GLC_ErrorLog::addError(stringList);
 				}
 			}
 			else
 			{
-				qDebug() << imageFileName << " Not found";
+				QStringList stringList(m_FileName);
+				stringList.append(imageFileName + " Not found");
+				GLC_ErrorLog::addError(stringList);
 			}
 
 		}
 		else
 		{
-			qDebug() << "Texture : " << textureId << " Not found";
+			QStringList stringList(m_FileName);
+			stringList.append("Texture : " + textureId + " Not found");
+			GLC_ErrorLog::addError(stringList);
 		}
 		++iMat;
 	}
@@ -1787,7 +1882,12 @@ void GLC_ColladaToWorld::createMesh()
 				pCurrentMaterial= m_MaterialEffectHash.value(materialId);
 				Q_ASSERT(NULL != pCurrentMaterial);
 			}
-			else qDebug() << "Material " << materialId << " Not found";
+			else
+			{
+				QStringList stringList(m_FileName);
+				stringList.append("Material " + materialId + " Not found");
+				GLC_ErrorLog::addError(stringList);
+			}
 
 			// Create the list of triangles to add to the mesh
 			const int offset= iMatInfo.value().m_Offset;
@@ -1875,7 +1975,9 @@ GLC_StructOccurence* GLC_ColladaToWorld::createOccurenceFromNode(ColladaNode* pN
 				GLC_StructReference* pStructRef= NULL;
 				if (pRep->isEmpty())
 				{
-					qDebug() << "Empty rep : " << pRep->name();
+					QStringList stringList(m_FileName);
+					stringList.append("Empty rep : " + pRep->name());
+					GLC_ErrorLog::addError(stringList);
 					delete pRep;
 					pRep= NULL;
 				}
@@ -1893,7 +1995,12 @@ GLC_StructOccurence* GLC_ColladaToWorld::createOccurenceFromNode(ColladaNode* pN
 				}
 
 			}
-			else qDebug() << "Geometry Id Not found";
+			else
+			{
+				QStringList stringList(m_FileName);
+				stringList.append("Geometry Id Not found");
+				GLC_ErrorLog::addError(stringList);
+			}
 		}
 	}
 	if (!pNode->m_ChildNodes.isEmpty())
@@ -1957,7 +2064,6 @@ GLC_StructOccurence* GLC_ColladaToWorld::createOccurenceFromNode(ColladaNode* pN
 	}
 	if (NULL == pOccurence)
 	{
-		qDebug() << "Empty Node";
 		if (m_StructInstanceHash.contains(pNode->m_Id))
 		{
 			pInstance= new GLC_StructInstance(m_StructInstanceHash.value(pNode->m_Id));

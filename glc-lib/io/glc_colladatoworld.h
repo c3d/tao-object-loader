@@ -88,6 +88,20 @@ private:
 		int m_Offset;
 		int m_size;
 	};
+
+	// Accessor a source data (bulk)
+	struct Accessor
+	{
+		Accessor()
+		: m_Count(0)
+		, m_Offset(0)
+		, m_Stride(1)
+		{}
+		unsigned int m_Count;
+		unsigned int m_Offset;
+		unsigned int m_Stride;
+	};
+
 	// The loading mesh info
 	struct MeshInfo
 	{
@@ -142,6 +156,7 @@ private:
 
 	typedef QHash<const QString, GLC_Material*> MaterialHash;
 	typedef QHash<const QString, QList<float> > BulkDataHash;
+	typedef QHash<const QString, Accessor> DataAccessorHash;
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
 //@{
@@ -197,14 +212,6 @@ private:
 
 	//! Throw an exception with the specified text
 	void throwException(const QString&);
-
-	//! Return true if the end of specified element is not reached
-	inline bool endElementNotReached(const QString& element)
-	{return !m_pStreamReader->atEnd() && !(m_pStreamReader->isEndElement() && (m_pStreamReader->name() == element));}
-
-	//! Return true if the start of specified element is not reached
-	inline bool startElementNotReached(const QString& element)
-	{return !m_pStreamReader->atEnd() && !(m_pStreamReader->isStartElement() && (m_pStreamReader->name() == element));}
 
 	//! Clear memmory
 	void clear();
@@ -271,6 +278,12 @@ private:
 
 	//! Load Vertex bulk data
 	void loadVertexBulkData();
+
+	//! Load Technique Common
+	void loadTechniqueCommon();
+
+	//! Load Accessor
+	void loadAccessor();
 
 	//! Load attributes and identity of mesh vertices
 	void loadVertices();
@@ -393,6 +406,9 @@ private:
 	//! Bulk data hash table
 	BulkDataHash m_BulkDataHash;
 
+	//! Data accessor hash
+	DataAccessorHash m_DataAccessorHash;
+
 	//! Map vertices id to source data id
 	QHash<QString, QString> m_VerticesSourceHash;
 
@@ -431,7 +447,6 @@ private:
 
 	//! The transparent mode is RGB_ZERO
 	bool m_TransparentIsRgbZero;
-
 
 };
 

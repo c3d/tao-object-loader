@@ -132,7 +132,10 @@ public:
 public:
 	//! Add Geometry to the 3DRep
 	inline void addGeom(GLC_Geometry* pGeom)
-	{m_pGeomList->append(pGeom);}
+	{
+		m_pGeomList->append(pGeom);
+		*m_pIsLoaded= true;
+	}
 
 	//! Remove empty geometries and factorise materials
 	void clean();
@@ -153,13 +156,19 @@ public:
 	void replaceMaterial(GLC_uint, GLC_Material*);
 
 	//! Merge this 3Drep with another 3DRep
-	void merge(GLC_3DRep*);
+	void merge(const GLC_3DRep*);
+
+	//! Take the geometry of another 3DRep
+	void take(GLC_3DRep* pSource);
 
 	//! Copy VBO to the Client Side
 	void copyVboToClientSide();
 
 	//! Release client VBO
 	void releaseVboClientSide(bool update= false);
+
+	//! Transform 3DRep sub mesh vertice with the given matrix
+	void transformSubGeometries(const GLC_Matrix4x4& matrix);
 
 
 //@}

@@ -137,8 +137,8 @@ public:
 	{return m_pWorldHandle->numberOfOccurence();}
 
 	//! Return true if the world contians specified id
-	inline int contains(GLC_uint id) const
-	{return m_pWorldHandle->contains(id);}
+	inline int containsOccurence(GLC_uint id) const
+	{return m_pWorldHandle->containsOccurence(id);}
 
 	//! Return the list of instance
 	inline QList<GLC_StructInstance*> instances() const
@@ -152,10 +152,13 @@ public:
 	inline int numberOfBody() const
 	{return m_pWorldHandle->numberOfBody();}
 
+	//! Return the number of representation
+	inline int representationCount() const
+	{return m_pWorldHandle->representationCount();}
+
 	//! Return the world Up vector
 	inline GLC_Vector3d upVector() const
 	{return m_pWorldHandle->upVector();}
-
 
 //@}
 
