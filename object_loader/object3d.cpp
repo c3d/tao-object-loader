@@ -150,22 +150,19 @@ void Object3D::DrawObject()
 //   Draw the 3D object
 // ----------------------------------------------------------------------------
 {
-    glPushAttrib(GL_ENABLE_BIT);
+    glPushAttrib(GL_ENABLE_BIT | GL_LIGHTING_BIT | GL_TRANSFORM_BIT);
+
     glDisable(GL_POLYGON_OFFSET_FILL);
     glDisable(GL_POLYGON_OFFSET_LINE);
     glDisable(GL_POLYGON_OFFSET_POINT);
 
-    glPushAttrib(GL_LIGHTING_BIT);
     glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
 
-    glPushAttrib(GL_TRANSFORM_BIT);
     glEnable(GL_NORMALIZE);
 
     glcWorld.render(0, glc::ShadingFlag);
     glcWorld.render(0, glc::TransparentRenderFlag);
 
-    glPopAttrib();
-    glPopAttrib();
     glPopAttrib();
 }
 
