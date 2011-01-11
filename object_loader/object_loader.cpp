@@ -31,6 +31,8 @@
 #include "object3d_drawing.h"
 #include "tao/module_api.h"
 #include <GLC_Exception>
+#include <QImage>
+#include <QGLWidget>
 
 
 using namespace XL;
@@ -93,13 +95,34 @@ Tree_p object(Tree_p self, Text_p name)
 }
 
 
-int module_init(const Tao::ModuleApi *api, const Tao::ModuleInfo *)
+int module_init(const Tao::ModuleApi *api, const Tao::ModuleInfo *mod)
 // ----------------------------------------------------------------------------
 //   Initialize the Tao module
 // ----------------------------------------------------------------------------
 {
     XL_INIT_TRACES();
     Object3D::tao = api;
+
+    // Pre-load progress images
+    QString path = QString("%1/progress.png").arg(mod->path.c_str());
+    QImage progress(path);
+    if (!progress.isNull())
+    {
+        int w = progress.width()/NPROGRESS;
+        int h = progress.height();
+        int x = 0, y = 0;
+        for (int i = 0; i < NPROGRESS; i++)
+        {
+            QImage img = progress.copy(x, y, w, h);
+            Object3D::progress[i] = QGLWidget::convertToGLFormat(img);
+            x += w;
+        }
+    }
+    else
+    {
+        Object3D::debug() << QObject::tr("%1 not found\n").arg(path)
+                                                          .toStdString();
+    }
     return 0;
 }
 

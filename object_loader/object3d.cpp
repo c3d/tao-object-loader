@@ -32,6 +32,7 @@ using namespace Tao;
 
 
 const ModuleApi *Object3D::tao = NULL;
+QImage           Object3D::progress[NPROGRESS];
 
 
 void Object3D::render_callback(void *arg)
@@ -172,11 +173,22 @@ void Object3D::DrawPlaceHolder()
 //   Draw a placeholder object
 // ----------------------------------------------------------------------------
 {
+    // Request refresh on next time interval
     tao->refreshOn(QEvent::Timer);
     if (loadTime.elapsed() < 2000)
         return;
-    RasterText::printf("%d%%", complete);
-    // Request refresh on next time interval
+    if (progress[0].isNull())
+    {
+        RasterText::printf("%d%%", complete);
+    }
+    else
+    {
+        int idx = NPROGRESS * complete / 100;
+        QImage img = progress[idx];
+        glRasterPos3d(0, 0, 0);
+        glDrawPixels(img.width(), img.height(), GL_RGBA, GL_UNSIGNED_BYTE,
+                     img.bits());
+    }
 }
 
 

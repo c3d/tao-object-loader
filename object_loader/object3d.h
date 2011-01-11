@@ -27,6 +27,7 @@
 #include "tao/module_api.h"
 #include <QObject>
 #include <QTime>
+#include <QImage>
 #include <vector>
 #include <iostream>
 #include <GLC_World>
@@ -95,6 +96,9 @@ private:
 public:
     // Pointer to Tao functions
     static const Tao::ModuleApi *tao;
+    // Collection of images to show load progress
+#   define         NPROGRESS 21
+    static QImage  progress[NPROGRESS];
 
     Q_OBJECT
 };

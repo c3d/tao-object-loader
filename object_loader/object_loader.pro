@@ -45,4 +45,7 @@ unix {
 }
 QMAKE_CXXFLAGS -= -Werror  # REVISIT: Avoid errors from GL redefinitions
 
-INSTALLS    += thismod_icon
+progress_img.path  = $$MODINSTPATH
+progress_img.files = progress.png
+
+INSTALLS    += thismod_icon progress_img
