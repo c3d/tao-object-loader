@@ -15,8 +15,8 @@ object 0, 0, 0, "model.obj"
 // so that width is 100
 object 0, 0, 0, 100, "model.obj"
 
-// Load model.obj, show it centered at (0, 0, 0) and scale it to fit in a
-// box of size (100, 50, 50)
+// Load model.obj, show it centered at (0, 0, 0) and scale it proportionally
+// to fit in a box of size (100, 50, 50)
 object 0, 0, 0, 100, 50, 50, "model.obj"
 
 */

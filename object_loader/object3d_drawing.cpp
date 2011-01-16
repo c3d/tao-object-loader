@@ -61,26 +61,27 @@ void Object3DDrawing::Draw()
     }
     else
     {
-        // Update object dimensions if we didn't specify them
-        scale k = 1.0;
-        if (w <= 0)
-            w->value = bounds.Width();
-        else
-            k = w / bounds.Width();
-        if (h->value <= 0)
-            h->value = bounds.Height() * k;
-        if (d->value <= 0)
-            d->value = bounds.Depth() * k;
+        // Compute scaling factor if bbox dimensions are specified
+        scale sx = 1.0, sy = 1.0, sz = 1.0, s;
+        if (w > 0)
+            sx = w / bounds.Width();
+        if (h > 0)
+            sy = h / bounds.Height();
+        if (d > 0)
+            sz = d / bounds.Depth();
+        s = sx;
+        if (sy < s)
+            s = sy;
+        if (sz < s)
+            s = sz;
 
-        // Translate and scale object
+        // Compute translation to center object
         coord ox = x - bounds.Center().x;
         coord oy = y - bounds.Center().y;
         coord oz = z - bounds.Center().z;
-        scale sx = w / bounds.Width();
-        scale sy = h / bounds.Height();
-        scale sz = d / bounds.Depth();
 
-        glScalef(sx, sy, sz);
+        // Translate and scale object
+        glScalef(s, s, s);
         glTranslatef(ox, oy, oz);
     }
 
