@@ -76,13 +76,17 @@ void Object3DDrawing::Draw()
             s = sz;
 
         // Compute translation to center object
-        coord ox = x - bounds.Center().x;
-        coord oy = y - bounds.Center().y;
-        coord oz = z - bounds.Center().z;
+        coord ox = bounds.Center().x;
+        coord oy = bounds.Center().y;
+        coord oz = bounds.Center().z;
 
-        // Translate and scale object
+        GLdouble matrix[16];
+        glGetDoublev(GL_MODELVIEW_MATRIX, matrix);
+        glLoadIdentity();
+        glTranslated(ox, oy, oz);
+        glMultMatrixd(matrix);
+        glTranslated(x, y, z);
         glScalef(s, s, s);
-        glTranslatef(ox, oy, oz);
     }
 
     object->Draw();
