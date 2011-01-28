@@ -34,8 +34,8 @@ struct Object3DDrawing
 // ----------------------------------------------------------------------------
 {
     Object3DDrawing (Object3D *obj,
-                     XL::Real_p x, XL::Real_p y, XL::Real_p z,
-                     XL::Real_p w, XL::Real_p h, XL::Real_p d)
+                     Tao::coord x, Tao::coord y, Tao::coord z,
+                     Tao::scale w, Tao::scale h, Tao::scale d)
         : object(obj), x(x), y(y), z(z), w(w), h(h), d(d) {}
     ~Object3DDrawing() {}
 
@@ -48,8 +48,8 @@ struct Object3DDrawing
 
 public:
     Object3D *          object;
-    XL::Real_p          x, y, z;
-    XL::Real_p          w, h, d;
+    Tao::coord          x, y, z;
+    Tao::scale          w, h, d;
 };
 
 #endif // OBJECT3D_DRAWING_H
