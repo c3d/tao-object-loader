@@ -23,7 +23,6 @@
 
 #include "object3d.h"
 #include "load_thread.h"
-#include "raster_text.h"
 #include <QString>
 #include <QFileInfo>
 #include <GLC_Factory>
@@ -177,11 +176,7 @@ void Object3D::DrawPlaceHolder()
     tao->refreshOn(QEvent::Timer);
     if (loadTime.elapsed() < 2000)
         return;
-    if (progress[0].isNull())
-    {
-        RasterText::printf("%d%%", complete);
-    }
-    else
+    if (!progress[0].isNull())
     {
         int idx = NPROGRESS * complete / 100;
         QImage img = progress[idx];
