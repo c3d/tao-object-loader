@@ -1,5 +1,24 @@
 /*
    Module definition file for the ObjectLoader module
+
+   Usage:
+
+import ObjectLoader "0.2"
+
+// Load model.obj and display it as is
+object "model.obj"
+
+// Load model.obj, show it centered at (0, 0, 0)
+object 0, 0, 0, "model.obj"
+
+// Load model.obj, show it centered at (0, 0, 0) and scale it proportionally
+// so that width is 100
+object 0, 0, 0, 100, "model.obj"
+
+// Load model.obj, show it centered at (0, 0, 0) and scale it proportionally
+// to fit in a box of size (100, 50, 50)
+object 0, 0, 0, 100, 50, 50, "model.obj"
+
 */
 
 module_description
@@ -9,20 +28,8 @@ module_description
     import_name "ObjectLoader"
     version "0.2"
 
-object x:real, y:real, z:real, file:text ->
-    /** Loads and translates a 3D object.
-    module.ObjectLoader
-    @a file is a relative or absolute path to the model file.
-    The object is shown centered at (@a x, @a y, @a z).
-    No scaling occurs: the object dimensions are as defined in the model file.
-    **/
-    object x, y, z, 0.0, 0.0, 0.0, file
+object x:real, y:real, z:real, f:text ->
+    object x, y, z, 0.0, 0.0, 0.0, f
 
-object x:real, y:real, z:real, width:real, file:text ->
-    /** Loads, scales and translates a 3D object.
-    module.ObjectLoader
-    @a file is a relative or absolute path to the model file.
-    The object is shown centered at (@a x, @a y, @a z).
-    It is scaled proportionally so that its width is @a width.
-    **/
-    object x, y, z, w, 0.0, 0.0, file
+object x:real, y:real, z:real, w:real, f:text ->
+    object x, y, z, w, 0.0, 0.0, f

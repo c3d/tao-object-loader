@@ -26,28 +26,34 @@
 #include "object_loader.h"
 
 PREFIX(ObjectLoader_object_centered,  tree,  "object",
-       PARM(x, real, )
-       PARM(y, real, )
-       PARM(z, real, )
-       PARM(width, real, )
-       PARM(height, real, )
-       PARM(depth, real, )
-       PARM(file, text, ),
-       return object(self, x, y, z, width, height, depth, file),
-       GROUP(module.ObjectLoader)
-       SYNOPSIS("Loads, scales and translates a 3D object")
-       DESCRIPTION("Loads, scales and translates a 3D object. "
-                   "@a file is a relative or absolute path to the model file. "
-                   "The object is shown centered at (@a x, @a y, @a z). "
-                   "The size of the object is specified by "
-                   "@a width, @a height and @a depth: the model is scaled "
-                   "proportionally so that it fits in a box of the specified "
-                   "size."))
+       PARM(x, real, "x-coordinate of object center")
+       PARM(y, real, "y-coordinate of object center")
+       PARM(z, real, "z-coordinate of object center")
+       PARM(w, real, "object width. Set to 0 to use default object width")
+       PARM(h, real, "object height. "
+                     "If set to 0, use the default object height except "
+                     "if w is non-zero, in which case object"
+                     "is scaled proportionally to have requested width")
+       PARM(d, real, "object depth. "
+                     "If set to 0, use the default object height except "
+                     "if w is non-zero, in which case object"
+                     "is scaled proportionally to have requested width")
+       PARM(f, text, "filename"),
+       return object(self, x, y, z, w, h, d, f),
+       GROUP(3D)
+       SYNOPSIS("Load a 3D object from file")
+       DESCRIPTION("Load a 3D object from file and display it centered at "
+                   "(x, y, z). "
+                   "Supported formats include "
+                   "Collada V1.4, 3DXML ASCII V3 and V4, OBJ, 3DS, "
+                   "STL (ASCII and binary), OFF and COFF."))
 
 PREFIX(ObjectLoader_object,  tree,  "object",
-       PARM(file, text, ),
-       return object(self, file),
-       GROUP(module.ObjectLoader)
-       SYNOPSIS("Loads a 3D object from @a file")
-       DESCRIPTION("Loads a 3D object from @a file. No scaling or translation "
-                   "occurs. The model is drawn as defined in the file."))
+       PARM(f, text, "filename"),
+       return object(self, f),
+       GROUP(3D)
+       SYNOPSIS("Load a 3D object from file")
+       DESCRIPTION("Load a 3D object from file. "
+                   "Supported formats include "
+                   "Collada V1.4, 3DXML ASCII V3 and V4, OBJ, 3DS, "
+                   "STL (ASCII and binary), OFF and COFF."))
