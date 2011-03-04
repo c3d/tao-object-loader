@@ -20,7 +20,7 @@
  *
  * For instance, the following Tao document will load a 3D model from
  * file @c conestoga.3ds, and show it rotating around the z axis.
- @verbatim
+ @code
 import ObjectLoader "0.2"
 
 the_light x, y, z ->
@@ -39,7 +39,7 @@ rotating_obj f ->
 
 the_light 300, 300, 300
 rotating_obj "conestoga.3ds"
- @endverbatim
+ @endcode
  *
  * Here is a screen capture:
  * @image html conestoga.png "(3D model by Helmut Schaub &mdash; http://www.3dxtra.net, http://www.3d-xtra.bravepages.com)"
