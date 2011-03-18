@@ -2,6 +2,8 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
+ Version 2.0.0, packaged on July 2010.
+
  http://glc-lib.sourceforge.net
 
  GLC-lib is free software; you can redistribute it and/or modify
@@ -29,7 +31,7 @@
 #include "glc_wiredata.h"
 #include "../glc_boundingbox.h"
 
-#include "../glc_config.h"
+#include "glc_config.h"
 
 typedef QHash<GLC_uint, GLC_Material*> MaterialHash;
 typedef QHash<GLC_uint, GLC_uint> MaterialHashMap;
@@ -187,15 +189,15 @@ public:
 
 	//! Return the number of wire polylines
 	inline int wirePolylineCount() const
-	{return m_WireData.verticeGroupCount();}
+	{return m_WireData.polylineCount();}
 
 	//! Return the polyline offset from the given index
 	inline GLuint wirePolylineOffset(int index) const
-	{return m_WireData.verticeGroupOffset(index);}
+	{return m_WireData.polylineOffset(index);}
 
 	//! Return the polyline size from the given index
 	inline GLsizei wirePolylineSize(int index) const
-	{return m_WireData.verticeGroupSize(index);}
+	{return m_WireData.polylineSize(index);}
 
 //@}
 
@@ -242,9 +244,9 @@ public:
 	inline void setName(const QString name)
 	{m_Name= name;}
 
-	//! Add a vertice group to the geometry and returns its id
-	inline GLC_uint addVerticeGroup(const GLfloatVector& vector)
-	{return m_WireData.addVerticeGroup(vector);}
+	//! Add a Polyline to the geometry and returns its id
+	inline GLC_uint addPolyline(const GLfloatVector& vector)
+	{return m_WireData.addPolyline(vector);}
 
 	//! Set Line width
 	inline void setLineWidth(GLfloat lineWidth)

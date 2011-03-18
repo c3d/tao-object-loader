@@ -1,0 +1,28 @@
+/*
+   Module definition file for the ObjectLoader module
+*/
+
+module_description
+    id "4F6776FA-D116-4A88-A6F8-524D2B53AAD8"
+    name "3D object loader"
+    description "Import 3D objects into Tao. Supported formats include Collada V1.4, 3DXML ASCII V3 and V4, OBJ, 3DS, STL (ASCII and binary), OFF and COFF."
+    import_name "ObjectLoader"
+    version "0.2"
+
+object x:real, y:real, z:real, file:text ->
+    /** Loads and translates a 3D object.
+    module.ObjectLoader
+    @a file is a relative or absolute path to the model file.
+    The object is shown centered at (@a x, @a y, @a z).
+    No scaling occurs: the object dimensions are as defined in the model file.
+    **/
+    object x, y, z, 0.0, 0.0, 0.0, file
+
+object x:real, y:real, z:real, width:real, file:text ->
+    /** Loads, scales and translates a 3D object.
+    module.ObjectLoader
+    @a file is a relative or absolute path to the model file.
+    The object is shown centered at (@a x, @a y, @a z).
+    It is scaled proportionally so that its width is @a width.
+    **/
+    object x, y, z, w, 0.0, 0.0, file

@@ -2,6 +2,8 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
+ Version 2.0.0, packaged on July 2010.
+
  http://glc-lib.sourceforge.net
 
  GLC-lib is free software; you can redistribute it and/or modify
@@ -26,14 +28,11 @@
 
 #include <QColor>
 #include <QtOpenGL>
-#include <QHash>
-
 #include "../glc_ext.h"
 #include "glc_shader.h"
 
 #include "../glc_config.h"
 
-class QGLContext;
 class GLC_Material;
 
 //////////////////////////////////////////////////////////////////////
@@ -70,15 +69,15 @@ public:
 	//! Execute OpenGL Material
 	static void glExecute();
 	//! Init shader
-	static void initShader(const QGLContext* pContext);
+	static void initShader();
 	//! delete shader
-	static void deleteShader(const QGLContext* pContext);
+	static void deleteShader();
 	//! Set shader
-	static void setShaders(QFile& vertex, QFile& fragment, const QGLContext* pContext);
+	static void setShaders(QFile& vertex, QFile& fragment);
 	//! Use shader
-	static void useShader();
+	inline static void useShader() {m_pSelectionShader->use();}
 	//! Unused shader
-	static void unUseShader();
+	inline static void unUseShader() {m_pSelectionShader->unuse();}
 
 //@}
 
@@ -88,7 +87,7 @@ public:
 
 private:
 		//! Selection Shader
-		static QHash<const QGLContext*, GLC_Shader*> m_SelectionShaderHash;
+		static GLC_Shader* m_pSelectionShader;
 
 		//! Selection material id
 		static GLC_uint m_SelectionMaterialId;

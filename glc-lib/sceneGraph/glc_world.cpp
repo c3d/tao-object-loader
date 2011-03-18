@@ -2,6 +2,8 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
+ Version 2.0.0, packaged on July 2010.
+
  http://glc-lib.sourceforge.net
 
  GLC-lib is free software; you can redistribute it and/or modify
@@ -71,13 +73,13 @@ void GLC_World::mergeWithAnotherWorld(GLC_World& anotherWorld)
 		const int size= childs.size();
 		for (int i= 0; i < size; ++i)
 		{
-			m_pRoot->addChild(childs.at(i)->clone(m_pWorldHandle, false));
+			m_pRoot->addChild(childs.at(i)->clone(m_pWorldHandle, true));
 		}
 		m_pRoot->updateChildrenAbsoluteMatrix();
 	}
 	else
 	{
-		m_pRoot->addChild(anotherWorld.rootOccurence()->clone(m_pWorldHandle, false));
+		m_pRoot->addChild(anotherWorld.rootOccurence()->clone(m_pWorldHandle, true));
 	}
 }
 

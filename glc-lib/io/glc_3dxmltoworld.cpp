@@ -2,6 +2,8 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
+ Version 2.0.0, packaged on July 2010.
+
  http://glc-lib.sourceforge.net
 
  GLC-lib is free software; you can redistribute it and/or modify
@@ -26,7 +28,6 @@
 #include "../sceneGraph/glc_world.h"
 #include "../glc_fileformatexception.h"
 #include "../geometry/glc_mesh.h"
-#include "../geometry/glc_3drep.h"
 #include "glc_xmlutil.h"
 
 // Quazip library
@@ -37,19 +38,16 @@
 #include <QGLContext>
 #include <QFileInfo>
 #include <QSet>
-#include <QMutexLocker>
 
-//using namespace glcXmlUtil;
+using namespace glcXmlUtil;
 
-QMutex GLC_3dxmlToWorld::m_ZipMutex;
-
-static qint64 chunckSize= 10000000;
-
-GLC_3dxmlToWorld::GLC_3dxmlToWorld()
+GLC_3dxmlToWorld::GLC_3dxmlToWorld(const QGLContext* pContext)
 : QObject()
+, m_pQGLContext(pContext)
 , m_pStreamReader(NULL)
 , m_FileName()
 , m_p3dxmlArchive(NULL)
+, m_p3dxmlFile(NULL)
 , m_pCurrentFile(NULL)
 , m_RootName()
 , m_pWorld(NULL)
@@ -68,12 +66,11 @@ GLC_3dxmlToWorld::GLC_3dxmlToWorld()
 , m_pCurrentMaterial(NULL)
 , m_TextureImagesHash()
 , m_LoadStructureOnly(false)
-, m_SetOfAttachedFileName()
+, m_ListOfAttachedFileName()
 , m_CurrentFileName()
 , m_CurrentDateTime()
 , m_OccurenceAttrib()
 , m_GetExternalRef3DName(false)
-, m_ByteArrayList()
 {
 
 }
@@ -84,6 +81,7 @@ GLC_3dxmlToWorld::~GLC_3dxmlToWorld()
 	m_pStreamReader= NULL;
 
 	delete m_pCurrentFile;
+	delete m_p3dxmlFile;
 	delete m_p3dxmlArchive;
 
 	clearMaterialHash();
@@ -105,8 +103,6 @@ GLC_3dxmlToWorld::~GLC_3dxmlToWorld()
 // Create an GLC_World from an input 3DXML File
 GLC_World* GLC_3dxmlToWorld::createWorldFrom3dxml(QFile &file, bool structureOnly, bool getExternalRef)
 {
-	clear();
-	m_pWorld= new GLC_World();
 	m_GetExternalRef3DName= getExternalRef;
 	m_LoadStructureOnly= structureOnly;
 	m_FileName= file.fileName();
@@ -160,7 +156,6 @@ GLC_3DRep GLC_3dxmlToWorld::create3DrepFrom3dxmlRep(const QString& fileName)
 		m_FileName= glc::archiveFileName(fileName);
 
 		// Create the 3dxml Zip archive
-		m_ZipMutex.lock();
 		m_p3dxmlArchive= new QuaZip(m_FileName);
 		// Trying to load archive
 		if(!m_p3dxmlArchive->open(QuaZip::mdUnzip))
@@ -174,7 +169,6 @@ GLC_3DRep GLC_3dxmlToWorld::create3DrepFrom3dxmlRep(const QString& fileName)
 			// Set the file Name Codec
 			//m_p3dxmlArchive->setFileNameCodec("IBM866");
 		}
-		m_ZipMutex.unlock();
 		m_CurrentFileName= glc::archiveEntryFileName(fileName);
 
 		// Get the 3DXML time stamp
@@ -219,12 +213,11 @@ GLC_3DRep GLC_3dxmlToWorld::create3DrepFrom3dxmlRep(const QString& fileName)
 				if ((NULL != pStructRef) && pStructRef->hasRepresentation())
 				{
 					pRep= dynamic_cast<GLC_3DRep*> (pStructRef->representationHandle());
-
-					if (NULL != pRep)
-					{
-						resultRep = GLC_3DRep(*pRep);
-						resultRep.setName(pStructRef->name());
-					}
+				}
+				if (NULL != pRep)
+				{
+					resultRep = GLC_3DRep(*pRep);
+					resultRep.setName(pStructRef->name());
 				}
 				delete pStructRef;
 			}
@@ -270,6 +263,8 @@ void GLC_3dxmlToWorld::loadManifest()
 
 	delete m_pStreamReader;
 	m_pStreamReader= NULL;
+
+	m_p3dxmlFile->close();
 }
 
 //! Close all files and clear memmory
@@ -281,13 +276,20 @@ void GLC_3dxmlToWorld::clear()
 	delete m_pStreamReader;
 	m_pStreamReader= NULL;
 
-	m_ByteArrayList.clear();
 	// Clear current file
 	if (NULL != m_pCurrentFile)
 	{
 		m_pCurrentFile->close();
 		delete m_pCurrentFile;
 		m_pCurrentFile= NULL;
+	}
+
+	// Clear the 3dxml file
+	if (NULL != m_p3dxmlFile)
+	{
+		m_p3dxmlFile->close();
+		delete m_p3dxmlFile;
+		m_p3dxmlFile= NULL;
 	}
 
 	// Clear the 3dxml archive
@@ -298,8 +300,6 @@ void GLC_3dxmlToWorld::clear()
 		m_p3dxmlArchive= NULL;
 	}
 
-	m_SetOfAttachedFileName.clear();
-
 	clearMaterialHash();
 }
 
@@ -309,7 +309,7 @@ void GLC_3dxmlToWorld::goToRepId(const QString& id)
 	while(!m_pStreamReader->atEnd() && !((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) && (m_pStreamReader->name() == "Representation")
 			&& (m_pStreamReader->attributes().value("id").toString() == id)))
 	{
-		readNext();;
+		m_pStreamReader->readNext();
 	}
 
 }
@@ -323,7 +323,7 @@ void GLC_3dxmlToWorld::gotToPolygonalRepType()
 	{
 		//qDebug() << m_pStreamReader->name();
 		//qDebug() << m_pStreamReader->attributes().value("xsi:type").toString();
-		readNext();;
+		m_pStreamReader->readNext();
 	}
 
 }
@@ -372,7 +372,7 @@ void GLC_3dxmlToWorld::loadProductStructure()
 			else loadInstanceRep();
 		}
 
-		readNext();;
+		m_pStreamReader->readNext();
 	}
 
 	// Load Default view properties
@@ -385,7 +385,7 @@ void GLC_3dxmlToWorld::loadProductStructure()
 			else if (m_pStreamReader->name() == "GeometricRepresentationSet") loadLocalRepresentations();
 
 		}
-		readNext();;
+		m_pStreamReader->readNext();
 	}
 
 	// Check if an error Occur
@@ -543,6 +543,7 @@ void GLC_3dxmlToWorld::loadReference3D()
 
 	if (id == 1) // This is the root reference.
 	{
+		m_pWorld= new GLC_World();
 		m_pWorld->setRootName(refName);
 		pStructReference= m_pWorld->rootOccurence()->structInstance()->structReference();
 		pStructReference->setName(refName);
@@ -569,10 +570,10 @@ void GLC_3dxmlToWorld::loadReference3D()
 					}
 					userAttributes.insert(name, value);
 				}
-				readNext();;
+				m_pStreamReader->readNext();
 			}
 		}
-		readNext();;
+		m_pStreamReader->readNext();
 	}
 	if (!userAttributes.isEmpty())
 	{
@@ -613,10 +614,10 @@ void GLC_3dxmlToWorld::loadInstance3D()
 					QString value= readAttribute("value", true);
 					userAttributes.insert(name, value);
 				}
-				readNext();;
+				m_pStreamReader->readNext();
 			}
 		}
-		readNext();;
+		m_pStreamReader->readNext();
 	}
 	if (!userAttributes.isEmpty())
 	{
@@ -656,28 +657,17 @@ void GLC_3dxmlToWorld::loadReferenceRep()
 
 	const unsigned int id= readAttribute("id", true).toUInt();
 	//const QString refName(readAttribute("name", true));
-	const QString format= readAttribute("format", false);
 	QString associatedFile(readAttribute("associatedFile", true));
-	if (format == "TESSELLATED")
-	{
-		if (associatedFile.contains(local))
-		{
-			const QString repId= associatedFile.remove(local);
-			m_ReferenceRepHash.insert(id, repId);
-		}
-		else if (associatedFile.contains(externName))
-		{
-			const QString repId= associatedFile.remove(externName);
-			m_ReferenceRepHash.insert(id, repId);
-		}
-	}
-	else if (format == "UVR")
-	{
-		QString message(QString("GLC_3dxmlToWorld::loadReferenceRep in file ") + m_CurrentFileName + " format " + format + " not supported");
-		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::FileNotSupported);
-		clear();
-		throw(fileFormatException);
 
+	if (associatedFile.contains(local))
+	{
+		const QString repId= associatedFile.remove(local);
+		m_ReferenceRepHash.insert(id, repId);
+	}
+	else if (associatedFile.contains(externName))
+	{
+		const QString repId= associatedFile.remove(externName);
+		m_ReferenceRepHash.insert(id, repId);
 	}
 }
 
@@ -781,9 +771,8 @@ void GLC_3dxmlToWorld::loadExternalRef3D()
 			{
 				const QString repFileName= glc::builtFileString(m_FileName, m_CurrentFileName);
 				pRep->setFileName(repFileName);
-				m_SetOfAttachedFileName << glc::archiveEntryFileName(repFileName);
+				m_ListOfAttachedFileName << glc::archiveEntryFileName(repFileName);
 			}
-
 			if (m_GetExternalRef3DName && setStreamReaderToFile(m_CurrentFileName))
 			{
 				const QString localFileName= m_CurrentFileName;
@@ -967,7 +956,7 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId, GLC_3DR
 		// Load Faces index data
 		while (endElementNotReached(m_pStreamReader, "Faces"))
 		{
-			readNext();;
+			m_pStreamReader->readNext();
 			if ( m_pStreamReader->name() == "Face")
 			{
 				loadFace(pMesh, 0, masterLodAccuracy);
@@ -977,7 +966,7 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId, GLC_3DR
 
 		while (startElementNotReached(m_pStreamReader, "Edges") && startElementNotReached(m_pStreamReader, "VertexBuffer"))
 		{
-			readNext();;
+			m_pStreamReader->readNext();
 		}
 
 		checkForXmlError("Element VertexBuffer not found");
@@ -985,11 +974,11 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId, GLC_3DR
 		{
 			while (endElementNotReached(m_pStreamReader, "Edges"))
 			{
-				readNext();;
+				m_pStreamReader->readNext();
 				if ( m_pStreamReader->name() == "Polyline")
 				{
 					loadPolyline(pMesh);
-					readNext();;
+					m_pStreamReader->readNext();
 				}
 			}
 		}
@@ -1046,7 +1035,7 @@ GLC_StructReference* GLC_3dxmlToWorld::createReferenceRep(QString repId, GLC_3DR
 				}
 				pMesh->addTexels(texelValues.toVector());
 			}
-			readNext();;
+			m_pStreamReader->readNext();
 		}
 
 		++numberOfMesh;
@@ -1244,7 +1233,7 @@ void GLC_3dxmlToWorld::loadLOD(GLC_Mesh* pMesh)
 	int lodIndex= 1;
 	while(!m_pStreamReader->atEnd() && !((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) && (m_pStreamReader->name() == "Faces")))
 	{
-		readNext();;
+		m_pStreamReader->readNext();
 		if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) && (m_pStreamReader->name() == "SurfaceAttributes"))
 		{
 			m_pCurrentMaterial= loadSurfaceAttributes();
@@ -1255,7 +1244,7 @@ void GLC_3dxmlToWorld::loadLOD(GLC_Mesh* pMesh)
 			// Load Faces index data
 			while (endElementNotReached(m_pStreamReader, "Faces"))
 			{
-				readNext();;
+				m_pStreamReader->readNext();
 				if ( m_pStreamReader->name() == "Face")
 				{
 					loadFace(pMesh, lodIndex, accuracy);
@@ -1291,7 +1280,7 @@ void GLC_3dxmlToWorld::loadFace(GLC_Mesh* pMesh, const int lod, double accuracy)
 		{
 			pCurrentMaterial= loadSurfaceAttributes();
 		}
-		readNext();;
+		m_pStreamReader->readNext();
 	}
 	if (NULL == pCurrentMaterial)
 	{
@@ -1371,7 +1360,7 @@ void GLC_3dxmlToWorld::loadPolyline(GLC_Mesh* pMesh)
 		dataStream >> buff;
 		dataVector.append(buff.toFloat());
 	}
-	pMesh->addVerticeGroup(dataVector);
+	pMesh->addPolyline(dataVector);
 }
 
 // Clear material hash
@@ -1403,9 +1392,10 @@ GLC_Material* GLC_3dxmlToWorld::loadSurfaceAttributes()
 		{
 			while (endElementNotReached(m_pStreamReader, "MaterialApplication"))
 			{
-				readNext();;
+				m_pStreamReader->readNext();
 				if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) && (m_pStreamReader->name() == "MaterialId"))
 				{
+					//qDebug() << m_p3dxmlFile->getActualFileName();
 					checkForXmlError("Material ID not found");
 					QString materialId= readAttribute("id", true).remove("urn:3DXML:CATMaterialRef.3dxml#");
 					pMaterial= m_MaterialHash.value(materialId);
@@ -1413,7 +1403,7 @@ GLC_Material* GLC_3dxmlToWorld::loadSurfaceAttributes()
 			}
 
 		}
-		readNext();;
+		m_pStreamReader->readNext();
 	}
 
 	return pMaterial;
@@ -1460,10 +1450,9 @@ bool GLC_3dxmlToWorld::setStreamReaderToFile(QString fileName, bool test)
 	m_CurrentFileName= fileName;
 	if (m_IsInArchive)
 	{
-		QMutexLocker locker(&m_ZipMutex);
-		m_ByteArrayList.clear();
+		delete m_p3dxmlFile;
 		// Create QuaZip File
-		QuaZipFile* p3dxmlFile= new QuaZipFile(m_p3dxmlArchive);
+		m_p3dxmlFile= new QuaZipFile(m_p3dxmlArchive);
 
 		// Get the file of the 3dxml
 		if (!m_p3dxmlArchive->setCurrentFile(fileName, QuaZip::csInsensitive))
@@ -1479,7 +1468,7 @@ bool GLC_3dxmlToWorld::setStreamReaderToFile(QString fileName, bool test)
 		}
 
 		// Open the file of the 3dxml
-		if(!p3dxmlFile->open(QIODevice::ReadOnly))
+		if(!m_p3dxmlFile->open(QIODevice::ReadOnly))
 	    {
 			QString message(QString("GLC_3dxmlToWorld::setStreamReaderToFile Unable to Open ") + fileName);
 			GLC_FileFormatException fileFormatException(message, fileName, GLC_FileFormatException::FileNotSupported);
@@ -1487,26 +1476,9 @@ bool GLC_3dxmlToWorld::setStreamReaderToFile(QString fileName, bool test)
 			throw(fileFormatException);
 	    }
 
-		// Test if the file is a binary
-		checkFileValidity(p3dxmlFile);
-		{
-			delete p3dxmlFile;
-			p3dxmlFile= new QuaZipFile(m_p3dxmlArchive);
-			m_p3dxmlArchive->setCurrentFile(fileName, QuaZip::csInsensitive);
-			p3dxmlFile->open(QIODevice::ReadOnly);
-		}
-
 		// Set the stream reader
 		delete m_pStreamReader;
-
-		QByteArray currentByteArray;
-		while (!currentByteArray.isEmpty() || m_ByteArrayList.isEmpty())
-		{
-			currentByteArray= p3dxmlFile->read(chunckSize);
-			m_ByteArrayList.append(currentByteArray);
-		}
-		m_pStreamReader= new QXmlStreamReader(m_ByteArrayList.takeFirst());
-		delete p3dxmlFile;
+		m_pStreamReader= new QXmlStreamReader(m_p3dxmlFile);
 	}
 	else
 	{
@@ -1529,12 +1501,8 @@ bool GLC_3dxmlToWorld::setStreamReaderToFile(QString fileName, bool test)
 		}
 		else if (m_FileName != fileName)
 		{
-			m_SetOfAttachedFileName << fileName;
+			m_ListOfAttachedFileName << fileName;
 		}
-
-		// Test if the file is a binary
-		checkFileValidity(m_pCurrentFile);
-
 		// Set the stream reader
 		delete m_pStreamReader;
 		m_pStreamReader= new QXmlStreamReader(m_pCurrentFile);
@@ -1558,14 +1526,15 @@ void GLC_3dxmlToWorld::loadLocalRepresentations()
 		{
 			QString id= readAttribute("id", true);
 			GLC_StructReference* pRef= createReferenceRep("3DXML_Local_" + id, NULL);
-			if (pRef->hasRepresentation())
+			GLC_Rep* pRep= pRef->representationHandle();
+			if (pRep != NULL)
 			{
-				GLC_3DRep representation(*(dynamic_cast<GLC_3DRep*>(pRef->representationHandle())));
+				GLC_3DRep representation(*(dynamic_cast<GLC_3DRep*>(pRep)));
 				repHash.insert(id, representation);
 			}
 			delete pRef;
 		}
-		readNext();;
+		m_pStreamReader->readNext();
 	}
 	//qDebug() << "Local rep loaded";
 
@@ -1579,7 +1548,7 @@ void GLC_3dxmlToWorld::loadLocalRepresentations()
 		GLC_StructReference* pReference= m_ReferenceHash.value(referenceId);
 		const QString representationID= m_ReferenceRepHash.value(refId);
 		pReference->setRepresentation(repHash.value(representationID));
-		pReference->setRepresentationName(pReference->name());
+		pReference->representationHandle()->setName(pReference->name());
 
 		++iLocalRep;
 	}
@@ -1603,7 +1572,7 @@ void GLC_3dxmlToWorld::loadGraphicsProperties()
 			loadDefaultViewProperty();
 		}
 
-		readNext();;
+		m_pStreamReader->readNext();
 	}
 
 	// Check if an error Occur
@@ -1677,12 +1646,12 @@ void GLC_3dxmlToWorld::loadDefaultViewProperty()
 					else m_OccurenceAttrib.value(occurenceId)->m_pRenderProperties= pRenderProperties;
 				}
 
-				readNext();;
+				m_pStreamReader->readNext();
 			}
 
 		}
 
-		readNext();;
+		m_pStreamReader->readNext();
 	}
 
 	// Check if an error Occur
@@ -1756,7 +1725,7 @@ void GLC_3dxmlToWorld::loadExternRepresentations()
 			{
 				const QString repFileName= glc::builtFileString(m_FileName, m_CurrentFileName);
 				representation.setFileName(repFileName);
-				m_SetOfAttachedFileName << glc::archiveEntryFileName(repFileName);
+				m_ListOfAttachedFileName << glc::archiveEntryFileName(repFileName);
 			}
 
 			repHash.insert(id, representation);
@@ -1782,23 +1751,12 @@ void GLC_3dxmlToWorld::loadExternRepresentations()
 		unsigned int refId= (*iExtRep).m_RepId;
 
 		GLC_StructReference* pReference= m_ReferenceHash.value(referenceId);
-		if (pReference->hasRepresentation())
-		{
-			GLC_3DRep* pRep= dynamic_cast<GLC_3DRep*>(pReference->representationHandle());
-			if (NULL != pRep)
-			{
-				GLC_3DRep newRep(repHash.value(refId));
-				pRep->take(&newRep);
-			}
-		}
-		else
-		{
-			pReference->setRepresentation(repHash.value(refId));
-		}
+		pReference->setRepresentation(repHash.value(refId));
+
 		// If representation hasn't a name. Set his name to reference name
-		if (pReference->representationName().isEmpty())
+		if (pReference->representationHandle()->name().isEmpty())
 		{
-			pReference->setRepresentationName(pReference->name());
+			pReference->representationHandle()->setName(pReference->name());
 		}
 
 		++iExtRep;
@@ -1878,7 +1836,7 @@ GLC_3DRep GLC_3dxmlToWorld::loadCurrentExtRep()
 		// Load Faces index data
 		while (endElementNotReached(m_pStreamReader, "Faces"))
 		{
-			readNext();;
+			m_pStreamReader->readNext();
 			if ( m_pStreamReader->name() == "Face")
 			{
 				loadFace(pMesh, 0, masteLodAccuracy);
@@ -1888,7 +1846,7 @@ GLC_3DRep GLC_3dxmlToWorld::loadCurrentExtRep()
 
 		while (startElementNotReached(m_pStreamReader, "Edges") && startElementNotReached(m_pStreamReader, "VertexBuffer"))
 		{
-			readNext();;
+			m_pStreamReader->readNext();
 		}
 
 		checkForXmlError("Element VertexBuffer not found");
@@ -1896,11 +1854,11 @@ GLC_3DRep GLC_3dxmlToWorld::loadCurrentExtRep()
 		{
 			while (endElementNotReached(m_pStreamReader, "Edges"))
 			{
-				readNext();;
+				m_pStreamReader->readNext();
 				if ( m_pStreamReader->name() == "Polyline")
 				{
 					loadPolyline(pMesh);
-					readNext();;
+					m_pStreamReader->readNext();
 				}
 			}
 		}
@@ -1954,7 +1912,7 @@ GLC_3DRep GLC_3dxmlToWorld::loadCurrentExtRep()
 				}
 				pMesh->addTexels(texelValues.toVector());
 			}
-			readNext();;
+			m_pStreamReader->readNext();
 		}
 		++numberOfMesh;
 	}
@@ -2000,7 +1958,7 @@ void GLC_3dxmlToWorld::loadCatMaterialRef()
 					//qDebug() << "Material " << currentMaterial.m_Name << " Added";
 				}
 			}
-			readNext();;
+			m_pStreamReader->readNext();
 		}
 	}
 	// Load material files
@@ -2023,7 +1981,7 @@ void GLC_3dxmlToWorld::loadMaterialDef(const MaterialRef& materialRef)
 	checkForXmlError(QString("Element Osm not found in file : ") + materialRef.m_AssociatedFile);
 	while (endElementNotReached(m_pStreamReader, "Osm"))
 	{
-		readNext();;
+		m_pStreamReader->readNext();
 		if ((QXmlStreamReader::StartElement == m_pStreamReader->tokenType()) && m_pStreamReader->name() == "Attr")
 		{
 			const QString currentName= readAttribute("Name", true);
@@ -2120,7 +2078,7 @@ void GLC_3dxmlToWorld::loadCatRepImage()
 					m_TextureImagesHash.insert(id,associatedFile);
 				}
 			}
-			readNext();;
+			m_pStreamReader->readNext();
 		}
 		//qDebug() << "CATRepImage.3dxml Load";
 	}
@@ -2176,7 +2134,7 @@ GLC_Texture* GLC_3dxmlToWorld::loadTexture(QString fileName)
 		}
 		else
 		{
-			m_SetOfAttachedFileName << resultImageFileName;
+			m_ListOfAttachedFileName << resultImageFileName;
 		}
 		resultImage.load(pCurrentFile, format.toLocal8Bit());
 		pCurrentFile->close();
@@ -2186,7 +2144,7 @@ GLC_Texture* GLC_3dxmlToWorld::loadTexture(QString fileName)
 	GLC_Texture* pTexture= NULL;
 	if (!resultImage.isNull())
 	{
-		pTexture= new GLC_Texture(resultImage, resultImageFileName);
+		pTexture= new GLC_Texture(m_pQGLContext, resultImage, resultImageFileName);
 	}
 	else
 	{
@@ -2251,18 +2209,3 @@ void GLC_3dxmlToWorld::setRepresentationFileName(GLC_3DRep* pRep)
 	}
 }
 
-void GLC_3dxmlToWorld::checkFileValidity(QIODevice* pIODevice)
-{
-	QByteArray begining= pIODevice->read(2);
-	if (begining == "V5")
-	{
-		QString message(QString("GLC_3dxmlToWorld::setStreamReaderToFile : File ") + m_CurrentFileName + " is binary");
-		GLC_FileFormatException fileFormatException(message, m_CurrentFileName, GLC_FileFormatException::FileNotSupported);
-		clear();
-		throw(fileFormatException);
-	}
-	else
-	{
-		pIODevice->seek(0);
-	}
-}

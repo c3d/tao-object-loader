@@ -4,8 +4,8 @@
 # File Description:
 # Qt build file for the 3D object loader module
 # ******************************************************************************
-# This software is property of Taodyne SAS - Confidential
-# Ce logiciel est la propriété de Taodyne SAS - Confidentiel
+# This document is released under the GNU General Public License.
+# See http://www.gnu.org/copyleft/gpl.html and Matthew 25:22 for details
 # (C) 2010 Jerome Forissier <jerome@taodyne.com>
 # (C) 2010 Taodyne SAS
 # ******************************************************************************
@@ -25,7 +25,7 @@ SOURCES     = object_loader.cpp \
               object3d_drawing.cpp \
               load_thread.cpp
 TBL_SOURCES = object_loader.tbl
-OTHER_FILES = object_loader.xl object_loader.tbl traces.tbl
+OTHER_FILES = module.xl object_loader.tbl traces.tbl module.doxy.h
 
 INCLUDEPATH += ../glc-lib/include \
                ../glc-lib

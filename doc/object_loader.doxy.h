@@ -1,3 +1,7 @@
+/*
+ * This file duplicates module.xl and object_loader.tbl for documentation purposes.
+ */
+
 /**
  * @defgroup ObjectLoader Object Loader
  * @ingroup Modules
@@ -17,21 +21,21 @@
  * For instance, the following Tao document will load a 3D model from
  * file @c conestoga.3ds, and show it rotating around the z axis.
  @code
-import ObjectLoader 1.0
+import ObjectLoader "0.2"
 
-the_light X, Y, Z ->
+the_light x, y, z ->
     light 0
     light_ambient 0.4, 0.4, 0.4, 1.0
     light_diffuse 0.4, 0.4, 0.4, 1.0
     light_specular 0.8, 0.8, 0.8, 1.0
     light_attenuation 1.0, 0.0, 0.0
-    light_position X, Y, Z
+    light_position x, y, z
 
-rotating_obj F ->
+rotating_obj f ->
     locally
         rotatex -70
         rotatez 8 * time
-        object 0, 0, 0, 400, 400, 400, F
+        object 0, 0, 0, 400, 400, 400, f
 
 the_light 300, 300, 300
 rotating_obj "conestoga.3ds"

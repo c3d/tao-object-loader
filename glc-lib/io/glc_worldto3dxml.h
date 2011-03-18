@@ -2,6 +2,8 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
+ Version 2.0.0, packaged on July 2010.
+
  http://glc-lib.sourceforge.net
 
  GLC-lib is free software; you can redistribute it and/or modify
@@ -166,7 +168,7 @@ private:
 	void addImageTextureTo3dxml(const QImage& image, const QString& fileName);
 
 	//! Transform the given name to the 3DXML name (no double)
-	QString xmlFileName(QString fileName);
+	QString xmlFileName(const QString& fileName);
 
 	//! Write extension attributes to 3DXML
 	void writeExtensionAttributes(GLC_Attributes* pAttributes);
