@@ -21,7 +21,7 @@
  * For instance, the following Tao document will load a 3D model from
  * file @c conestoga.3ds, and show it rotating around the z axis.
  @code
-import ObjectLoader "1.0"
+import ObjectLoader 1.0
 
 the_light x, y, z ->
     light 0
