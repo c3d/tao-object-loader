@@ -7,7 +7,7 @@ module_description
     name "3D object loader"
     description "Import 3D objects into Tao. Supported formats include Collada V1.4, 3DXML ASCII V3 and V4, OBJ, 3DS, STL (ASCII and binary), OFF and COFF."
     import_name "ObjectLoader"
-    version "0.2"
+    version 1.0
 
 object x:real, y:real, z:real, file:text ->
     /** Loads and translates a 3D object.
