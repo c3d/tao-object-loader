@@ -23,19 +23,19 @@
  @code
 import ObjectLoader 1.0
 
-the_light x, y, z ->
+the_light X, Y, Z ->
     light 0
     light_ambient 0.4, 0.4, 0.4, 1.0
     light_diffuse 0.4, 0.4, 0.4, 1.0
     light_specular 0.8, 0.8, 0.8, 1.0
     light_attenuation 1.0, 0.0, 0.0
-    light_position x, y, z
+    light_position X, Y, Z
 
-rotating_obj f ->
+rotating_obj F ->
     locally
         rotatex -70
         rotatez 8 * time
-        object 0, 0, 0, 400, 400, 400, f
+        object 0, 0, 0, 400, 400, 400, F
 
 the_light 300, 300, 300
 rotating_obj "conestoga.3ds"
