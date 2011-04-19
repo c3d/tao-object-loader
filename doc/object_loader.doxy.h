@@ -1,7 +1,3 @@
-/*
- * This file duplicates module.xl and object_loader.tbl for documentation purposes.
- */
-
 /**
  * @defgroup ObjectLoader Object Loader
  * @ingroup Modules
