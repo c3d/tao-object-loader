@@ -25,7 +25,7 @@ SOURCES     = object_loader.cpp \
               object3d_drawing.cpp \
               load_thread.cpp
 TBL_SOURCES = object_loader.tbl
-OTHER_FILES = object_loader.xl object_loader.tbl traces.tbl
+OTHER_FILES = module.xl object_loader.tbl traces.tbl module.doxy.h
 
 INCLUDEPATH += ../glc-lib/include \
                ../glc-lib
