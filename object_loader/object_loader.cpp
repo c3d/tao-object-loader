@@ -23,7 +23,6 @@
 //  (C) 2010 Taodyne SAS
 // ****************************************************************************
 
-#include "tao_gl.h"
 #include "object_loader.h"
 #include "main.h"
 #include "runtime.h"
@@ -55,10 +54,7 @@ Tree_p object(Tree_p self,
     {
         Object3D *obj = Object3D::Object(name);
         if (!obj)
-        {
-            Ooops("File not found or unreadable: $1", self);
             return XL::xl_false;
-        }
 
         Object3DDrawing *drawing = new Object3DDrawing(obj, x, y, z, w, h, d);
         Object3D::tao->addToLayout(Object3DDrawing::render_callback, drawing,
@@ -86,10 +82,7 @@ Tree_p object(Tree_p self, Text_p name)
     {
         Object3D *obj = Object3D::Object(name);
         if (!obj)
-        {
-            Ooops("File not found or unreadable: $1", self);
             return XL::xl_false;
-        }
 
         Object3D::tao->scheduleRender(Object3D::render_callback, obj);
     }
@@ -107,7 +100,6 @@ int module_init(const Tao::ModuleApi *api, const Tao::ModuleInfo *mod)
 //   Initialize the Tao module
 // ----------------------------------------------------------------------------
 {
-    glewInit();
     XL_INIT_TRACES();
     Object3D::tao = api;
 

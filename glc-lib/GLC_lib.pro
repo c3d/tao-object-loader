@@ -5,9 +5,10 @@ QT += opengl \
 
 
 CONFIG += exceptions \
+    debug \
     warn_on
 TARGET = GLC_lib
-VERSION = 2.2.0
+VERSION = 2.0.0
 
 DEFINES += CREATE_GLC_LIB_DLL
 DEFINES += LIB3DS_EXPORTS
@@ -77,9 +78,7 @@ HEADERS_GLC_IO +=		io/glc_objmtlloader.h \
 						io/glc_worldto3dxml.h \
 						io/glc_bsreptoworld.h \
 						io/glc_xmlutil.h \
-						io/glc_fileloader.h \
-						io/glc_worldreaderplugin.h \
-						io/glc_worldreaderhandler.h
+						io/glc_fileloader.h
 
 HEADERS_GLC_SCENEGRAPH +=	sceneGraph/glc_3dviewcollection.h \
 							sceneGraph/glc_3dviewinstance.h \
@@ -91,8 +90,7 @@ HEADERS_GLC_SCENEGRAPH +=	sceneGraph/glc_3dviewcollection.h \
 							sceneGraph/glc_worldhandle.h \
 							sceneGraph/glc_spacepartitioning.h \
 							sceneGraph/glc_octree.h \
-							sceneGraph/glc_octreenode.h \
-							sceneGraph/glc_selectionset.h
+							sceneGraph/glc_octreenode.h
 							
 HEADERS_GLC_GEOMETRY +=		geometry/glc_geometry.h \
 							geometry/glc_circle.h \
@@ -114,8 +112,7 @@ HEADERS_GLC_GEOMETRY +=		geometry/glc_geometry.h \
 							geometry/glc_polylines.h \
 							geometry/glc_disc.h \
 							geometry/glc_cone.h \
-							geometry/glc_sphere.h \
-							geometry/glc_pointcloud.h
+							geometry/glc_sphere.h
 
 HEADERS_GLC_SHADING +=	shading/glc_material.h \						
 						shading/glc_texture.h \
@@ -139,9 +136,7 @@ HEADERS_GLC_VIEWPORT +=	viewport/glc_camera.h \
 						viewport/glc_turntablemover.h \
 						viewport/glc_frustum.h \
 						viewport/glc_flymover.h \
-						viewport/glc_repflymover.h \
-						viewport/glc_userinput.h \
-						viewport/glc_tsrmover.h
+						viewport/glc_repflymover.h
 
 
 HEADERS_GLC += glc_global.h \
@@ -241,8 +236,7 @@ SOURCES +=	sceneGraph/glc_3dviewcollection.cpp \
 			sceneGraph/glc_worldhandle.cpp \
 			sceneGraph/glc_spacepartitioning.cpp \
 			sceneGraph/glc_octree.cpp \
-			sceneGraph/glc_octreenode.cpp \
-			sceneGraph/glc_selectionset.cpp
+			sceneGraph/glc_octreenode.cpp
 
 SOURCES +=	geometry/glc_geometry.cpp \
 			geometry/glc_circle.cpp \
@@ -264,8 +258,7 @@ SOURCES +=	geometry/glc_geometry.cpp \
 			geometry/glc_polylines.cpp \
 			geometry/glc_disc.cpp \
 			geometry/glc_cone.cpp \
-			geometry/glc_sphere.cpp \
-			geometry/glc_pointcloud.cpp
+			geometry/glc_sphere.cpp
 
 
 SOURCES +=	shading/glc_material.cpp \
@@ -290,9 +283,7 @@ SOURCES +=	viewport/glc_camera.cpp \
 			viewport/glc_turntablemover.cpp \
 			viewport/glc_frustum.cpp \
 			viewport/glc_flymover.cpp \
-			viewport/glc_repflymover.cpp \
-			viewport/glc_userinput.cpp \
-			viewport/glc_tsrmover.cpp
+			viewport/glc_repflymover.cpp
 		
 SOURCES +=	glc_global.cpp \
 			glc_object.cpp \			
@@ -412,20 +403,14 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_TraceLog \
     		   include/glcXmlUtil \
     		   include/GLC_OpenGLState \
-    		   include/GLC_FileLoader \
-    		   include/GLC_WorldReaderPlugin \
-    		   include/GLC_WorldReaderHandler \
-    		   include/GLC_PointCloud \
-    		   include/GLC_SelectionSet \
-    		   include/GLC_UserInput \
-    		   include/GLC_TsrMover
+    		   include/GLC_FileLoader
 
     			   
 # Linux and macx install configuration
 unix {
     # Location of HEADERS and library
-    LIB_DIR = /usr/local/lib
-    INCLUDE_DIR = /usr/local/include
+    LIB_DIR = /usr/lib
+    INCLUDE_DIR = /usr/include
     # Adds a -P to preserve link
 	QMAKE_COPY_FILE = $${QMAKE_COPY_FILE} -P
 	include.path = $${INCLUDE_DIR}/GLC_lib

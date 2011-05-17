@@ -2,6 +2,8 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
+ Version 2.0.0, packaged on July 2010.
+
  http://glc-lib.sourceforge.net
 
  GLC-lib is free software; you can redistribute it and/or modify
@@ -138,7 +140,7 @@ void GLC_Circle::glDraw(const GLC_RenderProperties& renderProperties)
 		createWire();
 	}
 
-	m_WireData.glDraw(renderProperties, GL_LINE_STRIP);
+	m_WireData.glDraw(renderProperties);
 }
 
 // Create the wire
@@ -163,5 +165,5 @@ void GLC_Circle::createWire()
 		floatVector[(i * 3) + 1]= static_cast<float>(m_Radius * sin(static_cast<double>(i) * angleOnStep));
 		floatVector[(i * 3) + 2]= 0.0f;
 	}
-	GLC_Geometry::addVerticeGroup(floatVector);
+	GLC_Geometry::addPolyline(floatVector);
 }

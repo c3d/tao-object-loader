@@ -5,32 +5,9 @@
 module_description
     id "4F6776FA-D116-4A88-A6F8-524D2B53AAD8"
     name "3D object loader"
-    description "Import 3D objects into Tao Presentations. " &
-                "Supported formats include: " &
-                "Collada V1.4 (.dae), " &
-                "3DXML ASCII V3 and V4 (.3dxml), " &
-                "OBJ (.obj), " &
-                "3DS (.3ds), " &
-                "STL (ASCII and binary) (.stl), " &
-                "OFF and COFF (.off). " &
-                "This module uses GLC_lib (http://www.glc-lib.net)."
+    description "Import 3D objects into Tao. Supported formats include Collada V1.4, 3DXML ASCII V3 and V4, OBJ, 3DS, STL (ASCII and binary), OFF and COFF."
     import_name "ObjectLoader"
-    author "Taodyne SAS"
-    website "http://www.taodyne.com"
     version 1.0
-
-module_description "fr",
-    name "Lecteur de fichiers 3D"
-    description "Permet de charger des modèles 3D dans Tao " &
-                "Presentations. Les formats supportés sont : " &
-                "Collada V1.4 (.dae), " &
-                "3DXML ASCII V3 et V4 (.3dxml), " &
-                "OBJ (.obj), " &
-                "3DS (.3ds), " &
-                "STL (ASCII et binaire) (.stl), " &
-                "OFF et COFF (.off). " &
-                "Ce module utilise la bibliothèque GLC_lib " &
-                "(http://www.glc-lib.net)."
 
 object x:real, y:real, z:real, file:text ->
     /** Loads and translates a 3D object.

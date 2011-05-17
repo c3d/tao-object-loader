@@ -2,6 +2,8 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
+ Version 2.0.0, packaged on July 2010.
+
  http://glc-lib.sourceforge.net
 
  GLC-lib is free software; you can redistribute it and/or modify
@@ -40,8 +42,8 @@
 //////////////////////////////////////////////////////////////////////
 class GLC_LIB_EXPORT GLC_MeshData
 {
-	friend GLC_LIB_EXPORT QDataStream &operator<<(QDataStream &, const GLC_MeshData &);
-	friend GLC_LIB_EXPORT QDataStream &operator>>(QDataStream &, GLC_MeshData &);
+	friend QDataStream &operator<<(QDataStream &, const GLC_MeshData &);
+	friend QDataStream &operator>>(QDataStream &, GLC_MeshData &);
 
 public:
 
@@ -254,7 +256,7 @@ private:
 };
 
 //! Non-member stream operator
-GLC_LIB_EXPORT QDataStream &operator<<(QDataStream &, const GLC_MeshData &);
-GLC_LIB_EXPORT QDataStream &operator>>(QDataStream &, GLC_MeshData &);
+QDataStream &operator<<(QDataStream &, const GLC_MeshData &);
+QDataStream &operator>>(QDataStream &, GLC_MeshData &);
 
 #endif /* GLC_MESHDATA_H_ */

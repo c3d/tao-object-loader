@@ -2,6 +2,8 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
+ Version 2.0.0, packaged on July 2010.
+
  http://glc-lib.sourceforge.net
 
  GLC-lib is free software; you can redistribute it and/or modify
@@ -34,8 +36,6 @@
 #include "glc_structinstance.h"
 
 #include "../glc_config.h"
-
-class GLC_StructOccurence;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_StructReference
@@ -91,9 +91,11 @@ public:
 	inline bool hasRepresentation() const
 	{return NULL != m_pRepresentation;}
 
-	//! Return the representation of this reference
-	/*! The representation must exists*/
-	GLC_Rep* representationHandle() const;
+	//! Return an handle on the representation
+	inline GLC_Rep* representationHandle() const
+	{
+		return m_pRepresentation;
+	}
 
 	//! Return the name
 	inline QString name() const
@@ -155,18 +157,6 @@ public:
 	inline GLC_Attributes* attributesHandle() const
 	{return m_pAttributes;}
 
-	//! Return the name of the representation
-	QString representationName() const;
-
-	//! Return true if the representation is loaded
-	bool representationIsLoaded() const;
-
-	//! Return the representation file name
-	QString representationFileName() const;
-
-	//! Return true if the representation is empty or if there is no representation
-	bool representationIsEmpty() const;
-
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -190,30 +180,15 @@ public:
 	{m_Name= name;}
 
 	//! Set the reference representation
+	/*! Representation must not exist*/
 	void setRepresentation(const GLC_3DRep& rep);
 
 	//! Set the reference attributes
-	inline void setAttributes(const GLC_Attributes& attr)
+	void setAttributes(const GLC_Attributes& attr)
 	{
 		delete m_pAttributes;
 		m_pAttributes= new GLC_Attributes(attr);
 	}
-
-	//! Set the representation name
-	void setRepresentationName(const QString& representationName);
-
-	//! Load the representation
-	/*! The representation must exists*/
-	bool loadRepresentation();
-
-	//! Unload the representation
-	/*! The representation must exists*/
-	bool unloadRepresentation();
-
-	//! Add the given occurence as a child
-	/*! Return true on success*/
-	bool addChild(GLC_StructOccurence* pOccurence);
-
 
 //@}
 

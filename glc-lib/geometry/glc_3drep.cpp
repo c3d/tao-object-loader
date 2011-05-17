@@ -2,6 +2,8 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
+ Version 2.0.0, packaged on July 2010.
+
  http://glc-lib.sourceforge.net
 
  GLC-lib is free software; you can redistribute it and/or modify
@@ -58,17 +60,12 @@ GLC_3DRep::GLC_3DRep(const GLC_3DRep& rep)
 }
 
 // Assignement operator
-GLC_3DRep& GLC_3DRep::operator=(const GLC_Rep& rep)
+GLC_3DRep& GLC_3DRep::operator=(const GLC_3DRep& rep)
 {
-	const GLC_3DRep* p3DRep= dynamic_cast<const GLC_3DRep*>(&rep);
-	Q_ASSERT(NULL != p3DRep);
-	if (this != &rep)
-	{
-		clear();
-		GLC_Rep::operator=(rep);
-		m_pGeomList= p3DRep->m_pGeomList;
-		m_pType= p3DRep->m_pType;
-	}
+	clear();
+	GLC_Rep::operator=(rep);
+	m_pGeomList= rep.m_pGeomList;
+	m_pType= rep.m_pType;
 
 	return *this;
 }

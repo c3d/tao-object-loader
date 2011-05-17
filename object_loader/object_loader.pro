@@ -16,8 +16,6 @@ TAO_SDK = ../../..
 
 include($${TAO_SDK}/modules/modules.pri)
 
-DEFINES     += GLEW_STATIC
-
 HEADERS     = object_loader.h \
               object3d.h \
               object3d_drawing.h \
@@ -30,18 +28,18 @@ TBL_SOURCES = object_loader.tbl
 OTHER_FILES = object_loader.xl object_loader.tbl traces.tbl
 
 INCLUDEPATH += ../glc-lib/include \
-               ../glc-lib \
-               $${TAOTOPSRC}/tao/include/tao
+               ../glc-lib
 DEPENDPATH  += ../glc-lib/include \
-               ../glc-lib \
-               $${TAOTOPSRC}/tao/include/tao
+               ../glc-lib
 QT          += core \
                gui \
                opengl
-!macx:SOURCES += $${TAOTOPSRC}/tao/include/tao/GL/glew.c
-win32:LIBS += -L../glc-lib/release -L../glc-lib/debug -lGLC_lib2
-unix:LIBS += -L../glc-lib -lGLC_lib
-
+win32 {
+    LIBS += -L../glc-lib/release -L../glc-lib/debug -lGLC_lib2
+}
+unix {
+    LIBS += -L../glc-lib -lGLC_lib
+}
 QMAKE_CXXFLAGS -= -Werror  # REVISIT: Avoid errors from GL redefinitions
 
 progress_img.path  = $$MODINSTPATH
