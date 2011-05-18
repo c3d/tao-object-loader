@@ -5,8 +5,10 @@
 module_description
     id "4F6776FA-D116-4A88-A6F8-524D2B53AAD8"
     name "3D object loader"
-    description "Import 3D objects into Tao. Supported formats include Collada V1.4, 3DXML ASCII V3 and V4, OBJ, 3DS, STL (ASCII and binary), OFF and COFF."
+    description "Import 3D objects into Tao. Supported formats include Collada V1.4, 3DXML ASCII V3 and V4, OBJ, 3DS, STL (ASCII and binary), OFF and COFF. This module uses GLC_lib (http://www.glc-lib.net)."
     import_name "ObjectLoader"
+    author "Taodyne SAS"
+    website "http://www.taodyne.com"
     version 1.0
 
 object x:real, y:real, z:real, file:text ->
