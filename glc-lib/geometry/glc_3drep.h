@@ -2,8 +2,6 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
- Version 2.0.0, packaged on July 2010.
-
  http://glc-lib.sourceforge.net
 
  GLC-lib is free software; you can redistribute it and/or modify
@@ -37,8 +35,8 @@
 //////////////////////////////////////////////////////////////////////
 class GLC_LIB_EXPORT GLC_3DRep : public GLC_Rep
 {
-	friend QDataStream &operator<<(QDataStream &, const GLC_3DRep &);
-	friend QDataStream &operator>>(QDataStream &, GLC_3DRep &);
+	friend GLC_LIB_EXPORT QDataStream &operator<<(QDataStream &, const GLC_3DRep &);
+	friend GLC_LIB_EXPORT QDataStream &operator>>(QDataStream &, GLC_3DRep &);
 
 //////////////////////////////////////////////////////////////////////
 /*! @name Constructor / Destructor */
@@ -55,7 +53,7 @@ public:
 	GLC_3DRep(const GLC_3DRep&);
 
 	//! Assignement operator
-	virtual GLC_3DRep &operator=(const GLC_3DRep&);
+	virtual GLC_3DRep &operator=(const GLC_Rep&);
 
 	//! Clone the representation
 	virtual GLC_Rep* clone() const;
@@ -196,7 +194,7 @@ private:
 };
 
 //! Non-member stream operator
-QDataStream &operator<<(QDataStream &, const GLC_3DRep &);
-QDataStream &operator>>(QDataStream &, GLC_3DRep &);
+GLC_LIB_EXPORT QDataStream &operator<<(QDataStream &, const GLC_3DRep &);
+GLC_LIB_EXPORT QDataStream &operator>>(QDataStream &, GLC_3DRep &);
 
 #endif /* GLC_3DREP_H_ */

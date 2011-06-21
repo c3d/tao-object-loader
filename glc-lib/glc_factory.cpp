@@ -2,8 +2,7 @@
 
  This file is part of the GLC-lib library.
  Copyright (C) 2005-2008 Laurent Ribon (laumaya@users.sourceforge.net)
- Version 2.0.0, packaged on July 2010.
-
+ Copyright (C) 2011 JŽr™me Forrissier
  http://glc-lib.sourceforge.net
 
  GLC-lib is free software; you can redistribute it and/or modify
@@ -27,6 +26,7 @@
 #include "glc_factory.h"
 #include "io/glc_fileloader.h"
 #include "io/glc_3dxmltoworld.h"
+#include "io/glc_worldreaderplugin.h"
 
 #include "viewport/glc_panmover.h"
 #include "viewport/glc_zoommover.h"
@@ -45,6 +45,8 @@
 // init static member
 GLC_Factory* GLC_Factory::m_pFactory= NULL;
 QGLContext* GLC_Factory::m_pQGLContext= NULL;
+QList<GLC_WorldReaderPlugin*> GLC_Factory::m_WorldReaderPluginList;
+QSet<QString> GLC_Factory::m_SupportedExtensionSet;
 
 //////////////////////////////////////////////////////////////////////
 // static method
@@ -71,6 +73,7 @@ GLC_Factory* GLC_Factory::instance(const QGLContext *pContext)
 GLC_Factory::GLC_Factory(const QGLContext *pContext)
 {
 	m_pQGLContext= (const_cast<QGLContext*>(pContext));
+	loadPlugins();
 }
 
 // Destructor
@@ -93,6 +96,30 @@ GLC_3DRep GLC_Factory::createPoint(double x, double y, double z) const
 {
 	GLC_3DRep newPoint(new GLC_Point(x, y, z));
 	return newPoint;
+}
+
+GLC_3DRep GLC_Factory::createPointCloud(const GLfloatVector& data, const QColor& color)
+{
+	GLC_PointCloud* pPointCloud= new GLC_PointCloud();
+	pPointCloud->addPoint(data);
+	pPointCloud->setWireColor(color);
+	return GLC_3DRep(pPointCloud);
+}
+
+GLC_3DRep GLC_Factory::createPointCloud(const QList<GLC_Point3d>& pointList, const QColor& color)
+{
+	GLC_PointCloud* pPointCloud= new GLC_PointCloud();
+	pPointCloud->addPoint(pointList);
+	pPointCloud->setWireColor(color);
+	return GLC_3DRep(pPointCloud);
+}
+
+GLC_3DRep GLC_Factory::createPointCloud(const QList<GLC_Point3df>& pointList, const QColor& color)
+{
+	GLC_PointCloud* pPointCloud= new GLC_PointCloud();
+	pPointCloud->addPoint(pointList);
+	pPointCloud->setWireColor(color);
+	return GLC_3DRep(pPointCloud);
 }
 
 
@@ -358,3 +385,70 @@ GLC_MoverController GLC_Factory::createDefaultMoverController(const QColor& colo
 
 	return defaultController;
 }
+
+
+void GLC_Factory::loadPlugins()
+{
+	Q_ASSERT(NULL != QCoreApplication::instance());
+	const QStringList libraryPath= QCoreApplication::libraryPaths();
+	foreach(QString path, libraryPath)
+	{
+		const QDir pluginsDir= QDir(path);
+		const QStringList pluginNames= pluginsDir.entryList(QDir::Files);
+		foreach (QString fileName, pluginNames)
+		{
+	         QPluginLoader loader(pluginsDir.absoluteFilePath(fileName));
+	         QObject* pPlugin= loader.instance();
+	         GLC_WorldReaderPlugin* pWorldReader = qobject_cast<GLC_WorldReaderPlugin *>(pPlugin);
+	         if (pWorldReader)
+	         {
+	        	 m_WorldReaderPluginList.append(pWorldReader);
+	        	 m_SupportedExtensionSet.unite(QSet<QString>::fromList(pWorldReader->keys()));
+	         }
+		}
+	}
+
+	//qDebug() << m_WorldReaderPluginList.size() << " Loaded plugins.";
+}
+
+QList<GLC_WorldReaderPlugin*> GLC_Factory::worldReaderPlugins()
+{
+	if (NULL == m_pFactory)
+	{
+		instance();
+	}
+	return m_WorldReaderPluginList;
+}
+
+bool GLC_Factory::canBeLoaded(const QString& extension)
+{
+	if (NULL == m_pFactory)
+	{
+		instance();
+	}
+
+	return m_SupportedExtensionSet.contains(extension.toLower());
+}
+
+GLC_WorldReaderHandler* GLC_Factory::loadingHandler(const QString& fileName)
+{
+	if (NULL == m_pFactory)
+	{
+		instance();
+	}
+
+	const QString extension= QFileInfo(fileName).suffix();
+	if (canBeLoaded(extension))
+	{
+		foreach(GLC_WorldReaderPlugin* pPlugin, m_WorldReaderPluginList)
+		{
+			if (pPlugin->keys().contains(extension.toLower()))
+			{
+				return pPlugin->readerHandler();
+			}
+		}
+	}
+	return NULL;
+}
+
+
