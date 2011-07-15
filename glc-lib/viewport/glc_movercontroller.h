@@ -31,9 +31,9 @@
 #include <QtDebug>
 
 #include "../glc_config.h"
-#include "glc_userinput.h"
 
 class QGLWidget;
+class QMouseEvent;
 
 //////////////////////////////////////////////////////////////////////
 //! \class GLC_MoverController
@@ -54,8 +54,7 @@ public:
 		TrackBall= 3,
 		Target= 4,
 		TurnTable= 5,
-		Fly= 6,
-		TSR= 7
+		Fly= 6
 	};
 
 public:
@@ -86,10 +85,6 @@ public:
 	inline GLC_Mover* activeMover() const
 	{return m_MoverHash.value(m_ActiveMoverId);}
 
-	//! Return the mover of the given id
-	inline GLC_Mover* getMover(const int id) const
-	{return m_MoverHash.value(id);}
-
 //@}
 
 //////////////////////////////////////////////////////////////////////
@@ -107,16 +102,16 @@ public:
 	void removeMover(const int);
 
 	//! Set the specified mover as active
-	void setActiveMover(const int id, const GLC_UserInput& userInput);
+	void setActiveMover(const int id, QMouseEvent * e);
 
 	//! Set no mover as active
 	void setNoMover();
 
 	//! Move with the active mover
-	inline bool move(const GLC_UserInput& userInput)
+	inline bool move(QMouseEvent * e)
 	{
 		Q_ASSERT(0 != m_ActiveMoverId);
-		return m_MoverHash.value(m_ActiveMoverId)->move(userInput);
+		return m_MoverHash.value(m_ActiveMoverId)->move(e);
 	}
 
 //@}

@@ -70,11 +70,11 @@ class GLC_LIB_EXPORT GLC_Factory : public QObject
 
 public:
 	//! Get unique instance of the factory
-	static GLC_Factory* instance();
+	static GLC_Factory* instance(const QGLContext * pContext= NULL);
 
 protected:
 	//! Constructor
-	GLC_Factory();
+	GLC_Factory(const QGLContext *);
 public:
 	//! Destructor
 	~GLC_Factory();
@@ -84,6 +84,9 @@ public:
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
+	//! Return the current factory context
+	inline QGLContext* context() const
+	{return m_pQGLContext;}
 
 	//! Create a GLC_Point
 	GLC_3DRep createPoint(const GLC_Point3d &coord) const;
@@ -197,6 +200,9 @@ private:
 private:
 	//! The unique instance of the factory
 	static GLC_Factory* m_pFactory;
+
+	//! The QGLContext attached to the factory (rendering context)
+	static QGLContext* m_pQGLContext;
 
 	//! The list off worldReader plugins
 	static QList<GLC_WorldReaderPlugin*> m_WorldReaderPluginList;

@@ -5,7 +5,7 @@ License: LGPL
 SVN repository is at:
 https://glc-lib.svn.sourceforge.net/svnroot/glc-lib/glc-lib
 
-Current version is: 2.2.0
+Current version is: 2.1.0
 
 Note: glc-lib contains 2 project files (.pro):
  * GLC_lib.pro: the real one (from the GLC lib source repository)
