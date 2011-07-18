@@ -68,7 +68,7 @@ public:
 	GLC_Material(const QString& name, const GLfloat *);
 
 	//! Construct textured GLC_Material
-	GLC_Material(GLC_Texture* pTexture, const QString& name= QString());
+	GLC_Material(GLC_Texture* pTexture, const char *pName);
 
 	//! Copy constructor
 	/*! Hast usage table are not copying
@@ -215,7 +215,7 @@ public:
 public:
 
 	//! Load the texture
-	void glLoadTexture(QGLContext* pContext= NULL);
+	void glLoadTexture(void);
 
 	//! Execute OpenGL Material
 	virtual void glExecute();

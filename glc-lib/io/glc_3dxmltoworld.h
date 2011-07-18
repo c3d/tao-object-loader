@@ -34,7 +34,7 @@
 #include "../maths/glc_matrix4x4.h"
 #include "../sceneGraph/glc_3dviewinstance.h"
 
-#include "../glc_config.h"
+#include "glc_config.h"
 
 class GLC_World;
 class QGLContext;
@@ -111,7 +111,7 @@ class GLC_LIB_EXPORT GLC_3dxmlToWorld : public QObject
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Default constructor
-	GLC_3dxmlToWorld();
+	GLC_3dxmlToWorld(const QGLContext*);
 
 	virtual ~GLC_3dxmlToWorld();
 //@}
@@ -274,6 +274,9 @@ private:
 // Private members
 //////////////////////////////////////////////////////////////////////
 private:
+	//! OpenGL Context
+	const QGLContext* m_pQGLContext;
+
 	//! Xml Reader
 	QXmlStreamReader* m_pStreamReader;
 

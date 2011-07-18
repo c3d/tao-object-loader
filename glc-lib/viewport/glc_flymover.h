@@ -71,10 +71,10 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Initialized the mover
-	virtual void init(const GLC_UserInput& userInput);
+	virtual void init(QMouseEvent * e);
 
 	//! Move the camera
-	virtual bool move(const GLC_UserInput& userInput);
+	virtual bool move(QMouseEvent * e);
 
 	//! Ends this mover
 	virtual void ends();

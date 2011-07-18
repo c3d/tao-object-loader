@@ -166,7 +166,7 @@ private:
 	void addImageTextureTo3dxml(const QImage& image, const QString& fileName);
 
 	//! Transform the given name to the 3DXML name (no double)
-	QString xmlFileName(QString fileName);
+	QString xmlFileName(const QString& fileName);
 
 	//! Write extension attributes to 3DXML
 	void writeExtensionAttributes(GLC_Attributes* pAttributes);

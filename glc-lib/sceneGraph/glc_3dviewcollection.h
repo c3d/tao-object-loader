@@ -223,7 +223,15 @@ public:
 
 	//! Set the Show or noShow state
 	inline void swapShowState()
-	{m_IsInShowSate= !m_IsInShowSate;}
+	{
+		m_IsInShowSate= !m_IsInShowSate;
+		// Bounding box validity
+		if (NULL != m_pBoundingBox)
+		{
+			delete m_pBoundingBox;
+			m_pBoundingBox= NULL;
+		}
+	}
 
 	//! Set the LOD usage
 	inline void setLodUsage(const bool usage, GLC_Viewport* pView)
@@ -287,11 +295,25 @@ private:
 //@}
 
 //////////////////////////////////////////////////////////////////////
+/*! \name Privates services Functions*/
+//@{
+//////////////////////////////////////////////////////////////////////
+
+private:
+	//! Set the Bounding box validity
+	void setBoundingBoxValidity(void);
+
+//@}
+
+//////////////////////////////////////////////////////////////////////
 // Private members
 //////////////////////////////////////////////////////////////////////
 private:
 	//! GLC_3DViewInstance Hash Table
 	ViewInstancesHash m_3DViewInstanceHash;
+
+	//! BoundingBox of the collection
+	GLC_BoundingBox* m_pBoundingBox;
 
 	//! Selected Node Hash Table
 	PointerViewInstanceHash m_SelectedInstances;

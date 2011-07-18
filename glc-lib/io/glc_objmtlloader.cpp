@@ -32,11 +32,12 @@
 #include <QtDebug>
 #include <QGLContext>
 
-GLC_ObjMtlLoader::GLC_ObjMtlLoader(const QString& fileName)
+GLC_ObjMtlLoader::GLC_ObjMtlLoader(const QGLContext *pContext, const QString& fileName)
 : m_FileName(fileName)
 , m_pCurrentMaterial(NULL)
 , m_Materials()
 , m_LoadStatus()
+, m_pQGLContext(pContext)
 , m_ListOfAttachedFileName()
 {
 }
@@ -213,7 +214,7 @@ void GLC_ObjMtlLoader::extractTextureFileName(QString &ligne)
 		{
 			m_ListOfAttachedFileName << textureFileName;
 			// Create the texture and assign it to current material
-			GLC_Texture *pTexture = new GLC_Texture(textureFile);
+			GLC_Texture *pTexture = new GLC_Texture(m_pQGLContext, textureFile);
 			m_pCurrentMaterial->setTexture(pTexture);
 			//qDebug() << "Texture File is : " << valueString;
 		}

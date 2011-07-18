@@ -45,9 +45,10 @@
 #include <QFileInfo>
 #include <QGLContext>
 
-GLC_3dsToWorld::GLC_3dsToWorld()
+GLC_3dsToWorld::GLC_3dsToWorld(const QGLContext *pContext)
 : m_pWorld(NULL)
 , m_FileName()
+, m_pQGLContext(pContext)
 , m_pCurrentMesh(NULL)
 , m_pLib3dsFile(NULL)
 , m_Materials()
@@ -386,7 +387,7 @@ void GLC_3dsToWorld::loadMaterial(Lib3dsMaterial* p3dsMaterial)
 			if (textureFile.open(QIODevice::ReadOnly))
 			{
 				// Create the texture and assign it to the material
-				GLC_Texture *pTexture = new GLC_Texture(textureFile);
+				GLC_Texture *pTexture = new GLC_Texture(m_pQGLContext, textureFile);
 				pMaterial->setTexture(pTexture);
 				m_ListOfAttachedFileName << textureFileName;
 				textureFile.close();

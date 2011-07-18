@@ -47,16 +47,16 @@ class GLC_LIB_EXPORT GLC_Texture
 
 public:
 	//! Default constructor
-	GLC_Texture();
+	GLC_Texture(const QGLContext*);
 
 	//! Constructor with fileName
-	GLC_Texture(const QString&);
+	GLC_Texture(const QGLContext*, const QString&);
 
 	//! Constructor with QFile
-	GLC_Texture(const QFile&);
+	GLC_Texture(const QGLContext*, const QFile&);
 
 	//! Constructor with QImage
-	GLC_Texture(const QImage&, const QString& fileName= QString());
+	GLC_Texture(const QGLContext*, const QImage&, const QString& fileName= QString());
 
 	//! Copy constructor
 	GLC_Texture(const GLC_Texture& TextureToCopy);
@@ -126,7 +126,7 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Load the texture
-	void glLoadTexture(QGLContext* pContext= NULL);
+	void glLoadTexture(void);
 	//! Bind texture in 2D mode
 	void glcBindTexture(void);
 

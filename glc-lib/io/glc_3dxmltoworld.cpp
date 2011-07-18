@@ -45,8 +45,9 @@ QMutex GLC_3dxmlToWorld::m_ZipMutex;
 
 static qint64 chunckSize= 10000000;
 
-GLC_3dxmlToWorld::GLC_3dxmlToWorld()
+GLC_3dxmlToWorld::GLC_3dxmlToWorld(const QGLContext* pContext)
 : QObject()
+, m_pQGLContext(pContext)
 , m_pStreamReader(NULL)
 , m_FileName()
 , m_p3dxmlArchive(NULL)
@@ -2186,7 +2187,7 @@ GLC_Texture* GLC_3dxmlToWorld::loadTexture(QString fileName)
 	GLC_Texture* pTexture= NULL;
 	if (!resultImage.isNull())
 	{
-		pTexture= new GLC_Texture(resultImage, resultImageFileName);
+		pTexture= new GLC_Texture(m_pQGLContext, resultImage, resultImageFileName);
 	}
 	else
 	{

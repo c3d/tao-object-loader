@@ -72,7 +72,7 @@ class GLC_LIB_EXPORT GLC_3dsToWorld : public QObject
 //////////////////////////////////////////////////////////////////////
 
 public:
-	GLC_3dsToWorld();
+	GLC_3dsToWorld(const QGLContext*);
 	virtual ~GLC_3dsToWorld();
 //@}
 
@@ -124,6 +124,9 @@ private:
 
 	//! The 3DS File name
 	QString m_FileName;
+
+	//! OpenGL Context
+	const QGLContext* m_pQGLContext;
 
 	//! The current mesh
 	GLC_Mesh* m_pCurrentMesh;

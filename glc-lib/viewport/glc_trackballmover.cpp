@@ -23,7 +23,6 @@
 
 #include "glc_trackballmover.h"
 #include "glc_viewport.h"
-#include "glc_reptrackballmover.h"
 
 // Default constructor
 GLC_TrackBallMover::GLC_TrackBallMover(GLC_Viewport* pViewport, const QList<GLC_RepMover*>& repsList)
@@ -62,9 +61,9 @@ GLC_Mover* GLC_TrackBallMover::clone() const
 //////////////////////////////////////////////////////////////////////
 
 // Initialized the mover
-void GLC_TrackBallMover::init(const GLC_UserInput& userInput)
+void GLC_TrackBallMover::init(QMouseEvent * e)
 {
-	GLC_Mover::m_PreviousVector.setVect(mapForTracking(static_cast<double>(userInput.x()), static_cast<double>(userInput.y())));
+	GLC_Mover::m_PreviousVector.setVect(mapForTracking(static_cast<double>(e->x()), static_cast<double>(e->y())));
 
 	const double Angle= acos(glc::Z_AXIS * GLC_Mover::m_PreviousVector);
 	const GLC_Vector3d AxeRot(glc::Z_AXIS ^ GLC_Mover::m_PreviousVector);
@@ -78,9 +77,9 @@ void GLC_TrackBallMover::init(const GLC_UserInput& userInput)
 }
 
 // Move the camera
-bool GLC_TrackBallMover::move(const GLC_UserInput& userInput)
+bool GLC_TrackBallMover::move(QMouseEvent * e)
 {
-	const GLC_Vector3d VectCurOrbit(mapForTracking(static_cast<double>(userInput.x()), static_cast<double>(userInput.y())));
+	const GLC_Vector3d VectCurOrbit(mapForTracking(static_cast<double>(e->x()), static_cast<double>(e->y())));
 
 	// Update camera position (orbit)
 	GLC_Mover::m_pViewport->cameraHandle()->orbit(GLC_Mover::m_PreviousVector, VectCurOrbit);
@@ -97,19 +96,6 @@ bool GLC_TrackBallMover::move(const GLC_UserInput& userInput)
 	return true;
 }
 
-void GLC_TrackBallMover::setRatio(double ratio)
-{
-	m_Ratio= ratio;
-	const int repCount= m_RepMoverList.count();
-	for (int i= 0; i < repCount; ++i)
-	{
-		GLC_RepTrackBallMover* pRep= dynamic_cast<GLC_RepTrackBallMover*>(m_RepMoverList.at(i));
-		if (NULL != pRep)
-		{
-			pRep->setRatio(ratio);
-		}
-	}
-}
 /////////////////////////////////////////////////////////////////////
 // Private services Functions
 //////////////////////////////////////////////////////////////////////
