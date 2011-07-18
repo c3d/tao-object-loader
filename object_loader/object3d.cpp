@@ -217,7 +217,20 @@ Object3D *Object3D::Object(text name)
     typedef std::map<text, Object3D *> file_map;
     static file_map loaded;
     static int use_vbo = -1;
+    static const QGLContext *context = NULL;
 
+    if (QGLContext::currentContext() != context)
+    {
+        // GL context has changed. Force reload, because textures used by
+        // cached objects would be invalid.
+        // REVISIT: it would be far more efficient to tell GLC_Lib to reload
+        // its textures.
+        IFTRACE(objloader)
+            debug() << "GL context changed: clearing cache\n";
+        loaded.clear();
+        context = QGLContext::currentContext();
+        use_vbo = -1;
+    }
     if (use_vbo == -1)
     {
         // Enable Vertex Buffer Objects only if they're supported, otherwise
