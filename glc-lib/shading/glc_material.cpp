@@ -100,8 +100,8 @@ GLC_Material::GLC_Material(const QString& name ,const GLfloat *pDiffuseColor)
 	// Others
 	initOtherColor();
 }
-GLC_Material::GLC_Material(GLC_Texture* pTexture, const char *pName)
-:GLC_Object(pName)
+GLC_Material::GLC_Material(GLC_Texture* pTexture, const QString& name)
+:GLC_Object(name)
 , m_AmbientColor()
 , m_DiffuseColor()
 , m_SpecularColor()
@@ -460,11 +460,15 @@ void GLC_Material::setOpacity(const qreal alpha)
 //////////////////////////////////////////////////////////////////////
 
 // Load the texture
-void GLC_Material::glLoadTexture(void)
+void GLC_Material::glLoadTexture(QGLContext* pContext)
 {
 	if (m_pTexture != NULL)
 	{
-		m_pTexture->glLoadTexture();
+		m_pTexture->glLoadTexture(pContext);
+	}
+	else
+	{
+		qDebug() << "GLC_Material::glLoadTexture : Material without texture !";
 	}
 }
 
@@ -687,7 +691,7 @@ QDataStream &operator>>(QDataStream &stream, GLC_Material &material)
 	stream >> hasTexture;
 	if (hasTexture)
 	{
-		GLC_Texture texture(GLC_Factory::instance()->context());
+		GLC_Texture texture;
 		stream >> texture;
 		material.setTexture(new GLC_Texture(texture));
 	}

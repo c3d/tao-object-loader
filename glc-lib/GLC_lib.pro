@@ -5,10 +5,9 @@ QT += opengl \
 
 
 CONFIG += exceptions \
-    debug \
     warn_on
 TARGET = GLC_lib
-VERSION = 2.1.0
+VERSION = 2.2.0
 
 DEFINES += CREATE_GLC_LIB_DLL
 DEFINES += LIB3DS_EXPORTS
@@ -140,7 +139,9 @@ HEADERS_GLC_VIEWPORT +=	viewport/glc_camera.h \
 						viewport/glc_turntablemover.h \
 						viewport/glc_frustum.h \
 						viewport/glc_flymover.h \
-						viewport/glc_repflymover.h
+						viewport/glc_repflymover.h \
+						viewport/glc_userinput.h \
+						viewport/glc_tsrmover.h
 
 
 HEADERS_GLC += glc_global.h \
@@ -289,7 +290,9 @@ SOURCES +=	viewport/glc_camera.cpp \
 			viewport/glc_turntablemover.cpp \
 			viewport/glc_frustum.cpp \
 			viewport/glc_flymover.cpp \
-			viewport/glc_repflymover.cpp
+			viewport/glc_repflymover.cpp \
+			viewport/glc_userinput.cpp \
+			viewport/glc_tsrmover.cpp
 		
 SOURCES +=	glc_global.cpp \
 			glc_object.cpp \			
@@ -413,7 +416,9 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_WorldReaderPlugin \
     		   include/GLC_WorldReaderHandler \
     		   include/GLC_PointCloud \
-    		   include/GLC_SelectionSet
+    		   include/GLC_SelectionSet \
+    		   include/GLC_UserInput \
+    		   include/GLC_TsrMover
 
     			   
 # Linux and macx install configuration
