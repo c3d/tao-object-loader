@@ -64,13 +64,10 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Initialized the mover
-	virtual void init(const GLC_UserInput& userInput);
+	virtual void init(QMouseEvent * e);
 
 	//! Move the camera
-	virtual bool move(const GLC_UserInput& userInput);
-
-	//! Set this mover screen ratio
-	void setRatio(double ratio);
+	virtual bool move(QMouseEvent * e);
 
 //@}
 

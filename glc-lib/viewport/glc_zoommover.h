@@ -64,10 +64,10 @@ public:
 //////////////////////////////////////////////////////////////////////
 public:
 	//! Initialized the mover
-	virtual void init(const GLC_UserInput& userInput);
+	virtual void init(QMouseEvent * e);
 
 	//! Move the camera
-	virtual bool move(const GLC_UserInput& userInput);
+	virtual bool move(QMouseEvent * e);
 
 	//! Set the maximum zoom factor
 	inline void setMaxZoomFactor(const double factor)
