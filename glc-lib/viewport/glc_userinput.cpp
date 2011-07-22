@@ -20,50 +20,48 @@
 
  *****************************************************************************/
 
-#ifndef GLC_SETTARGETMOVER_H_
-#define GLC_SETTARGETMOVER_H_
+//! \file glc_mover.cpp Implementation of the GLC_Mover class.
 
-#include "glc_mover.h"
+#include "glc_userinput.h"
 
-#include "../glc_config.h"
-
-//////////////////////////////////////////////////////////////////////
-//! \class GLC_SetTargetMover
-/*! \brief GLC_SetTargetMover : Define the view target */
-//////////////////////////////////////////////////////////////////////
-class GLC_LIB_EXPORT GLC_SetTargetMover : public GLC_Mover
+GLC_UserInput::GLC_UserInput(int x, int y)
+: m_X(x)
+, m_Y(y)
+, m_NormalyzeX(0.0)
+, m_NormalyzeY(0.0)
+, m_Translation()
+, m_Rotation(0.0)
+, m_ScaleFactor(1.0)
+, m_TransformationIsSet(false)
 {
-public:
-	//! Default constructor
-	GLC_SetTargetMover(GLC_Viewport*, const QList<GLC_RepMover*>& repsList= QList<GLC_RepMover*>());
 
-	//! Copy constructor
-	GLC_SetTargetMover(const GLC_SetTargetMover&);
+}
 
-	//! Destructor
-	virtual ~GLC_SetTargetMover();
+GLC_UserInput::~GLC_UserInput()
+{
+
+}
 
 //////////////////////////////////////////////////////////////////////
-/*! \name Get Functions*/
-//@{
+// Set Functions
 //////////////////////////////////////////////////////////////////////
-public:
-	//! Return a clone of the mover
-	virtual GLC_Mover* clone() const;
-//@}
+void GLC_UserInput::setPosition(int x, int y)
+{
+	m_X= x;
+	m_Y= y;
+}
 
-//////////////////////////////////////////////////////////////////////
-/*! \name Set Functions*/
-//@{
-//////////////////////////////////////////////////////////////////////
-public:
-	//! Initialized the mover
-	virtual void init(const GLC_UserInput& userInput);
+void GLC_UserInput::setNormalyzeTouchCenterPosition(double x, double y)
+{
+	m_NormalyzeX= x;
+	m_NormalyzeY= y;
+}
 
-	//! Move the camera
-	virtual bool move(const GLC_UserInput&){return true;}
-//@}
+void GLC_UserInput::setTransformation(const GLC_Vector2d& translation, double rotation, double scaleFactor)
+{
+	m_Translation= translation;
+	m_Rotation= rotation;
+	m_ScaleFactor= scaleFactor;
 
-};
-
-#endif /* GLC_SETTARGETMOVER_H_ */
+	m_TransformationIsSet= true;
+}
