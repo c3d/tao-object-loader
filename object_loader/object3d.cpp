@@ -21,6 +21,7 @@
 // ****************************************************************************
 
 
+#include "tao_gl.h"
 #include "object3d.h"
 #include "load_thread.h"
 #include <QString>

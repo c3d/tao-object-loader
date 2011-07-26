@@ -16,6 +16,8 @@ TAO_SDK = ../../..
 
 include($${TAO_SDK}/modules/modules.pri)
 
+DEFINES     += GLEW_STATIC
+
 HEADERS     = object_loader.h \
               object3d.h \
               object3d_drawing.h \
@@ -28,13 +30,16 @@ TBL_SOURCES = object_loader.tbl
 OTHER_FILES = object_loader.xl object_loader.tbl traces.tbl
 
 INCLUDEPATH += ../glc-lib/include \
-               ../glc-lib
+               ../glc-lib \
+               $${TAOTOPSRC}/tao/include/tao
 DEPENDPATH  += ../glc-lib/include \
-               ../glc-lib
+               ../glc-lib \
+               $${TAOTOPSRC}/tao/include/tao
 QT          += core \
                gui \
                opengl
 win32 {
+    SOURCES += $${TAOTOPSRC}/tao/include/tao/GL/glew.c
     LIBS += -L../glc-lib/release -L../glc-lib/debug -lGLC_lib2
 }
 unix {
