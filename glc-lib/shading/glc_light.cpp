@@ -22,7 +22,7 @@
 
 //! \file glc_light.cpp implementation of the GLC_Light class.
 
-#include <QtOpenGL>
+#include <QGlContext>
 #include <QtDebug>
 
 #include "glc_light.h"
