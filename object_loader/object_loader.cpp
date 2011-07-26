@@ -23,6 +23,7 @@
 //  (C) 2010 Taodyne SAS
 // ****************************************************************************
 
+#include "tao_gl.h"
 #include "object_loader.h"
 #include "main.h"
 #include "runtime.h"
@@ -100,6 +101,7 @@ int module_init(const Tao::ModuleApi *api, const Tao::ModuleInfo *mod)
 //   Initialize the Tao module
 // ----------------------------------------------------------------------------
 {
+    glewInit();
     XL_INIT_TRACES();
     Object3D::tao = api;
 
