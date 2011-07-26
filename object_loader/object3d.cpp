@@ -178,11 +178,19 @@ void Object3D::DrawPlaceHolder()
         return;
     if (!progress[0].isNull())
     {
+        GLint prog = 0;
+        glGetIntegerv(GL_CURRENT_PROGRAM, &prog);
+        if (prog)
+            glUseProgram(0);
+
         int idx = NPROGRESS * complete / 100;
         QImage img = progress[idx];
         glRasterPos3d(0, 0, 0);
         glDrawPixels(img.width(), img.height(), GL_RGBA, GL_UNSIGNED_BYTE,
                      img.bits());
+
+        if (prog)
+            glUseProgram(prog);
     }
 }
 
