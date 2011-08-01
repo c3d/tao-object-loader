@@ -174,7 +174,7 @@ void Object3D::DrawPlaceHolder()
 // ----------------------------------------------------------------------------
 {
     // Request refresh on next time interval
-    tao->refreshOn(QEvent::Timer, -1.0);
+    tao->refreshOn(QEvent::Timer);
     if (loadTime.elapsed() < 2000)
         return;
     if (!progress[0].isNull())
