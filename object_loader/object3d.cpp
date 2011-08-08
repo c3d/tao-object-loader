@@ -21,6 +21,7 @@
 // ****************************************************************************
 
 
+#include "tao_gl.h"
 #include "object3d.h"
 #include "load_thread.h"
 #include <QString>
@@ -173,16 +174,24 @@ void Object3D::DrawPlaceHolder()
 // ----------------------------------------------------------------------------
 {
     // Request refresh on next time interval
-    tao->refreshOn(QEvent::Timer);
+    tao->refreshOn(QEvent::Timer, -1.0);
     if (loadTime.elapsed() < 2000)
         return;
     if (!progress[0].isNull())
     {
+        GLint prog = 0;
+        glGetIntegerv(GL_CURRENT_PROGRAM, &prog);
+        if (prog)
+            glUseProgram(0);
+
         int idx = NPROGRESS * complete / 100;
         QImage img = progress[idx];
         glRasterPos3d(0, 0, 0);
         glDrawPixels(img.width(), img.height(), GL_RGBA, GL_UNSIGNED_BYTE,
                      img.bits());
+
+        if (prog)
+            glUseProgram(prog);
     }
 }
 
@@ -217,7 +226,20 @@ Object3D *Object3D::Object(text name)
     typedef std::map<text, Object3D *> file_map;
     static file_map loaded;
     static int use_vbo = -1;
+    static const QGLContext *context = NULL;
 
+    if (QGLContext::currentContext() != context)
+    {
+        // GL context has changed. Force reload, because textures used by
+        // cached objects would be invalid.
+        // REVISIT: it would be far more efficient to tell GLC_Lib to reload
+        // its textures.
+        IFTRACE(objloader)
+            debug() << "GL context changed: clearing cache\n";
+        loaded.clear();
+        context = QGLContext::currentContext();
+        use_vbo = -1;
+    }
     if (use_vbo == -1)
     {
         // Enable Vertex Buffer Objects only if they're supported, otherwise

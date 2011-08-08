@@ -18,58 +18,52 @@
  along with GLC-lib; if not, write to the Free Software
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
-*****************************************************************************/
+ *****************************************************************************/
 
-//! \file glc_imagePlane.h interface for the GLC_ImagePlane class.
+//! \file glc_tsrmover Interface for the GLC_TsrMover class.
 
-#ifndef GLC_IMAGEPLANE_H_
-#define GLC_IMAGEPLANE_H_
+#ifndef GLC_TSRMOVER_H_
+#define GLC_TSRMOVER_H_
 
-#include "../shading/glc_material.h"
+#include "glc_mover.h"
 
 #include "../glc_config.h"
 
 //////////////////////////////////////////////////////////////////////
-//! \class GLC_ImagePlane
-/*! \brief GLC_ImagePlane : Viewport background image*/
-
-/*! An GLC_ImagePlane is just a plane with a image texture.*/
+//! \class GLC_TsrMover
+/*! \brief GLC_TsrMover : Translationn scaling and rotation interactive manipulation */
 //////////////////////////////////////////////////////////////////////
-
-class GLC_LIB_EXPORT GLC_ImagePlane
+class GLC_LIB_EXPORT GLC_TsrMover : public GLC_Mover
 {
+public:
+	//! Default constructor
+	GLC_TsrMover(GLC_Viewport*, const QList<GLC_RepMover*>& repsList= QList<GLC_RepMover*>());
+
+	//! Copy constructor
+	GLC_TsrMover(const GLC_TsrMover&);
+
+	//! Destructor
+	virtual ~GLC_TsrMover();
+
 //////////////////////////////////////////////////////////////////////
-/*! @name Constructor / Destructor */
+/*! \name Get Functions*/
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Construct image plane from the given image file name and QGLContext
-	GLC_ImagePlane(const QString& ImageName);
-
-	//! Construct image plane from the given image and QGLContext
-	GLC_ImagePlane(const QImage& image);
-
-	~GLC_ImagePlane();
+	//! Return a clone of the mover
+	virtual GLC_Mover* clone() const;
 //@}
 
 //////////////////////////////////////////////////////////////////////
-/*! \name OpenGL Functions*/
+/*! \name Set Functions*/
 //@{
 //////////////////////////////////////////////////////////////////////
 public:
-	//! Render this image plane
-	void render();
+	//! Initialized the mover
+	virtual void init(const GLC_UserInput& userInput);
+
+	//! Move the camera
+	virtual bool move(const GLC_UserInput& userInput);
 //@}
-
-//////////////////////////////////////////////////////////////////////
-// Private members
-//////////////////////////////////////////////////////////////////////
-
-private:
-
-	//! The image plane material
-	GLC_Material m_Material;
-
 };
-
-#endif //GLC_IMAGEPLANE_H_
+#endif /* GLC_TSRMOVER_H_ */
