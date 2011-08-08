@@ -603,8 +603,6 @@ void GLC_3DViewCollection::render(GLuint groupId, glc::RenderFlag renderFlag)
 {
 	if (!isEmpty())
 	{
-		if (renderFlag != glc::GeometryOnlyRenderFlag)
-		{
 		if (renderFlag == glc::WireRenderFlag)
 		{
 	        glEnable(GL_POLYGON_OFFSET_FILL);
@@ -619,7 +617,6 @@ void GLC_3DViewCollection::render(GLuint groupId, glc::RenderFlag renderFlag)
 		else
 		{
 			glEnable(GL_LIGHTING);
-		}
 		}
 		glDraw(groupId, renderFlag);
 
@@ -652,7 +649,7 @@ void GLC_3DViewCollection::renderShaderGroup(glc::RenderFlag renderFlag)
 void GLC_3DViewCollection::glDraw(GLuint groupId, glc::RenderFlag renderFlag)
 {
 	// Set render Mode and OpenGL state
-	if (!GLC_State::isInSelectionMode() && (groupId == 0) && renderFlag != glc::GeometryOnlyRenderFlag)
+	if (!GLC_State::isInSelectionMode() && (groupId == 0))
 	{
 		if (renderFlag == glc::TransparentRenderFlag)
 		{
@@ -698,8 +695,7 @@ void GLC_3DViewCollection::glDraw(GLuint groupId, glc::RenderFlag renderFlag)
 	}
 
 	// Restore OpenGL state
-	if (renderFlag && !GLC_State::isInSelectionMode() && (groupId == 0)
-			&& renderFlag != glc::GeometryOnlyRenderFlag)
+	if (renderFlag && !GLC_State::isInSelectionMode() && (groupId == 0))
 	{
 		glDisable(GL_BLEND);
 		glDepthMask(GL_TRUE);

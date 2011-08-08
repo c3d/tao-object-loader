@@ -32,6 +32,7 @@
 #include <iostream>
 #include <GLC_World>
 
+
 class LoadThread;
 
 struct Object3D : public QObject
@@ -48,7 +49,6 @@ struct Object3D : public QObject
 
     // Draw interface
     void              Draw();
-    void              Identify();
 
     // Object bounding box
     Tao::Box3         Bounds();
@@ -78,19 +78,8 @@ private:
 
 private:
     void              DrawObject();
-    void              IdentifyObject();
     void              DrawPlaceHolder();
     void              DrawErrorPlaceHolder();
-
-private:
-    static text       toText(QString s);
-    static void       initGLC();
-    static void       checkCurrentContext();
-
-private:
-    typedef std::map<text, Object3D *> file_map;
-    static file_map           loaded;
-    static const QGLContext * context;
 
 private:
     // Representation of an object
@@ -103,10 +92,6 @@ private:
     int           complete;
     // Load start time
     QTime         loadTime;
-
-public:
-    // True if Draw should force use of current color/material
-    bool          colored;
 
 public:
     // Pointer to Tao functions
