@@ -35,12 +35,6 @@ void Object3DDrawing::render_callback(void *arg)
     ((Object3DDrawing *)arg)->Draw();
 }
 
-void Object3DDrawing::identify_callback(void *arg)
-// ----------------------------------------------------------------------------
-// ----------------------------------------------------------------------------
-{
-     ((Object3DDrawing *)arg)->Identify();
-}
 
 void Object3DDrawing::delete_callback(void *arg)
 // ----------------------------------------------------------------------------
@@ -56,39 +50,16 @@ void Object3DDrawing::Draw()
 //   Draw object, centered at (x, y, z) and scaled to fit (w, h, d) size
 // ----------------------------------------------------------------------------
 {
-    glPushMatrix();
-    Transform();
-
-    object->colored = colored;
-    object->Draw();
-    glPopMatrix();
-}
-
-void Object3DDrawing::Identify()
-// ----------------------------------------------------------------------------
-//   Identify object under cursor
-// ----------------------------------------------------------------------------
-{
-    glPushMatrix();
-    Transform();
-
-    object->Identify();
-    glPopMatrix();
-}
-
-void Object3DDrawing::Transform()
-// ----------------------------------------------------------------------------
-//   Transform correctly the object
-// ----------------------------------------------------------------------------
-{
     Box3 bounds = object->Bounds();
+
+    glPushMatrix();
     if (bounds.IsEmpty())
     {
         // When object load is in progress, bound are not yet knwon. We just
         // need to translate to display the % complete at the right place
         glTranslatef(x, y, z);
     }
-    else if (w > 0 || h > 0 || d > 0)
+    else
     {
         // Compute scaling factor if bbox dimensions are specified
         scale sx = 1.0, sy = 1.0, sz = 1.0, s;
@@ -117,4 +88,7 @@ void Object3DDrawing::Transform()
         glTranslated(x, y, z);
         glScalef(s, s, s);
     }
+
+    object->Draw();
+    glPopMatrix();
 }

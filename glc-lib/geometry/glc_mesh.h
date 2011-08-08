@@ -365,9 +365,6 @@ private:
 	//! The primitive Selected render loop
 	void primitiveSelectedRenderLoop(const GLC_RenderProperties&, bool);
 
-	//! The geometry only render loop
-	void geometryOnlyRenderLoop(bool);
-
 	//! Copy index of this mesh from the given LOD into the given mesh
 	void copyIndex(int lod, GLC_Mesh* pLodMesh, QHash<GLuint, GLuint>& sourceToTargetIndexMap, QHash<GLuint, GLuint>& tagetToSourceIndexMap, int& maxIndex, int targetLod);
 

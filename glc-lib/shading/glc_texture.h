@@ -27,7 +27,6 @@
 
 #include <QFile>
 #include <QtOpenGL>
-#include <GL/glu.h>
 
 #include "../glc_config.h"
 
