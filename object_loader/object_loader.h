@@ -26,10 +26,10 @@
 #include "tree.h"
 
 XL::Tree_p object(XL::Tree_p self,
-                  XL::Real &x, XL::Real &y, XL::Real &z,
-                  XL::Real &w, XL::Real &h, XL::Real &d,
-                  XL::Text &name);
+                  XL::Real_p x, XL::Real_p y, XL::Real_p z,
+                  XL::Real_p w, XL::Real_p h, XL::Real_p d,
+                  XL::Text_p name);
 
-XL::Tree_p object(XL::Tree_p self, XL::Text &name);
+XL::Tree_p object(XL::Tree_p self, XL::Text_p name);
 
 #endif // OBJECT_LOADER_H
