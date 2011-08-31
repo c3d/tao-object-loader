@@ -41,9 +41,9 @@ using namespace XL;
 XL_DEFINE_TRACES
 
 Tree_p object(Tree_p self,
-              Real &x, Real &y, Real &z,
-              Real &w, Real &h, Real &d,
-              Text &name)
+              Real_p x, Real_p y, Real_p z,
+              Real_p w, Real_p h, Real_p d,
+              Text_p name)
 // ----------------------------------------------------------------------------
 //   Primitive to load a 3D object and show it centered at (x, y, z)
 // ----------------------------------------------------------------------------
@@ -71,7 +71,7 @@ Tree_p object(Tree_p self,
 }
 
 
-Tree_p object(Tree_p self, Text &name)
+Tree_p object(Tree_p self, Text_p name)
 // ----------------------------------------------------------------------------
 //   Load a 3D object and show it as-is (not coordinate manipulation)
 // ----------------------------------------------------------------------------
