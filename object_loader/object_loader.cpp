@@ -55,7 +55,10 @@ Tree_p object(Tree_p self,
     {
         Object3D *obj = Object3D::Object(name);
         if (!obj)
+        {
+            Ooops("File not found or unreadable: $1", self);
             return XL::xl_false;
+        }
 
         Object3DDrawing *drawing = new Object3DDrawing(obj, x, y, z, w, h, d);
         Object3D::tao->addToLayout(Object3DDrawing::render_callback, drawing,
@@ -83,7 +86,10 @@ Tree_p object(Tree_p self, Text_p name)
     {
         Object3D *obj = Object3D::Object(name);
         if (!obj)
+        {
+            Ooops("File not found or unreadable: $1", self);
             return XL::xl_false;
+        }
 
         Object3D::tao->scheduleRender(Object3D::render_callback, obj);
     }

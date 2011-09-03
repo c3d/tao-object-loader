@@ -38,13 +38,10 @@ DEPENDPATH  += ../glc-lib/include \
 QT          += core \
                gui \
                opengl
-win32 {
-    SOURCES += $${TAOTOPSRC}/tao/include/tao/GL/glew.c
-    LIBS += -L../glc-lib/release -L../glc-lib/debug -lGLC_lib2
-}
-unix {
-    LIBS += -L../glc-lib -lGLC_lib
-}
+!macx:SOURCES += $${TAOTOPSRC}/tao/include/tao/GL/glew.c
+win32:LIBS += -L../glc-lib/release -L../glc-lib/debug -lGLC_lib2
+unix:LIBS += -L../glc-lib -lGLC_lib
+
 QMAKE_CXXFLAGS -= -Werror  # REVISIT: Avoid errors from GL redefinitions
 
 progress_img.path  = $$MODINSTPATH
