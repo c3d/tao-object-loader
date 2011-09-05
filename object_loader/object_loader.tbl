@@ -33,7 +33,7 @@ PREFIX(ObjectLoader_object_centered,  tree,  "object",
        PARM(height, real, )
        PARM(depth, real, )
        PARM(file, text, ),
-       return object(self, x, y, z, width, height, depth, file, false),
+       return object(self, x, y, z, width, height, depth, file),
        GROUP(module.ObjectLoader)
        SYNOPSIS("Loads, scales and translates a 3D object")
        DESCRIPTION("Loads, scales and translates a 3D object. "
@@ -43,16 +43,6 @@ PREFIX(ObjectLoader_object_centered,  tree,  "object",
                    "@a width, @a height and @a depth: the model is scaled "
                    "proportionally so that it fits in a box of the specified "
                    "size."))
-
-PREFIX(ObjectLoader_colored_object_centered,  tree,  "colored_object",
-       PARM(x, real, )
-       PARM(y, real, )
-       PARM(z, real, )
-       PARM(width, real, )
-       PARM(height, real, )
-       PARM(depth, real, )
-       PARM(file, text, ),
-       return object(self, x, y, z, width, height, depth, file, true), /* */)
 
 PREFIX(ObjectLoader_object,  tree,  "object",
        PARM(file, text, ),

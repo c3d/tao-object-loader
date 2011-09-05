@@ -48,8 +48,7 @@ Object3D::Object3D(kstring name)
 // ----------------------------------------------------------------------------
 //   Initialize an object. If a name is given, load the file
 // ----------------------------------------------------------------------------
-      : glcWorld(), loadThread(NULL), status(NotStarted), complete(0),
-	colored(false)
+    : glcWorld(), loadThread(NULL), status(NotStarted), complete(0)
 {
     if (name)
         Load(name);
@@ -162,23 +161,8 @@ void Object3D::DrawObject()
 
     glEnable(GL_NORMALIZE);
 
-    if (colored)
-    {
-        Object3D::tao->SetFillColor();
-        Object3D::tao->SetTextures();
-        GLfloat color[4];
-        glGetFloatv(GL_CURRENT_COLOR, color);
-        if (color[3] != 1)
-            glDepthMask(GL_FALSE);
-        glcWorld.render(0, glc::GeometryOnlyRenderFlag);
-        if (color[3] != 1)
-            glDepthMask(GL_TRUE);
-    }
-    else
-    {
-        glcWorld.render(0, glc::ShadingFlag);
-        glcWorld.render(0, glc::TransparentRenderFlag);
-    }
+    glcWorld.render(0, glc::ShadingFlag);
+    glcWorld.render(0, glc::TransparentRenderFlag);
 
     glPopAttrib();
 }
