@@ -32,6 +32,7 @@
 #include <iostream>
 #include <GLC_World>
 
+
 class LoadThread;
 
 struct Object3D : public QObject
@@ -91,10 +92,6 @@ private:
     int           complete;
     // Load start time
     QTime         loadTime;
-
-public:
-    // True if Draw should force use of current color/material
-    bool          colored;
 
 public:
     // Pointer to Tao functions
