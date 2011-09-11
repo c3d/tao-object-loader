@@ -175,8 +175,10 @@ bool GLC_RenderProperties::needToRenderWithTransparency() const
 	bool renderWithTransparency= false;
 	if (m_RenderMode == glc::OverwriteMaterial)
 	{
-		Q_ASSERT(NULL != m_pOverwriteMaterial);
-		renderWithTransparency= m_pOverwriteMaterial->isTransparent();
+		if (NULL == m_pOverwriteMaterial)
+			renderWithTransparency= false;
+		else
+			renderWithTransparency= m_pOverwriteMaterial->isTransparent();
 	}
 	else if (m_RenderMode == glc::OverwriteTransparency)
 	{
@@ -234,15 +236,16 @@ void GLC_RenderProperties::clear()
 // Set the overwrite material
 void GLC_RenderProperties::setOverwriteMaterial(GLC_Material* pMaterial)
 {
-	Q_ASSERT(NULL != pMaterial);
 	if (NULL != m_pOverwriteMaterial)
 	{
 		m_pOverwriteMaterial->delUsage(m_Uid);
 		if (m_pOverwriteMaterial->isUnused()) delete m_pOverwriteMaterial;
 	}
 	m_pOverwriteMaterial= pMaterial;
-
-	m_pOverwriteMaterial->addUsage(m_Uid);
+	if (NULL != m_pOverwriteMaterial)
+	{
+		m_pOverwriteMaterial->addUsage(m_Uid);
+	}
 }
 
 // Return true if the specified primitive id of the specified body index is selected
