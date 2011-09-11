@@ -89,6 +89,7 @@ void Object3DDrawing::Draw()
         glScalef(s, s, s);
     }
 
+    object->colored = colored;
     object->Draw();
     glPopMatrix();
 }
