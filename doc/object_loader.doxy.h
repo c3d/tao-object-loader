@@ -72,6 +72,8 @@ object(real x, real y, real z, real width, real height, real depth, text file);
  * Similar the the @ref object primitive, except that it forces the object to
  * take the current color or material properties even if the model file defines
  * colors, materials or textures.
+ *
+ * @since 1.1
  */
 colored_object(real x, real y, real z, text file);
 
@@ -81,6 +83,8 @@ colored_object(real x, real y, real z, text file);
  * Similar the the @ref object primitive, except that it forces the object to
  * take the current color or material properties even if the model file defines
  * colors, materials or textures.
+ *
+ * @since 1.1
  */
 colored_object(real x, real y, real z, real width, real height, real depth, text file);
 
