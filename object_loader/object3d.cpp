@@ -172,7 +172,8 @@ void Object3D::DrawObject()
 		    p->setOverwriteMaterial(NULL);
 		    p->setRenderingMode(glc::OverwriteMaterial);
 	    }
-	    Object3D::tao->SetFillColor();
+            Object3D::tao->SetFillColor();
+            Object3D::tao->SetTextures();
     }
 
     glcWorld.render(0, glc::ShadingFlag);
