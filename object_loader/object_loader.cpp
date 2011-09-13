@@ -43,7 +43,7 @@ XL_DEFINE_TRACES
 Tree_p object(Tree_p self,
               Real_p x, Real_p y, Real_p z,
               Real_p w, Real_p h, Real_p d,
-              Text_p name)
+              Text_p name, bool colored)
 // ----------------------------------------------------------------------------
 //   Primitive to load a 3D object and show it centered at (x, y, z)
 // ----------------------------------------------------------------------------
@@ -60,7 +60,8 @@ Tree_p object(Tree_p self,
             return XL::xl_false;
         }
 
-        Object3DDrawing *drawing = new Object3DDrawing(obj, x, y, z, w, h, d);
+        Object3DDrawing *drawing = new Object3DDrawing(obj, x, y, z, w, h, d,
+                                                       colored);
         Object3D::tao->addToLayout(Object3DDrawing::render_callback, drawing,
                                    Object3DDrawing::delete_callback);
         Object3D::tao->addControlBox(x, y, z, w, h, d);

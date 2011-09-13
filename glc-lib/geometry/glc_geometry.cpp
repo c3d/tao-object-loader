@@ -259,7 +259,9 @@ void GLC_Geometry::render(const GLC_RenderProperties& renderProperties)
 	renderWire= renderWire || ((renderProperties.renderingFlag() != glc::TransparentRenderFlag) && !isTransparent());
 	if (!m_IsWire || renderWire)
 	{
-		if (m_MaterialHash.isEmpty() && !m_IsWire)
+		bool renderNullOverWriteMaterial= (renderProperties.renderingMode() == glc::OverwriteMaterial);
+		renderNullOverWriteMaterial= renderNullOverWriteMaterial && (NULL == renderProperties.overwriteMaterial());
+		if (m_MaterialHash.isEmpty() && !m_IsWire && !renderNullOverWriteMaterial)
 		{
 			GLC_Material* pMaterial= new GLC_Material();
 			pMaterial->setName(name());
@@ -269,7 +271,7 @@ void GLC_Geometry::render(const GLC_RenderProperties& renderProperties)
 		m_IsSelected= renderProperties.isSelected();
 
 		// Define Geometry's property
-		if(!GLC_State::isInSelectionMode())
+		if(!GLC_State::isInSelectionMode() && !renderNullOverWriteMaterial)
 		{
 			glPropGeom(renderProperties);
 		}
