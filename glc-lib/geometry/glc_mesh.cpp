@@ -881,6 +881,12 @@ void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 	}
 	else
 	{
+		if (renderProperties.renderingFlag() == glc::GeometryOnlyRenderFlag)
+		{
+			geometryOnlyRenderLoop(vboIsUsed);
+		}
+		else
+		{
 		// Choose the accurate render loop
 		switch (renderProperties.renderingMode())
 		{
@@ -902,6 +908,7 @@ void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 		default:
 			Q_ASSERT(false);
 			break;
+		}
 		}
 	}
 
@@ -1330,6 +1337,22 @@ void GLC_Mesh::primitiveSelectedRenderLoop(const GLC_RenderProperties& renderPro
 			vboDrawSelectedPrimitivesGroupOf(pCurrentGroup, pCurrentMaterial, materialIsrenderable, isTransparent, renderProperties);
 		else
 			vertexArrayDrawSelectedPrimitivesGroupOf(pCurrentGroup, pCurrentMaterial, materialIsrenderable, isTransparent, renderProperties);
+
+		++iGroup;
+	}
+}
+
+void GLC_Mesh::geometryOnlyRenderLoop(bool vboIsUsed)
+{
+	LodPrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
+	while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
+	{
+		GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
+
+		if (vboIsUsed)
+			vboDrawPrimitivesOf(pCurrentGroup);
+		else
+			vertexArrayDrawPrimitivesOf(pCurrentGroup);
 
 		++iGroup;
 	}

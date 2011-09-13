@@ -54,7 +54,8 @@ namespace glc
 	{
 		ShadingFlag= 800,
 		WireRenderFlag,
-		TransparentRenderFlag
+		TransparentRenderFlag,
+		GeometryOnlyRenderFlag
 	};
 };
 //////////////////////////////////////////////////////////////////////
