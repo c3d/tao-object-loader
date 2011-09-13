@@ -255,6 +255,11 @@ void GLC_Geometry::glLoadTexture(void)
 void GLC_Geometry::render(const GLC_RenderProperties& renderProperties)
 {
 	Q_ASSERT(!m_IsWire || (m_IsWire && m_MaterialHash.isEmpty()));
+	if (renderProperties.renderingFlag() == glc::GeometryOnlyRenderFlag)
+	{
+		glDraw(renderProperties);
+		return;
+	}
 	bool renderWire= (renderProperties.renderingFlag() == glc::TransparentRenderFlag) && isTransparent();
 	renderWire= renderWire || ((renderProperties.renderingFlag() != glc::TransparentRenderFlag) && !isTransparent());
 	if (!m_IsWire || renderWire)
