@@ -1154,7 +1154,7 @@ void GLC_Mesh::normalRenderLoop(const GLC_RenderProperties& renderProperties, bo
 
 			// Choose the material to render
 	   		if ((materialIsrenderable || m_IsSelected) && !GLC_State::isInSelectionMode())
-			{
+	    	{
 				// Execute current material
 				pCurrentMaterial->glExecute();
 
@@ -1181,8 +1181,8 @@ void GLC_Mesh::OverwriteMaterialRenderLoop(const GLC_RenderProperties& renderPro
 {
 	// Get the overwrite material
 	GLC_Material* pOverwriteMaterial= renderProperties.overwriteMaterial();
-	if (NULL != pOverwriteMaterial)
-		pOverwriteMaterial->glExecute();
+	Q_ASSERT(NULL != pOverwriteMaterial);
+	pOverwriteMaterial->glExecute();
 	if (m_IsSelected) GLC_SelectionMaterial::glExecute();
 
 	LodPrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
@@ -1191,9 +1191,7 @@ void GLC_Mesh::OverwriteMaterialRenderLoop(const GLC_RenderProperties& renderPro
 		GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
 
 		// Test if the current material is renderable
-		bool materialIsrenderable = (NULL == pOverwriteMaterial) ||
-				(pOverwriteMaterial->isTransparent() ==
-				 (renderProperties.renderingFlag() == glc::TransparentRenderFlag));
+		bool materialIsrenderable = (pOverwriteMaterial->isTransparent() == (renderProperties.renderingFlag() == glc::TransparentRenderFlag));
 
    		// Choose the primitives to render
 		if (m_IsSelected || materialIsrenderable)
