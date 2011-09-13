@@ -59,7 +59,7 @@ void Object3DDrawing::Draw()
         // need to translate to display the % complete at the right place
         glTranslatef(x, y, z);
     }
-    else
+    else if (w > 0 || h > 0 || d > 0)
     {
         // Compute scaling factor if bbox dimensions are specified
         scale sx = 1.0, sy = 1.0, sz = 1.0, s;
