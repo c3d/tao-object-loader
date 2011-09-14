@@ -368,10 +368,7 @@ bool GLC_3DViewInstance::isTransparent() const
 	if (m_RenderProperties.renderingMode() == glc::OverwriteTransparency) return true;
 	if (m_RenderProperties.renderingMode() == glc::OverwriteMaterial)
 	{
-		GLC_Material* pOverwriteMaterial= m_RenderProperties.overwriteMaterial();
-		if (NULL == pOverwriteMaterial)
-			return false;
-		return pOverwriteMaterial->isTransparent();
+		return m_RenderProperties.overwriteMaterial()->isTransparent();
 	}
 	const int size= m_3DRep.numberOfBody();
 	bool result= true;

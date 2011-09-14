@@ -164,19 +164,20 @@ void Object3D::DrawObject()
 
     if (colored)
     {
-	    QList<GLC_3DViewInstance*> instances =
-	        glcWorld.collection()->instancesHandle();
-	    foreach(GLC_3DViewInstance *inst, instances)
-	    {
-		    GLC_RenderProperties * p = inst->renderPropertiesHandle();
-		    p->setOverwriteMaterial(NULL);
-		    p->setRenderingMode(glc::OverwriteMaterial);
-	    }
-	    Object3D::tao->SetFillColor();
+        Object3D::tao->SetFillColor();
+        GLfloat color[4];
+        glGetFloatv(GL_CURRENT_COLOR, color);
+        if (color[3] != 1)
+            glDepthMask(GL_FALSE);
+        glcWorld.render(0, glc::GeometryOnlyRenderFlag);
+        if (color[3] != 1)
+            glDepthMask(GL_TRUE);
     }
-
-    glcWorld.render(0, glc::ShadingFlag);
-    glcWorld.render(0, glc::TransparentRenderFlag);
+    else
+    {
+        glcWorld.render(0, glc::ShadingFlag);
+        glcWorld.render(0, glc::TransparentRenderFlag);
+    }
 
     glPopAttrib();
 }

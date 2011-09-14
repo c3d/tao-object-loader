@@ -881,6 +881,12 @@ void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 	}
 	else
 	{
+		if (renderProperties.renderingFlag() == glc::GeometryOnlyRenderFlag)
+		{
+			geometryOnlyRenderLoop(vboIsUsed);
+		}
+		else
+		{
 		// Choose the accurate render loop
 		switch (renderProperties.renderingMode())
 		{
@@ -902,6 +908,7 @@ void GLC_Mesh::glDraw(const GLC_RenderProperties& renderProperties)
 		default:
 			Q_ASSERT(false);
 			break;
+		}
 		}
 	}
 
@@ -1154,7 +1161,7 @@ void GLC_Mesh::normalRenderLoop(const GLC_RenderProperties& renderProperties, bo
 
 			// Choose the material to render
 	   		if ((materialIsrenderable || m_IsSelected) && !GLC_State::isInSelectionMode())
-			{
+	    	{
 				// Execute current material
 				pCurrentMaterial->glExecute();
 
@@ -1181,8 +1188,8 @@ void GLC_Mesh::OverwriteMaterialRenderLoop(const GLC_RenderProperties& renderPro
 {
 	// Get the overwrite material
 	GLC_Material* pOverwriteMaterial= renderProperties.overwriteMaterial();
-	if (NULL != pOverwriteMaterial)
-		pOverwriteMaterial->glExecute();
+	Q_ASSERT(NULL != pOverwriteMaterial);
+	pOverwriteMaterial->glExecute();
 	if (m_IsSelected) GLC_SelectionMaterial::glExecute();
 
 	LodPrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
@@ -1191,9 +1198,7 @@ void GLC_Mesh::OverwriteMaterialRenderLoop(const GLC_RenderProperties& renderPro
 		GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
 
 		// Test if the current material is renderable
-		bool materialIsrenderable = (NULL == pOverwriteMaterial) ||
-				(pOverwriteMaterial->isTransparent() ==
-				 (renderProperties.renderingFlag() == glc::TransparentRenderFlag));
+		bool materialIsrenderable = (pOverwriteMaterial->isTransparent() == (renderProperties.renderingFlag() == glc::TransparentRenderFlag));
 
    		// Choose the primitives to render
 		if (m_IsSelected || materialIsrenderable)
@@ -1332,6 +1337,22 @@ void GLC_Mesh::primitiveSelectedRenderLoop(const GLC_RenderProperties& renderPro
 			vboDrawSelectedPrimitivesGroupOf(pCurrentGroup, pCurrentMaterial, materialIsrenderable, isTransparent, renderProperties);
 		else
 			vertexArrayDrawSelectedPrimitivesGroupOf(pCurrentGroup, pCurrentMaterial, materialIsrenderable, isTransparent, renderProperties);
+
+		++iGroup;
+	}
+}
+
+void GLC_Mesh::geometryOnlyRenderLoop(bool vboIsUsed)
+{
+	LodPrimitiveGroups::iterator iGroup= m_PrimitiveGroups.value(m_CurrentLod)->begin();
+	while (iGroup != m_PrimitiveGroups.value(m_CurrentLod)->constEnd())
+	{
+		GLC_PrimitiveGroup* pCurrentGroup= iGroup.value();
+
+		if (vboIsUsed)
+			vboDrawPrimitivesOf(pCurrentGroup);
+		else
+			vertexArrayDrawPrimitivesOf(pCurrentGroup);
 
 		++iGroup;
 	}
