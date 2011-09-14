@@ -48,7 +48,8 @@ Object3D::Object3D(kstring name)
 // ----------------------------------------------------------------------------
 //   Initialize an object. If a name is given, load the file
 // ----------------------------------------------------------------------------
-    : glcWorld(), loadThread(NULL), status(NotStarted), complete(0)
+      : glcWorld(), loadThread(NULL), status(NotStarted), complete(0),
+	colored(false)
 {
     if (name)
         Load(name);
@@ -160,6 +161,19 @@ void Object3D::DrawObject()
     glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
 
     glEnable(GL_NORMALIZE);
+
+    if (colored)
+    {
+	    QList<GLC_3DViewInstance*> instances =
+	        glcWorld.collection()->instancesHandle();
+	    foreach(GLC_3DViewInstance *inst, instances)
+	    {
+		    GLC_RenderProperties * p = inst->renderPropertiesHandle();
+		    p->setOverwriteMaterial(NULL);
+		    p->setRenderingMode(glc::OverwriteMaterial);
+	    }
+	    Object3D::tao->SetFillColor();
+    }
 
     glcWorld.render(0, glc::ShadingFlag);
     glcWorld.render(0, glc::TransparentRenderFlag);

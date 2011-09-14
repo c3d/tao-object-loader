@@ -35,8 +35,9 @@ struct Object3DDrawing
 {
     Object3DDrawing (Object3D *obj,
                      Tao::coord x, Tao::coord y, Tao::coord z,
-                     Tao::scale w, Tao::scale h, Tao::scale d)
-        : object(obj), x(x), y(y), z(z), w(w), h(h), d(d) {}
+                     Tao::scale w, Tao::scale h, Tao::scale d,
+                     bool colored = false)
+        : object(obj), x(x), y(y), z(z), w(w), h(h), d(d), colored(colored) {}
     ~Object3DDrawing() {}
 
     void                Draw();
@@ -50,6 +51,7 @@ public:
     Object3D *          object;
     Tao::coord          x, y, z;
     Tao::scale          w, h, d;
+    bool                colored;
 };
 
 #endif // OBJECT3D_DRAWING_H

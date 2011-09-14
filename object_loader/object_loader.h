@@ -28,7 +28,7 @@
 XL::Tree_p object(XL::Tree_p self,
                   XL::Real_p x, XL::Real_p y, XL::Real_p z,
                   XL::Real_p w, XL::Real_p h, XL::Real_p d,
-                  XL::Text_p name);
+                  XL::Text_p name, bool colored);
 
 XL::Tree_p object(XL::Tree_p self, XL::Text_p name);
 
