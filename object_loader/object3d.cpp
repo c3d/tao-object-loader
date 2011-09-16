@@ -165,6 +165,7 @@ void Object3D::DrawObject()
     if (colored)
     {
         Object3D::tao->SetFillColor();
+        Object3D::tao->SetTextures();
         GLfloat color[4];
         glGetFloatv(GL_CURRENT_COLOR, color);
         if (color[3] != 1)
