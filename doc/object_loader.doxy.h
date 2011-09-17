@@ -17,7 +17,7 @@
  * For instance, the following Tao document will load a 3D model from
  * file @c conestoga.3ds, and show it rotating around the z axis.
  @code
-import ObjectLoader 1.0
+import ObjectLoader 1.01
 
 the_light X, Y, Z ->
     light 0
@@ -73,7 +73,7 @@ object(real x, real y, real z, real width, real height, real depth, text file);
  * take the current color or material properties even if the model file defines
  * colors, materials or textures.
  *
- * @since 1.1
+ * @since 1.01
  */
 colored_object(real x, real y, real z, text file);
 
@@ -84,7 +84,7 @@ colored_object(real x, real y, real z, text file);
  * take the current color or material properties even if the model file defines
  * colors, materials or textures.
  *
- * @since 1.1
+ * @since 1.01
  */
 colored_object(real x, real y, real z, real width, real height, real depth, text file);
 
