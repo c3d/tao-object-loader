@@ -17,7 +17,7 @@ module_description
     import_name "ObjectLoader"
     author "Taodyne SAS"
     website "http://www.taodyne.com"
-    version 1.0
+    version 1.01
 
 module_description "fr",
     name "Lecteur de fichiers 3D"
@@ -33,19 +33,7 @@ module_description "fr",
                 "(http://www.glc-lib.net)."
 
 object x:real, y:real, z:real, file:text ->
-    /** Loads and translates a 3D object.
-    module.ObjectLoader
-    @a file is a relative or absolute path to the model file.
-    The object is shown centered at (@a x, @a y, @a z).
-    No scaling occurs: the object dimensions are as defined in the model file.
-    **/
     object x, y, z, 0.0, 0.0, 0.0, file
 
-object x:real, y:real, z:real, width:real, file:text ->
-    /** Loads, scales and translates a 3D object.
-    module.ObjectLoader
-    @a file is a relative or absolute path to the model file.
-    The object is shown centered at (@a x, @a y, @a z).
-    It is scaled proportionally so that its width is @a width.
-    **/
-    object x, y, z, w, 0.0, 0.0, file
+colored_object x:real, y:real, z:real, file:text ->
+    colored_object x, y, z, 0.0, 0.0, 0.0, file

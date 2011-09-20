@@ -17,7 +17,7 @@
  * For instance, the following Tao document will load a 3D model from
  * file @c conestoga.3ds, and show it rotating around the z axis.
  @code
-import ObjectLoader 1.0
+import ObjectLoader 1.01
 
 the_light X, Y, Z ->
     light 0
@@ -60,20 +60,34 @@ object(real x, real y, real z, text file);
 /**
  * Loads, scales and translates a 3D object.
  * @a file is a relative or absolute path to the model file.
- * The object is shown centered at (@a x, @a y, @a z).
- * It is scaled proportionally so that its width is @a width.
- */
-object(real x, real y, real z, real width, text file);
-
-/**
- * Loads, scales and translates a 3D object.
- * @a file is a relative or absolute path to the model file.
  * The object is shown centered at (@a x, @a y, @a z). "
  * The size of the object is specified by @a width, @a height and @a depth:
  * the model is scaled proportionally so that it fits in a box of the
  * specified size.
  */
 object(real x, real y, real z, real width, real height, real depth, text file);
+
+/**
+ * Loads, translates and paints a 3D object.
+ * Similar the the @ref object primitive, except that it forces the object to
+ * take the current color or material properties even if the model file defines
+ * colors, materials or textures.
+ *
+ * @since 1.01
+ */
+colored_object(real x, real y, real z, text file);
+
+
+/**
+ * Loads, scales, translates and paints a 3D object.
+ * Similar the the @ref object primitive, except that it forces the object to
+ * take the current color or material properties even if the model file defines
+ * colors, materials or textures.
+ *
+ * @since 1.01
+ */
+colored_object(real x, real y, real z, real width, real height, real depth, text file);
+
 
 /**
  * @}
