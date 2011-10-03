@@ -31,7 +31,6 @@
 #include "object3d.h"
 #include "object3d_drawing.h"
 #include "tao/module_api.h"
-#include "preferences_dialog.h"
 #include <GLC_Exception>
 #include <QImage>
 #include <QGLWidget>
@@ -142,15 +141,5 @@ int module_exit()
 //   Uninitialize the Tao module
 // ----------------------------------------------------------------------------
 {
-    return 0;
-}
-
-
-int show_preferences()
-// ----------------------------------------------------------------------------
-//   Show the module preference dialog
-// ----------------------------------------------------------------------------
-{
-    PreferencesDialog().exec();
     return 0;
 }

@@ -21,13 +21,11 @@ DEFINES     += GLEW_STATIC
 HEADERS     = object_loader.h \
               object3d.h \
               object3d_drawing.h \
-              load_thread.h \
-              preferences_dialog.h
+              load_thread.h
 SOURCES     = object_loader.cpp \
               object3d.cpp \
               object3d_drawing.cpp \
-              load_thread.cpp \
-              preferences_dialog.cpp
+              load_thread.cpp
 TBL_SOURCES = object_loader.tbl
 OTHER_FILES = object_loader.xl object_loader.tbl traces.tbl
 
@@ -50,9 +48,3 @@ progress_img.path  = $$MODINSTPATH
 progress_img.files = progress.png
 
 INSTALLS    += thismod_icon progress_img
-
-TRANSLATIONS = object_loader.ts
-include($${TAO_SDK}/translations.pri)
-translations.path = $$MODINSTPATH
-translations.files = *.qm
-INSTALLS += translations
