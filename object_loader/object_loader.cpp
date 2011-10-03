@@ -31,7 +31,6 @@
 #include "object3d.h"
 #include "object3d_drawing.h"
 #include "tao/module_api.h"
-#include "preferences_dialog.h"
 #include <GLC_Exception>
 #include <QImage>
 #include <QGLWidget>
@@ -63,10 +62,8 @@ Tree_p object(Tree_p self,
 
         Object3DDrawing *drawing = new Object3DDrawing(obj, x, y, z, w, h, d,
                                                        colored);
-        Object3D::tao->AddToLayout2(Object3DDrawing::render_callback,
-                                    Object3DDrawing::identify_callback,
-                                    drawing,
-                                    Object3DDrawing::delete_callback);
+        Object3D::tao->addToLayout(Object3DDrawing::render_callback, drawing,
+                                   Object3DDrawing::delete_callback);
         Object3D::tao->addControlBox(x, y, z, w, h, d);
     }
     catch (GLC_Exception e)
@@ -144,15 +141,5 @@ int module_exit()
 //   Uninitialize the Tao module
 // ----------------------------------------------------------------------------
 {
-    return 0;
-}
-
-
-int show_preferences()
-// ----------------------------------------------------------------------------
-//   Show the module preference dialog
-// ----------------------------------------------------------------------------
-{
-    PreferencesDialog().exec();
     return 0;
 }

@@ -48,7 +48,6 @@ struct Object3D : public QObject
 
     // Draw interface
     void              Draw();
-    void              Identify();
 
     // Object bounding box
     Tao::Box3         Bounds();
@@ -80,16 +79,6 @@ private:
     void              DrawObject();
     void              DrawPlaceHolder();
     void              DrawErrorPlaceHolder();
-
-private:
-    static text       toText(QString s);
-    static void       initGLC();
-    static void       checkCurrentContext();
-
-private:
-    typedef std::map<text, Object3D *> file_map;
-    static file_map           loaded;
-    static const QGLContext * context;
 
 private:
     // Representation of an object

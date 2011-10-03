@@ -41,13 +41,9 @@ struct Object3DDrawing
     ~Object3DDrawing() {}
 
     void                Draw();
-    void                Identify();
-    void                Transform();
 
     // Call ((Object3DDrawing *)arg)->Draw()
     static void         render_callback(void *arg);
-    // Call ((Object3DDrawing *)arg)->Draw()
-    static void         identify_callback(void *arg);
     // Call delete (Object3DDrawing *)arg
     static void         delete_callback(void *arg);
 

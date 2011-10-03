@@ -24,7 +24,6 @@
 #include "tao_gl.h"
 #include "object3d.h"
 #include "load_thread.h"
-#include "preferences_dialog.h"
 #include <QString>
 #include <QFileInfo>
 #include <GLC_Factory>
@@ -32,10 +31,8 @@
 using namespace Tao;
 
 
-const ModuleApi *  Object3D::tao = NULL;
-QImage             Object3D::progress[NPROGRESS];
-const QGLContext * Object3D::context = NULL;
-Object3D::file_map Object3D::loaded;
+const ModuleApi *Object3D::tao = NULL;
+QImage           Object3D::progress[NPROGRESS];
 
 
 void Object3D::render_callback(void *arg)
@@ -52,7 +49,7 @@ Object3D::Object3D(kstring name)
 //   Initialize an object. If a name is given, load the file
 // ----------------------------------------------------------------------------
       : glcWorld(), loadThread(NULL), status(NotStarted), complete(0),
-        colored(false)
+	colored(false)
 {
     if (name)
         Load(name);
@@ -143,29 +140,6 @@ void Object3D::Draw()
         DrawErrorPlaceHolder(); break;
 
     case LoadSuccess:
-        Object3D::tao->SetTextures();
-        DrawObject();           break;
-
-    default:                    break;
-    }
-}
-
-
-void Object3D::Identify()
-// ----------------------------------------------------------------------------
-//   Identify object under cursor
-// ----------------------------------------------------------------------------
-{
-    switch (status)
-    {
-    case NotStarted:
-    case InProgress:
-        DrawPlaceHolder();      break;
-
-    case LoadFailed:
-        DrawErrorPlaceHolder(); break;
-
-    case LoadSuccess:
         DrawObject();           break;
 
     default:                    break;
@@ -178,8 +152,6 @@ void Object3D::DrawObject()
 //   Draw the 3D object
 // ----------------------------------------------------------------------------
 {
-    checkCurrentContext();
-
     glPushAttrib(GL_ENABLE_BIT | GL_LIGHTING_BIT | GL_TRANSFORM_BIT);
 
     glDisable(GL_POLYGON_OFFSET_FILL);
@@ -190,43 +162,22 @@ void Object3D::DrawObject()
 
     glEnable(GL_NORMALIZE);
 
-    // If color on lines is non transparent, then draw
-    // wireframe object
-    if(Object3D::tao->SetLineColor())
+    if (colored)
     {
-        // Set wireframe mode
-        glcWorld.collection()->setPolygonModeForAll(GL_FRONT_AND_BACK, GL_LINE);
-
-        if(colored)
-            glcWorld.render(0, glc::GeometryOnlyRenderFlag);
-        else
-        {
-            glcWorld.render(0, glc::WireRenderFlag);
-            glcWorld.render(0, glc::TransparentRenderFlag);
-        }
-
-        // Reset polygon mode
-        glcWorld.collection()->setPolygonModeForAll(GL_FRONT_AND_BACK, GL_FILL);
+        Object3D::tao->SetFillColor();
+        Object3D::tao->SetTextures();
+        GLfloat color[4];
+        glGetFloatv(GL_CURRENT_COLOR, color);
+        if (color[3] != 1)
+            glDepthMask(GL_FALSE);
+        glcWorld.render(0, glc::GeometryOnlyRenderFlag);
+        if (color[3] != 1)
+            glDepthMask(GL_TRUE);
     }
-
-    // Classic draw
-    if(Object3D::tao->SetFillColor())
+    else
     {
-        if (colored)
-        {
-            GLfloat color[4];
-            glGetFloatv(GL_CURRENT_COLOR, color);
-            if (color[3] != 1)
-                glDepthMask(GL_FALSE);
-            glcWorld.render(0, glc::GeometryOnlyRenderFlag);
-            if (color[3] != 1)
-                glDepthMask(GL_TRUE);
-        }
-        else
-        {
-            glcWorld.render(0, glc::ShadingFlag);
-            glcWorld.render(0, glc::TransparentRenderFlag);
-        }
+        glcWorld.render(0, glc::ShadingFlag);
+        glcWorld.render(0, glc::TransparentRenderFlag);
     }
 
     glPopAttrib();
@@ -249,7 +200,7 @@ void Object3D::DrawPlaceHolder()
         if (prog)
             glUseProgram(0);
 
-        int idx = (NPROGRESS - 1) * complete / 100;
+        int idx = NPROGRESS * complete / 100;
         QImage img = progress[idx];
         glRasterPos3d(0, 0, 0);
         glDrawPixels(img.width(), img.height(), GL_RGBA, GL_UNSIGNED_BYTE,
@@ -288,7 +239,35 @@ Object3D *Object3D::Object(text name)
 //   Maintain a list of object files currently in use
 // ----------------------------------------------------------------------------
 {
-    checkCurrentContext();
+    typedef std::map<text, Object3D *> file_map;
+    static file_map loaded;
+    static int use_vbo = -1;
+    static const QGLContext *context = NULL;
+
+    if (QGLContext::currentContext() != context)
+    {
+        // GL context has changed. Force reload, because textures used by
+        // cached objects would be invalid.
+        // REVISIT: it would be far more efficient to tell GLC_Lib to reload
+        // its textures.
+        IFTRACE(objloader)
+            debug() << "GL context changed: clearing cache\n";
+        loaded.clear();
+        context = QGLContext::currentContext();
+        use_vbo = -1;
+    }
+    if (use_vbo == -1)
+    {
+        // Enable Vertex Buffer Objects only if they're supported, otherwise
+        // GLC may crash
+        use_vbo = GLC_State::vboSupported();
+        GLC_State::setVboUsage(use_vbo);
+        IFTRACE(objloader)
+        {
+            const char * nt = use_vbo ? "" : "not ";
+            debug() << " Info: VBOs " << nt << "supported\n";
+        }
+    }
 
     file_map::iterator found = loaded.find(name);
     if (found == loaded.end())
@@ -326,67 +305,6 @@ Object3D *Object3D::Object(text name)
 }
 
 
-void Object3D::checkCurrentContext()
-// ----------------------------------------------------------------------------
-//   Do what is needed if GL context has changed
-// ----------------------------------------------------------------------------
-{
-    if (context)
-    {
-        if (context == QGLContext::currentContext())
-            return;
-        IFTRACE(objloader)
-            debug() << "GL context has changed\n";
-        // Force reload, because textures used by cached objects would be
-        // invalid.
-        // REVISIT: it would be far more efficient to tell GLC_Lib to reload
-        // its textures.
-        IFTRACE(objloader)
-            debug() << "Clearing cache\n";
-        loaded.clear();
-    }
-
-    IFTRACE(objloader)
-        debug() << "Initializing GLC_Lib\n";
-    initGLC();
-}
-
-
-static text supp(bool b)
-// ----------------------------------------------------------------------------
-//   Debug helper
-// ----------------------------------------------------------------------------
-{
-    if (!b)
-        return "not ";
-    return "";
-}
-
-
-void Object3D::initGLC()
-// ----------------------------------------------------------------------------
-//   Initialize the GLC library
-// ----------------------------------------------------------------------------
-{
-    GLC_State::init();
-    bool useVBOs = PreferencesDialog::useVBOs();
-    GLC_State::setVboUsage(useVBOs);
-    context = QGLContext::currentContext();
-
-    IFTRACE(objloader)
-    {
-        debug() << "GLC_Lib has detected the following:\n";
-        debug() << "  GL version: " << toText(GLC_State::version()) << "\n";
-        debug() << "  Vendor: " << toText(GLC_State::vendor()) << "\n";
-        debug() << "  Renderer: " << toText(GLC_State::renderer()) << "\n";
-        debug() << "  VBOs " << supp(GLC_State::vboSupported())
-                << "supported\n";
-        debug() << "  VBOs " << supp(GLC_State::vboUsed())
-                << "used\n";
-    }
-}
-
-
 std::ostream& Object3D::debug()
 // ----------------------------------------------------------------------------
 //   Convenience method to log with a common prefix
@@ -394,13 +312,4 @@ std::ostream& Object3D::debug()
 {
     std::cerr << "[ObjLoader] ";
     return std::cerr;
-}
-
-
-text Object3D::toText(QString s)
-// ----------------------------------------------------------------------------
-//   Convert QString to UTF-8 encoded std::string (text)
-// ----------------------------------------------------------------------------
-{
-    return std::string(s.toUtf8().constData());
 }
