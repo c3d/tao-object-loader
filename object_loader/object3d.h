@@ -81,6 +81,13 @@ private:
     void              DrawErrorPlaceHolder();
 
 private:
+    static text       toText(QString s);
+    static void       initGLC();
+
+private:
+    static bool   glcInitialized;
+
+private:
     // Representation of an object
     GLC_World     glcWorld;
     // Thread to load file asynchronously
