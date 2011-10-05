@@ -201,7 +201,7 @@ void Object3D::DrawPlaceHolder()
         if (prog)
             glUseProgram(0);
 
-        int idx = NPROGRESS * complete / 100;
+        int idx = (NPROGRESS - 1) * complete / 100;
         QImage img = progress[idx];
         glRasterPos3d(0, 0, 0);
         glDrawPixels(img.width(), img.height(), GL_RGBA, GL_UNSIGNED_BYTE,
