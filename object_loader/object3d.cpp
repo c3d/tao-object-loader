@@ -324,7 +324,10 @@ void Object3D::initGLC()
 // ----------------------------------------------------------------------------
 {
     GLC_State::init();
-    GLC_State::setVboUsage(false); // In progress: I get some crashes with VBOs
+#if defined(Q_OS_LINUX)
+    // If I enable VBOs on linux I get a crash on glGenBuffers
+    GLC_State::setVboUsage(false);
+#endif
     context = QGLContext::currentContext();
 
     IFTRACE(objloader)
