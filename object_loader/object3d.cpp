@@ -314,6 +314,7 @@ void Object3D::initGLC()
         debug() << "Initializing GLC_Lib\n";
 
     GLC_State::init();
+    GLC_State::setVboUsage(false); // In progress: I get some crashes with VBOs
     glcInitialized = true;
 
     IFTRACE(objloader)
