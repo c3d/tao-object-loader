@@ -31,9 +31,10 @@
 using namespace Tao;
 
 
-const ModuleApi *Object3D::tao = NULL;
-QImage           Object3D::progress[NPROGRESS];
-bool             Object3D::glcInitialized = false;
+const ModuleApi *  Object3D::tao = NULL;
+QImage             Object3D::progress[NPROGRESS];
+const QGLContext * Object3D::context = NULL;
+Object3D::file_map Object3D::loaded;
 
 
 void Object3D::render_callback(void *arg)
@@ -153,6 +154,8 @@ void Object3D::DrawObject()
 //   Draw the 3D object
 // ----------------------------------------------------------------------------
 {
+    checkCurrentContext();
+
     glPushAttrib(GL_ENABLE_BIT | GL_LIGHTING_BIT | GL_TRANSFORM_BIT);
 
     glDisable(GL_POLYGON_OFFSET_FILL);
@@ -240,23 +243,7 @@ Object3D *Object3D::Object(text name)
 //   Maintain a list of object files currently in use
 // ----------------------------------------------------------------------------
 {
-    typedef std::map<text, Object3D *> file_map;
-    static file_map loaded;
-    static const QGLContext *context = NULL;
-
-    if (!glcInitialized)
-        initGLC();
-    if (QGLContext::currentContext() != context)
-    {
-        // GL context has changed. Force reload, because textures used by
-        // cached objects would be invalid.
-        // REVISIT: it would be far more efficient to tell GLC_Lib to reload
-        // its textures.
-        IFTRACE(objloader)
-            debug() << "GL context changed: clearing cache\n";
-        loaded.clear();
-        context = QGLContext::currentContext();
-    }
+    checkCurrentContext();
 
     file_map::iterator found = loaded.find(name);
     if (found == loaded.end())
@@ -294,6 +281,32 @@ Object3D *Object3D::Object(text name)
 }
 
 
+void Object3D::checkCurrentContext()
+// ----------------------------------------------------------------------------
+//   Do what is needed if GL context has changed
+// ----------------------------------------------------------------------------
+{
+    if (context)
+    {
+        if (context == QGLContext::currentContext())
+            return;
+        IFTRACE(objloader)
+            debug() << "GL context has changed\n";
+        // Force reload, because textures used by cached objects would be
+        // invalid.
+        // REVISIT: it would be far more efficient to tell GLC_Lib to reload
+        // its textures.
+        IFTRACE(objloader)
+            debug() << "Clearing cache\n";
+        loaded.clear();
+    }
+
+    IFTRACE(objloader)
+        debug() << "Initializing GLC_Lib\n";
+    initGLC();
+}
+
+
 static text supp(bool b)
 // ----------------------------------------------------------------------------
 //   Debug helper
@@ -310,12 +323,9 @@ void Object3D::initGLC()
 //   Initialize the GLC library
 // ----------------------------------------------------------------------------
 {
-    IFTRACE(objloader)
-        debug() << "Initializing GLC_Lib\n";
-
     GLC_State::init();
     GLC_State::setVboUsage(false); // In progress: I get some crashes with VBOs
-    glcInitialized = true;
+    context = QGLContext::currentContext();
 
     IFTRACE(objloader)
     {

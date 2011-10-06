@@ -83,9 +83,12 @@ private:
 private:
     static text       toText(QString s);
     static void       initGLC();
+    static void       checkCurrentContext();
 
 private:
-    static bool   glcInitialized;
+    typedef std::map<text, Object3D *> file_map;
+    static file_map           loaded;
+    static const QGLContext * context;
 
 private:
     // Representation of an object
