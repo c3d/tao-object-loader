@@ -24,6 +24,7 @@
 #include "tao_gl.h"
 #include "object3d.h"
 #include "load_thread.h"
+#include "preferences_dialog.h"
 #include <QString>
 #include <QFileInfo>
 #include <GLC_Factory>
@@ -324,10 +325,8 @@ void Object3D::initGLC()
 // ----------------------------------------------------------------------------
 {
     GLC_State::init();
-#if defined(Q_OS_LINUX)
-    // If I enable VBOs on linux I get a crash on glGenBuffers
-    GLC_State::setVboUsage(false);
-#endif
+    bool useVBOs = PreferencesDialog::useVBOs();
+    GLC_State::setVboUsage(useVBOs);
     context = QGLContext::currentContext();
 
     IFTRACE(objloader)
