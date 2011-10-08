@@ -50,3 +50,9 @@ progress_img.path  = $$MODINSTPATH
 progress_img.files = progress.png
 
 INSTALLS    += thismod_icon progress_img
+
+TRANSLATIONS = object_loader.ts
+include($${TAO_SDK}/translations.pri)
+translations.path = $$MODINSTPATH
+translations.files = *.qm
+INSTALLS += translations
