@@ -59,7 +59,7 @@ void PreferencesDialog::useVBOToggled(bool use)
     if (use == useVBOsDefault())
         settings.remove("UseVBOs");
     else
-        settings.setValue("UseVBOs", QVariant(false));
+        settings.setValue("UseVBOs", QVariant(use));
 }
 
 
