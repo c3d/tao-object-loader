@@ -258,6 +258,7 @@ void GLC_Geometry::render(const GLC_RenderProperties& renderProperties)
 	if (renderProperties.renderingFlag() == glc::GeometryOnlyRenderFlag)
 	{
 		glDraw(renderProperties);
+		m_GeometryIsValid= true;
 		return;
 	}
 	bool renderWire= (renderProperties.renderingFlag() == glc::TransparentRenderFlag) && isTransparent();

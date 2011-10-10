@@ -81,6 +81,16 @@ private:
     void              DrawErrorPlaceHolder();
 
 private:
+    static text       toText(QString s);
+    static void       initGLC();
+    static void       checkCurrentContext();
+
+private:
+    typedef std::map<text, Object3D *> file_map;
+    static file_map           loaded;
+    static const QGLContext * context;
+
+private:
     // Representation of an object
     GLC_World     glcWorld;
     // Thread to load file asynchronously
