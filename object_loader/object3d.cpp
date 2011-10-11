@@ -51,8 +51,9 @@ Object3D::Object3D(kstring name)
 // ----------------------------------------------------------------------------
 //   Initialize an object. If a name is given, load the file
 // ----------------------------------------------------------------------------
-      : glcWorld(), loadThread(NULL), status(NotStarted), complete(0),
-	colored(false)
+    : glcWorld(), glcView(NULL),
+      loadThread(NULL), status(NotStarted), complete(0),
+      colored(false)
 {
     if (name)
         Load(name);
@@ -64,6 +65,8 @@ Object3D::~Object3D()
 //   Destruction
 // ----------------------------------------------------------------------------
 {
+    delete glcView;
+    delete loadThread;
 }
 
 
@@ -111,7 +114,11 @@ void Object3D::loadFinished()
         std::cerr << "done!\n";
     glcWorld = loadThread->world;
     if (status != LoadFailed && !glcWorld.isEmpty())
+    {
         status = LoadSuccess;
+        glcView = new GLC_Viewport(tao->renderingWidget());
+        glcWorld.setAttachedViewport(glcView);
+    }
     delete loadThread;
     loadThread = NULL;
 }
@@ -167,6 +174,9 @@ void Object3D::DrawObject()
 
     glEnable(GL_NORMALIZE);
 
+    if (glcView)
+        glcWorld.collection()->setLodUsage(true, glcView);
+
     if (colored)
     {
         Object3D::tao->SetFillColor();
@@ -184,6 +194,10 @@ void Object3D::DrawObject()
         glcWorld.render(0, glc::ShadingFlag);
         glcWorld.render(0, glc::TransparentRenderFlag);
     }
+
+    if (glcView)
+        glcWorld.collection()->setLodUsage(false, glcView);
+
 
     glPopAttrib();
 }

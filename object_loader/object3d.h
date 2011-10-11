@@ -93,6 +93,10 @@ private:
 private:
     // Representation of an object
     GLC_World     glcWorld;
+
+    // View in which we will show the object
+    GLC_Viewport *glcView;
+
     // Thread to load file asynchronously
     LoadThread *  loadThread;
     // File load status
