@@ -167,6 +167,7 @@ void Object3D::DrawObject()
 
     glEnable(GL_NORMALIZE);
 
+    Object3D::tao->SetShader(-1);
     if (colored)
     {
         Object3D::tao->SetFillColor();
