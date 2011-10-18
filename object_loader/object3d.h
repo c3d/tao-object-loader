@@ -48,7 +48,6 @@ struct Object3D : public QObject
 
     // Draw interface
     void              Draw();
-    void              Identify();
 
     // Object bounding box
     Tao::Box3         Bounds();

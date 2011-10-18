@@ -63,10 +63,8 @@ Tree_p object(Tree_p self,
 
         Object3DDrawing *drawing = new Object3DDrawing(obj, x, y, z, w, h, d,
                                                        colored);
-        Object3D::tao->AddToLayout2(Object3DDrawing::render_callback,
-                                    Object3DDrawing::identify_callback,
-                                    drawing,
-                                    Object3DDrawing::delete_callback);
+        Object3D::tao->addToLayout(Object3DDrawing::render_callback, drawing,
+                                   Object3DDrawing::delete_callback);
         Object3D::tao->addControlBox(x, y, z, w, h, d);
     }
     catch (GLC_Exception e)
