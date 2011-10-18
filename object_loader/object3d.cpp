@@ -143,6 +143,29 @@ void Object3D::Draw()
         DrawErrorPlaceHolder(); break;
 
     case LoadSuccess:
+        Object3D::tao->SetTextures();
+        DrawObject();           break;
+
+    default:                    break;
+    }
+}
+
+
+void Object3D::Identify()
+// ----------------------------------------------------------------------------
+//   Identify object under cursor
+// ----------------------------------------------------------------------------
+{
+    switch (status)
+    {
+    case NotStarted:
+    case InProgress:
+        DrawPlaceHolder();      break;
+
+    case LoadFailed:
+        DrawErrorPlaceHolder(); break;
+
+    case LoadSuccess:
         DrawObject();           break;
 
     default:                    break;
@@ -170,7 +193,6 @@ void Object3D::DrawObject()
     if (colored)
     {
         Object3D::tao->SetFillColor();
-        Object3D::tao->SetTextures();
         GLfloat color[4];
         glGetFloatv(GL_CURRENT_COLOR, color);
         if (color[3] != 1)
@@ -181,7 +203,6 @@ void Object3D::DrawObject()
     }
     else
     {
-        Object3D::tao->SetShader(-1);
         glcWorld.render(0, glc::ShadingFlag);
         glcWorld.render(0, glc::TransparentRenderFlag);
     }
