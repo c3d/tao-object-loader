@@ -51,11 +51,8 @@ progress_img.files = progress.png
 
 INSTALLS    += thismod_icon progress_img
 
-TRANSLATIONS = object_loader_fr.ts
+TRANSLATIONS = object_loader.ts
 include($${TAO_SDK}/translations.pri)
 translations.path = $$MODINSTPATH
 translations.files = *.qm
 INSTALLS += translations
-
-LICENSE_FILES = object_loader.taokey.notsigned
-exists(../../licenses.pri):include(../../licenses.pri)

@@ -143,6 +143,7 @@ void Object3D::Draw()
         DrawErrorPlaceHolder(); break;
 
     case LoadSuccess:
+        Object3D::tao->SetTextures();
         DrawObject();           break;
 
     default:                    break;
@@ -165,7 +166,7 @@ void Object3D::Identify()
         DrawErrorPlaceHolder(); break;
 
     case LoadSuccess:
-        IdentifyObject();       break;
+        DrawObject();           break;
 
     default:                    break;
     }
@@ -177,15 +178,6 @@ void Object3D::DrawObject()
 //   Draw the 3D object
 // ----------------------------------------------------------------------------
 {
-    static bool licensed, tested = false;
-    if (!tested)
-    {
-        licensed = tao->hasLicense("ObjectLoader 1.0");
-        tested = true;
-    }
-    if (!licensed && !tao->blink(4.5, 0.5))
-        return;
-
     checkCurrentContext();
 
     glPushAttrib(GL_ENABLE_BIT | GL_LIGHTING_BIT | GL_TRANSFORM_BIT);
@@ -198,27 +190,29 @@ void Object3D::DrawObject()
 
     glEnable(GL_NORMALIZE);
 
-    // If colored then use Tao materials
-    // otherwise use object materials.
-    if(colored)
+    // If color on lines is non transparent, then draw
+    // wireframe object
+    if(Object3D::tao->SetLineColor())
     {
-         Object3D::tao->SetTextures();
+        // Set wireframe mode
+        glcWorld.collection()->setPolygonModeForAll(GL_FRONT_AND_BACK, GL_LINE);
 
-         // If color on lines is non transparent, then draw
-         // wireframe object
-        if(Object3D::tao->SetLineColor())
-        {
-            // Set wireframe mode
-            glcWorld.collection()->setPolygonModeForAll(GL_FRONT_AND_BACK, GL_LINE);
-
+        if(colored)
             glcWorld.render(0, glc::GeometryOnlyRenderFlag);
-
-            // Reset polygon mode
-            glcWorld.collection()->setPolygonModeForAll(GL_FRONT_AND_BACK, GL_FILL);
+        else
+        {
+            glcWorld.render(0, glc::WireRenderFlag);
+            glcWorld.render(0, glc::TransparentRenderFlag);
         }
 
-        // Classic draw with color
-        if(Object3D::tao->SetFillColor())
+        // Reset polygon mode
+        glcWorld.collection()->setPolygonModeForAll(GL_FRONT_AND_BACK, GL_FILL);
+    }
+
+    // Classic draw
+    if(Object3D::tao->SetFillColor())
+    {
+        if (colored)
         {
             GLfloat color[4];
             glGetFloatv(GL_CURRENT_COLOR, color);
@@ -228,75 +222,11 @@ void Object3D::DrawObject()
             if (color[3] != 1)
                 glDepthMask(GL_TRUE);
         }
-    }
-    else
-    {
-        // Search if object contains a texture
-        bool hasTexture = false;
-        for(int i = 0; i < glcWorld.listOfMaterials().size(); i++)
-            hasTexture |= glcWorld.listOfMaterials()[i]->hasTexture();
-
-        uint saveUnits = Object3D::tao->TextureUnits();
-
-        // If object contains textures
-        // then force activation of unit 0
-        if(hasTexture)
-            Object3D::tao->SetTextureUnits(saveUnits | 1);
-
-        Object3D::tao->SetTextures();
-
-        // If color on lines is non transparent, then draw
-        // wireframe object
-        if(Object3D::tao->SetLineColor())
-        {
-            // Set wireframe mode
-            glcWorld.collection()->setPolygonModeForAll(GL_FRONT_AND_BACK, GL_LINE);
-
-            glcWorld.render(0, glc::WireRenderFlag);
-            glcWorld.render(0, glc::TransparentRenderFlag);
-
-            // Reset polygon mode
-            glcWorld.collection()->setPolygonModeForAll(GL_FRONT_AND_BACK, GL_FILL);
-        }
-
-        // Classic draw
-        if(Object3D::tao->SetFillColor())
+        else
         {
             glcWorld.render(0, glc::ShadingFlag);
             glcWorld.render(0, glc::TransparentRenderFlag);
         }
-
-        // Restore texture units
-        if(hasTexture)
-            Object3D::tao->SetTextureUnits(saveUnits);
-    }
-
-    glPopAttrib();
-}
-
-
-void Object3D::IdentifyObject()
-// ----------------------------------------------------------------------------
-//   Identify the 3D object
-// ----------------------------------------------------------------------------
-{
-    checkCurrentContext();
-
-    glPushAttrib(GL_ENABLE_BIT | GL_LIGHTING_BIT | GL_TRANSFORM_BIT);
-
-    glDisable(GL_POLYGON_OFFSET_FILL);
-    glDisable(GL_POLYGON_OFFSET_LINE);
-    glDisable(GL_POLYGON_OFFSET_POINT);
-
-    glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
-
-    glEnable(GL_NORMALIZE);
-
-    // Classic draw
-    if(Object3D::tao->SetFillColor())
-    {
-        glcWorld.render(0, glc::ShadingFlag);
-        glcWorld.render(0, glc::TransparentRenderFlag);
     }
 
     glPopAttrib();

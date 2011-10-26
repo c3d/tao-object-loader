@@ -78,7 +78,6 @@ private:
 
 private:
     void              DrawObject();
-    void              IdentifyObject();
     void              DrawPlaceHolder();
     void              DrawErrorPlaceHolder();
 
