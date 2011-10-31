@@ -52,7 +52,7 @@ Object3D::Object3D(kstring name)
 //   Initialize an object. If a name is given, load the file
 // ----------------------------------------------------------------------------
       : glcWorld(), loadThread(NULL), status(NotStarted), complete(0),
-	colored(false)
+        colored(false)
 {
     if (name)
         Load(name);
@@ -143,6 +143,29 @@ void Object3D::Draw()
         DrawErrorPlaceHolder(); break;
 
     case LoadSuccess:
+        Object3D::tao->SetTextures();
+        DrawObject();           break;
+
+    default:                    break;
+    }
+}
+
+
+void Object3D::Identify()
+// ----------------------------------------------------------------------------
+//   Identify object under cursor
+// ----------------------------------------------------------------------------
+{
+    switch (status)
+    {
+    case NotStarted:
+    case InProgress:
+        DrawPlaceHolder();      break;
+
+    case LoadFailed:
+        DrawErrorPlaceHolder(); break;
+
+    case LoadSuccess:
         DrawObject();           break;
 
     default:                    break;
@@ -167,22 +190,43 @@ void Object3D::DrawObject()
 
     glEnable(GL_NORMALIZE);
 
-    if (colored)
+    // If color on lines is non transparent, then draw
+    // wireframe object
+    if(Object3D::tao->SetLineColor())
     {
-        Object3D::tao->SetFillColor();
-        Object3D::tao->SetTextures();
-        GLfloat color[4];
-        glGetFloatv(GL_CURRENT_COLOR, color);
-        if (color[3] != 1)
-            glDepthMask(GL_FALSE);
-        glcWorld.render(0, glc::GeometryOnlyRenderFlag);
-        if (color[3] != 1)
-            glDepthMask(GL_TRUE);
+        // Set wireframe mode
+        glcWorld.collection()->setPolygonModeForAll(GL_FRONT_AND_BACK, GL_LINE);
+
+        if(colored)
+            glcWorld.render(0, glc::GeometryOnlyRenderFlag);
+        else
+        {
+            glcWorld.render(0, glc::WireRenderFlag);
+            glcWorld.render(0, glc::TransparentRenderFlag);
+        }
+
+        // Reset polygon mode
+        glcWorld.collection()->setPolygonModeForAll(GL_FRONT_AND_BACK, GL_FILL);
     }
-    else
+
+    // Classic draw
+    if(Object3D::tao->SetFillColor())
     {
-        glcWorld.render(0, glc::ShadingFlag);
-        glcWorld.render(0, glc::TransparentRenderFlag);
+        if (colored)
+        {
+            GLfloat color[4];
+            glGetFloatv(GL_CURRENT_COLOR, color);
+            if (color[3] != 1)
+                glDepthMask(GL_FALSE);
+            glcWorld.render(0, glc::GeometryOnlyRenderFlag);
+            if (color[3] != 1)
+                glDepthMask(GL_TRUE);
+        }
+        else
+        {
+            glcWorld.render(0, glc::ShadingFlag);
+            glcWorld.render(0, glc::TransparentRenderFlag);
+        }
     }
 
     glPopAttrib();
