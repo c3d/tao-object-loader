@@ -26,6 +26,7 @@
 #include "glc_camera.h"
 
 #include <QtDebug>
+#include <GL/glu.h>
 
 using namespace glc;
 //////////////////////////////////////////////////////////////////////
