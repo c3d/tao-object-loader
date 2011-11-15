@@ -26,11 +26,7 @@
 #include "glc_camera.h"
 
 #include <QtDebug>
-#ifdef Q_OS_MACX
-#  include <OpenGL/glu.h>
-#else
-#  include <GL/glu.h>
-#endif
+#include <GL/glu.h>
 
 using namespace glc;
 //////////////////////////////////////////////////////////////////////

@@ -67,7 +67,7 @@ Tree_p object(Tree_p self,
                                     Object3DDrawing::identify_callback,
                                     drawing,
                                     Object3DDrawing::delete_callback);
-        Object3D::tao->AddShapeManipulator(x, y, z, w, h, d);
+        Object3D::tao->addControlBox(x, y, z, w, h, d);
     }
     catch (GLC_Exception e)
     {
