@@ -27,7 +27,11 @@
 
 #include <QFile>
 #include <QtOpenGL>
-#include <GL/glu.h>
+#ifdef Q_OS_MACX
+#  include <OpenGL/glu.h>
+#else
+#  include <GL/glu.h>
+#endif
 
 #include "../glc_config.h"
 
