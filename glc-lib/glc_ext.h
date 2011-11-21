@@ -24,13 +24,29 @@
 #ifndef GLC_EXT_H_
 #define GLC_EXT_H_
 
-#include "glc_qtopengl.h"
+#include <QtOpenGL>
 #include "3rdparty/glext/glext.h"
 
 // Buffer offset used by VBO
 #define BUFFER_OFFSET(i) ((char*)NULL + (i))
 
 #if !defined(Q_OS_MAC)
+// ARB_vertex_buffer_object
+extern PFNGLBINDBUFFERARBPROC			glBindBuffer;
+extern PFNGLDELETEBUFFERSARBPROC		glDeleteBuffers;
+extern PFNGLGENBUFFERSARBPROC			glGenBuffers;
+extern PFNGLISBUFFERARBPROC				glIsBuffer;
+extern PFNGLBUFFERDATAARBPROC			glBufferData;
+extern PFNGLBUFFERSUBDATAARBPROC		glBufferSubData;
+extern PFNGLGETBUFFERSUBDATAARBPROC		glGetBufferSubData;
+extern PFNGLMAPBUFFERARBPROC			glMapBuffer;
+extern PFNGLUNMAPBUFFERARBPROC			glUnmapBuffer;
+extern PFNGLGETBUFFERPARAMETERIVARBPROC	glGetBufferParameteriv;
+extern PFNGLGETBUFFERPOINTERVARBPROC	glGetBufferPointerv;
+// glDrawRangElement
+//extern PFNGLDRAWRANGEELEMENTSPROC glDrawRangeElements;
+// glMultiDrawElement
+extern PFNGLMULTIDRAWELEMENTSPROC		glMultiDrawElements;
 
 // GL_point_parameters Point Sprite
 extern PFNGLPOINTPARAMETERFARBPROC  glPointParameterf;

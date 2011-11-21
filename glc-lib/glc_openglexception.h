@@ -28,7 +28,7 @@
 
 #include "glc_exception.h"
 
-#include "glc_qtopengl.h"
+#include <QtOpenGL>
 
 #include "glc_config.h"
 

@@ -24,9 +24,6 @@
 
 #include "glc_global.h"
 
-#include <QFileInfo>
-#include <QDir>
-
 QMutex glc::iDMutex;
 QMutex glc::geomIdMutex;
 QMutex glc::userIdMutex;

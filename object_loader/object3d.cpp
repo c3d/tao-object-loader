@@ -21,26 +21,12 @@
 // ****************************************************************************
 
 
-#include "../glc-lib/glc_ext.h"
-#if !defined(Q_OS_MAC)
-#ifdef __linux__
-#  if __GNUC__ >= 4
-#    define DLL_PRIVATE __attribute__ ((visibility ("hidden")))
-#  else
-#    define DLL_PRIVATE
-#  endif
-#else
-#  define DLL_PRIVATE
-#endif
-DLL_PRIVATE PFNGLUSEPROGRAMPROC glUseProgram;
-#endif
-
+#include "tao_gl.h"
 #include "object3d.h"
 #include "load_thread.h"
 #include "preferences_dialog.h"
 #include <QString>
 #include <QFileInfo>
-#include <QEvent>
 #include <GLC_Factory>
 
 using namespace Tao;
@@ -66,7 +52,7 @@ Object3D::Object3D(kstring name)
 //   Initialize an object. If a name is given, load the file
 // ----------------------------------------------------------------------------
       : glcWorld(), loadThread(NULL), status(NotStarted), complete(0),
-        hasTexture(false), colored(false)
+        colored(false)
 {
     if (name)
         Load(name);
@@ -125,12 +111,7 @@ void Object3D::loadFinished()
         std::cerr << "done!\n";
     glcWorld = loadThread->world;
     if (status != LoadFailed && !glcWorld.isEmpty())
-    {
         status = LoadSuccess;
-        // Search if object contains a texture
-        for(int i = 0; i < glcWorld.listOfMaterials().size(); i++)
-            hasTexture |= glcWorld.listOfMaterials()[i]->hasTexture();
-    }
     delete loadThread;
     loadThread = NULL;
 }
@@ -199,9 +180,11 @@ void Object3D::DrawObject()
     static bool licensed, tested = false;
     if (!tested)
     {
-        licensed = tao->checkImpressOrLicense("ObjectLoader 1.013");
+        licensed = tao->hasLicense("ObjectLoader 1.0");
         tested = true;
     }
+    if (!licensed && !tao->blink(4.5, 0.5))
+        return;
 
     checkCurrentContext();
 
@@ -248,14 +231,17 @@ void Object3D::DrawObject()
     }
     else
     {
+        // Search if object contains a texture
+        bool hasTexture = false;
+        for(int i = 0; i < glcWorld.listOfMaterials().size(); i++)
+            hasTexture |= glcWorld.listOfMaterials()[i]->hasTexture();
+
+        uint saveUnits = Object3D::tao->TextureUnits();
+
         // If object contains textures
         // then force activation of unit 0
-        uint saveUnits = 0;
         if(hasTexture)
-        {
-            saveUnits = Object3D::tao->TextureUnits();
             Object3D::tao->SetTextureUnits(saveUnits | 1);
-        }
 
         Object3D::tao->SetTextures();
 
@@ -468,11 +454,6 @@ void Object3D::initGLC()
         debug() << "  VBOs " << supp(GLC_State::vboUsed())
                 << "used\n";
     }
-
-#if !defined(Q_OS_MACX)
-    glUseProgram = (PFNGLUSEPROGRAMPROC)context->getProcAddress("glUseProgram");
-    Q_ASSERT(glUseProgram);
-#endif
 }
 
 

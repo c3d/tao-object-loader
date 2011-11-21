@@ -24,8 +24,6 @@
 
 #include "glc_errorlog.h"
 #include <QDir>
-#include <QApplication>
-#include <QDate>
 #include "glc_global.h"
 #include <QMutexLocker>
 
