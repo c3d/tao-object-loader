@@ -37,6 +37,7 @@ void Object3DDrawing::render_callback(void *arg)
 
 void Object3DDrawing::identify_callback(void *arg)
 // ----------------------------------------------------------------------------
+//   Identify callback: call the identify function for the object
 // ----------------------------------------------------------------------------
 {
      ((Object3DDrawing *)arg)->Identify();
