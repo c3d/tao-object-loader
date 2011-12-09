@@ -1,5 +1,5 @@
 @INCLUDE = ../../Doxyfile
-PROJECT_NAME = \"3D Object Loader Module\"
+PROJECT_NAME = \"3D Object Loader\"
 PROJECT_NUMBER = 1.01
 PROJECT_LOGO = ../object_loader/icon.png
 QHP_NAMESPACE = com.taodyne.TaoPresentations.modules.ObjectLoader
