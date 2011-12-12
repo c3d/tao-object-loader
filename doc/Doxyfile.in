@@ -1,6 +1,0 @@
-@INCLUDE = ../../Doxyfile
-PROJECT_NAME = \"3D Object Loader\"
-PROJECT_NUMBER = $$MODVERSION
-PROJECT_LOGO = ../object_loader/icon.png
-QHP_NAMESPACE = com.taodyne.TaoPresentations.modules.$$IMPORTNAME.$$MODVERSION
-QHP_VIRTUAL_FOLDER = $$IMPORTNAME
