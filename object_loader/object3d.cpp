@@ -177,6 +177,15 @@ void Object3D::DrawObject()
 //   Draw the 3D object
 // ----------------------------------------------------------------------------
 {
+    static bool licensed, tested = false;
+    if (!tested)
+    {
+        licensed = tao->checkLicense("ObjectLoader 1.0", false);
+        tested = true;
+    }
+    if (!licensed && !tao->blink(4.5, 0.5))
+        return;
+
     checkCurrentContext();
 
     glPushAttrib(GL_ENABLE_BIT | GL_LIGHTING_BIT | GL_TRANSFORM_BIT);
