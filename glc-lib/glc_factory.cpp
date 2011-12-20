@@ -43,9 +43,6 @@
 
 #include "glc_fileformatexception.h"
 
-#include <QCoreApplication>
-#include <QPluginLoader>
-
 // init static member
 GLC_Factory* GLC_Factory::m_pFactory= NULL;
 QList<GLC_WorldReaderPlugin*> GLC_Factory::m_WorldReaderPluginList;

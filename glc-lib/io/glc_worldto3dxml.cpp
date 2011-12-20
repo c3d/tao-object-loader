@@ -29,8 +29,6 @@
 #include "../geometry/glc_mesh.h"
 
 #include <QFileInfo>
-#include <QCoreApplication>
-#include <QEventLoop>
 
 GLC_WorldTo3dxml::GLC_WorldTo3dxml(const GLC_World& world, bool threaded)
 : QObject()

@@ -31,7 +31,7 @@ quint32 GLC_WireData::m_ChunkId= 0xA706;
 
 
 GLC_WireData::GLC_WireData()
-: m_VerticeBuffer()
+: m_VboId(0)
 , m_NextPrimitiveLocalId(1)
 , m_Positions()
 , m_PositionSize(0)
@@ -46,7 +46,7 @@ GLC_WireData::GLC_WireData()
 
 
 GLC_WireData::GLC_WireData(const GLC_WireData& data)
-: m_VerticeBuffer()
+: m_VboId(0)
 , m_NextPrimitiveLocalId(data.m_NextPrimitiveLocalId)
 , m_Positions(data.positionVector())
 , m_PositionSize(data.m_PositionSize)
@@ -86,6 +86,13 @@ GLC_WireData& GLC_WireData::operator=(const GLC_WireData& data)
 GLC_WireData::~GLC_WireData()
 {
 	clear();
+
+	// Delete Main Vbo ID
+	if (0 != m_VboId)
+	{
+		glDeleteBuffers(1, &m_VboId);
+		m_VboId= 0;
+	}
 }
 //////////////////////////////////////////////////////////////////////
 // Get Functions
@@ -100,18 +107,18 @@ quint32 GLC_WireData::chunckID()
 
 GLfloatVector GLC_WireData::positionVector() const
 {
-	if (m_VerticeBuffer.isCreated())
+	if (0 != m_VboId)
 	{
 		// VBO created get data from VBO
 		const int sizeOfVbo= m_PositionSize;
 		const GLsizeiptr dataSize= sizeOfVbo * sizeof(float);
 		GLfloatVector positionVector(sizeOfVbo);
 
-		const_cast<QGLBuffer&>(m_VerticeBuffer).bind();
-		GLvoid* pVbo = const_cast<QGLBuffer&>(m_VerticeBuffer).map(QGLBuffer::ReadOnly);
+		glBindBuffer(GL_ARRAY_BUFFER, m_VboId);
+		GLvoid* pVbo = glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
 		memcpy(positionVector.data(), pVbo, dataSize);
-		const_cast<QGLBuffer&>(m_VerticeBuffer).unmap();
-		const_cast<QGLBuffer&>(m_VerticeBuffer).release();
+		glUnmapBuffer(GL_ARRAY_BUFFER);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		return positionVector;
 	}
 	else
@@ -173,7 +180,6 @@ GLC_uint GLC_WireData::addVerticeGroup(const GLfloatVector& floatVector)
 
 void GLC_WireData::clear()
 {
-	m_VerticeBuffer.destroy();
 	m_NextPrimitiveLocalId= 1;
 	m_Positions.clear();
 	m_PositionSize= 0;
@@ -188,7 +194,7 @@ void GLC_WireData::clear()
 
 void GLC_WireData::copyVboToClientSide()
 {
-	if (m_VerticeBuffer.isCreated() && m_Positions.isEmpty())
+	if ((0 != m_VboId) && m_Positions.isEmpty())
 	{
 		m_Positions= positionVector();
 	}
@@ -196,7 +202,7 @@ void GLC_WireData::copyVboToClientSide()
 
 void GLC_WireData::releaseVboClientSide(bool update)
 {
-	if (m_VerticeBuffer.isCreated() && !m_Positions.isEmpty())
+	if ((0 != m_VboId) && !m_Positions.isEmpty())
 	{
 		if (update) finishVbo();
 	}
@@ -222,11 +228,11 @@ void GLC_WireData::useVBO(bool use)
 {
 	if (use)
 	{
-		m_VerticeBuffer.bind();
-	}
+		glBindBuffer(GL_ARRAY_BUFFER, m_VboId);	}
 	else
 	{
-		QGLBuffer::release(QGLBuffer::VertexBuffer);
+		// Unbind VBO
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 }
 
@@ -235,7 +241,7 @@ void GLC_WireData::glDraw(const GLC_RenderProperties&, GLenum mode)
 	Q_ASSERT(!isEmpty());
 	const bool vboIsUsed= GLC_State::vboUsed();
 
-	if (vboIsUsed && ((m_PositionSize == 0) || !m_VerticeBuffer.isCreated()))
+	if (vboIsUsed && ((m_PositionSize == 0) || (0 == m_VboId)))
 	{
 		finishVbo();
 	}
@@ -274,9 +280,9 @@ void GLC_WireData::glDraw(const GLC_RenderProperties&, GLenum mode)
 void GLC_WireData::createVBOs()
 {
 	// Create position VBO
-	if (!m_VerticeBuffer.isCreated())
+	if (0 == m_VboId)
 	{
-		m_VerticeBuffer.create();
+		glGenBuffers(1, &m_VboId);
 	}
 }
 
@@ -284,7 +290,7 @@ void GLC_WireData::fillVBOs()
 {
 	const GLsizei dataNbr= static_cast<GLsizei>(m_Positions.size());
 	const GLsizeiptr dataSize= dataNbr * sizeof(GLfloat);
-	m_VerticeBuffer.allocate(m_Positions.data(), dataSize);
+	glBufferData(GL_ARRAY_BUFFER, dataSize, m_Positions.data(), GL_STATIC_DRAW);
 }
 
 QDataStream &operator<<(QDataStream &stream, const GLC_WireData &wireData)

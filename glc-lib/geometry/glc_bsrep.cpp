@@ -25,8 +25,6 @@
 #include "../glc_fileformatexception.h"
 #include "../glc_tracelog.h"
 
-#include <QBuffer>
-
 // The binary rep suffix
 const QString GLC_BSRep::m_Suffix("BSRep");
 
