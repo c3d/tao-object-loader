@@ -1,7 +1,5 @@
 /**
- * @defgroup ObjectLoader Object Loader
- * @ingroup Modules
- *
+ * @taomoduledescription{ObjectLoader, Object Loader}
  * Loads 3D models from files.
  *
  * With this module, you can import 3D models exported from many popular
@@ -39,6 +37,8 @@ rotating_obj "conestoga.3ds"
  *
  * Here is a screen capture:
  * @image html conestoga.png "(3D model by Helmut Schaub &mdash; http://www.3dxtra.net, http://www.3d-xtra.bravepages.com)"
+ *
+ * @endtaomoduledescription{ObjectLoader}
  * @{
  */
 
