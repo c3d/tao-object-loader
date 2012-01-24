@@ -183,7 +183,7 @@ void Object3D::DrawObject()
         licensed = tao->checkLicense("ObjectLoader 1.0", false);
         tested = true;
     }
-    if (!licensed && !tao->blink(4.5, 0.5))
+    if (!licensed && !tao->blink(4.5, 0.5, 300.0))
         return;
 
     checkCurrentContext();
