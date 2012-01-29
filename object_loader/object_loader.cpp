@@ -31,6 +31,7 @@
 #include "object3d.h"
 #include "object3d_drawing.h"
 #include "tao/module_api.h"
+#include "preferences_dialog.h"
 #include <GLC_Exception>
 #include <QImage>
 #include <QGLWidget>
@@ -43,7 +44,7 @@ XL_DEFINE_TRACES
 Tree_p object(Tree_p self,
               Real_p x, Real_p y, Real_p z,
               Real_p w, Real_p h, Real_p d,
-              Text_p name)
+              Text_p name, bool colored)
 // ----------------------------------------------------------------------------
 //   Primitive to load a 3D object and show it centered at (x, y, z)
 // ----------------------------------------------------------------------------
@@ -55,11 +56,17 @@ Tree_p object(Tree_p self,
     {
         Object3D *obj = Object3D::Object(name);
         if (!obj)
+        {
+            Ooops("File not found or unreadable: $1", self);
             return XL::xl_false;
+        }
 
-        Object3DDrawing *drawing = new Object3DDrawing(obj, x, y, z, w, h, d);
-        Object3D::tao->addToLayout(Object3DDrawing::render_callback, drawing,
-                                   Object3DDrawing::delete_callback);
+        Object3DDrawing *drawing = new Object3DDrawing(obj, x, y, z, w, h, d,
+                                                       colored);
+        Object3D::tao->AddToLayout2(Object3DDrawing::render_callback,
+                                    Object3DDrawing::identify_callback,
+                                    drawing,
+                                    Object3DDrawing::delete_callback);
         Object3D::tao->addControlBox(x, y, z, w, h, d);
     }
     catch (GLC_Exception e)
@@ -83,7 +90,10 @@ Tree_p object(Tree_p self, Text_p name)
     {
         Object3D *obj = Object3D::Object(name);
         if (!obj)
+        {
+            Ooops("File not found or unreadable: $1", self);
             return XL::xl_false;
+        }
 
         Object3D::tao->scheduleRender(Object3D::render_callback, obj);
     }
@@ -134,5 +144,15 @@ int module_exit()
 //   Uninitialize the Tao module
 // ----------------------------------------------------------------------------
 {
+    return 0;
+}
+
+
+int show_preferences()
+// ----------------------------------------------------------------------------
+//   Show the module preference dialog
+// ----------------------------------------------------------------------------
+{
+    PreferencesDialog().exec();
     return 0;
 }

@@ -35,14 +35,19 @@ struct Object3DDrawing
 {
     Object3DDrawing (Object3D *obj,
                      Tao::coord x, Tao::coord y, Tao::coord z,
-                     Tao::scale w, Tao::scale h, Tao::scale d)
-        : object(obj), x(x), y(y), z(z), w(w), h(h), d(d) {}
+                     Tao::scale w, Tao::scale h, Tao::scale d,
+                     bool colored = false)
+        : object(obj), x(x), y(y), z(z), w(w), h(h), d(d), colored(colored) {}
     ~Object3DDrawing() {}
 
     void                Draw();
+    void                Identify();
+    void                Transform();
 
     // Call ((Object3DDrawing *)arg)->Draw()
     static void         render_callback(void *arg);
+    // Call ((Object3DDrawing *)arg)->Draw()
+    static void         identify_callback(void *arg);
     // Call delete (Object3DDrawing *)arg
     static void         delete_callback(void *arg);
 
@@ -50,6 +55,7 @@ public:
     Object3D *          object;
     Tao::coord          x, y, z;
     Tao::scale          w, h, d;
+    bool                colored;
 };
 
 #endif // OBJECT3D_DRAWING_H
