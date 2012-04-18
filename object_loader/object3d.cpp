@@ -180,7 +180,7 @@ void Object3D::DrawObject()
     static bool licensed, tested = false;
     if (!tested)
     {
-        licensed = tao->checkImpressOrLicense("ObjectLoader 1.0");
+        licensed = tao->checkLicense("ObjectLoader 1.0", false);
         tested = true;
     }
     if (!licensed && !tao->blink(4.5, 0.5, 300.0))
