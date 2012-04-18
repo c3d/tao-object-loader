@@ -6,6 +6,8 @@ SVN repository is at:
 https://glc-lib.svn.sourceforge.net/svnroot/glc-lib/glc-lib
 
 Current version is: 2.2.0
+                  + some Taodyne changes to support colored objects (#1182)
+                  + upstream commits included in 2.2.1, to fix #1507
 
 Note: glc-lib contains 2 project files (.pro):
  * GLC_lib.pro: the real one (from the GLC lib source repository)
