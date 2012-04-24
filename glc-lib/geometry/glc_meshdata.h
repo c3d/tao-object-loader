@@ -26,6 +26,7 @@
 #define GLC_MESHDATA_H_
 
 #include <QVector>
+#include <QGLBuffer>
 
 #include "glc_lod.h"
 #include "../glc_global.h"
@@ -160,9 +161,6 @@ public:
 	inline void appendLod(double accuracy= 0.0)
 	{m_LodList.append(new GLC_Lod(accuracy));}
 
-	//! The mesh wich use the data is finished and VBO is used
-	void finishVbo();
-
 	//! If the there is more than 2 LOD Swap the first and last
 	void finishLod();
 
@@ -194,14 +192,17 @@ public:
 	void createVBOs();
 
 	//! Ibo Usage
-	bool useVBO(bool, GLC_MeshData::VboType) const;
+	bool useVBO(bool, GLC_MeshData::VboType);
 
 	//! Ibo Usage
 	inline void useIBO(bool use, const int currentLod= 0)
 	{
 		if (use) m_LodList.at(currentLod)->useIBO();
-		else glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		else QGLBuffer::release(QGLBuffer::IndexBuffer);
 	}
+
+	//! Fill all LOD IBO
+	void fillLodIbo();
 
 	//! Fill the VBO of the given type
 	void fillVbo(GLC_MeshData::VboType vboType);
@@ -213,8 +214,8 @@ public:
 //////////////////////////////////////////////////////////////////////
 private:
 
-	//! Main VBO ID
-	GLuint m_VboId;
+	//! The vertex Buffer
+	QGLBuffer m_VertexBuffer;
 
 	//! Vertex Position Vector
 	GLfloatVector m_Positions;
@@ -228,14 +229,14 @@ private:
 	//! Color index
 	GLfloatVector m_Colors;
 
-	//! Normals VBO ID
-	GLuint m_NormalVboId;
+	//! Normals Buffer
+	QGLBuffer m_NormalBuffer;
 
-	//! Texture VBO ID
-	GLuint m_TexelVboId;
+	//! Texture Buffer
+	QGLBuffer m_TexelBuffer;
 
-	//! Color VBO ID
-	GLuint m_ColorVboId;
+	//! Color Buffer
+	QGLBuffer m_ColorBuffer;
 
 	//! The list of LOD
 	QList<GLC_Lod*> m_LodList;
