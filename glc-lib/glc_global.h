@@ -26,7 +26,7 @@
 #define GLC_GLOBAL_H_
 
 #include <QMutex>
-#include "glc_qtopengl.h"
+#include <QtOpenGL>
 #include <QList>
 #include <QVector>
 #include <QHash>
