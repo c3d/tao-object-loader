@@ -27,6 +27,7 @@
 #include "preferences_dialog.h"
 #include <QString>
 #include <QFileInfo>
+#include <QEvent>
 #include <GLC_Factory>
 
 using namespace Tao;

@@ -30,7 +30,7 @@
 
 #include <QSet>
 #include <QHash>
-#include <QtOpenGL>
+#include "../glc_qtopengl.h"
 
 #include "../glc_config.h"
 
