@@ -24,7 +24,7 @@
 #ifndef GLC_EXT_H_
 #define GLC_EXT_H_
 
-#include <QtOpenGL>
+#include "glc_qtopengl.h"
 #include "3rdparty/glext/glext.h"
 
 // Buffer offset used by VBO

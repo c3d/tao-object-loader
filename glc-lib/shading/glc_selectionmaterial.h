@@ -25,7 +25,7 @@
 #define GLC_SELECTIONMATERIAL_H_
 
 #include <QColor>
-#include <QtOpenGL>
+#include "../glc_qtopengl.h"
 #include <QHash>
 
 #include "../glc_ext.h"
