@@ -32,6 +32,7 @@
 #include "../quazip/quazipfile.h"
 
 #include <QtDebug>
+#include <QFileInfo>
 
 // The default maximum texture size
 QSize GLC_Texture::m_MaxTextureSize(676, 676);

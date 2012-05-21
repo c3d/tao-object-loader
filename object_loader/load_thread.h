@@ -24,6 +24,7 @@
 
 
 #include <QFile>
+#include <QThread>
 #include <GLC_Factory>
 #include <GLC_World>
 
