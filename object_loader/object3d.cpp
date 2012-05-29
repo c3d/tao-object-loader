@@ -27,6 +27,7 @@
 #include "preferences_dialog.h"
 #include <QString>
 #include <QFileInfo>
+#include <QEvent>
 #include <GLC_Factory>
 
 using namespace Tao;
@@ -180,7 +181,7 @@ void Object3D::DrawObject()
     static bool licensed, tested = false;
     if (!tested)
     {
-        licensed = tao->checkLicense("ObjectLoader 1.0", false);
+        licensed = tao->checkImpressOrLicense("ObjectLoader 1.0");
         tested = true;
     }
     if (!licensed && !tao->blink(4.5, 0.5, 300.0))

@@ -81,9 +81,5 @@ bool PreferencesDialog::useVBOsDefault()
 //   Should we allow use of VBOs if there is nothing in settings?
 // ----------------------------------------------------------------------------
 {
-#if defined(Q_OS_LINUX)
-    // If I enable VBOs on linux I get a crash on glGenBuffers
-    return false;
-#endif
     return true;
 }

@@ -21,7 +21,7 @@
 *****************************************************************************/
 //! \file glc_selectionmaterial.cpp implementation of the GLC_SelectionMaterial class.
 
-#include <QGLContext>
+#include "../glc_qtopengl.h"
 
 #include "glc_selectionmaterial.h"
 #include "glc_material.h"

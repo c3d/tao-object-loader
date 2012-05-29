@@ -27,7 +27,7 @@
 #define GLC_FACTORY_
 
 #include <QObject>
-#include <QtOpenGL>
+#include "glc_qtopengl.h"
 #include <QString>
 #include <QSet>
 

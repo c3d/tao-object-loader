@@ -26,7 +26,7 @@
 #define GLC_TEXTURE_H_
 
 #include <QFile>
-#include <QtOpenGL>
+#include "../glc_qtopengl.h"
 #ifdef Q_OS_MACX
 #  include <OpenGL/glu.h>
 #else
