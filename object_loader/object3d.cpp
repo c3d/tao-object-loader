@@ -53,7 +53,7 @@ Object3D::Object3D(kstring name)
 //   Initialize an object. If a name is given, load the file
 // ----------------------------------------------------------------------------
       : glcWorld(), loadThread(NULL), status(NotStarted), complete(0),
-        colored(false)
+        hasTexture(false), colored(false)
 {
     if (name)
         Load(name);
@@ -112,7 +112,12 @@ void Object3D::loadFinished()
         std::cerr << "done!\n";
     glcWorld = loadThread->world;
     if (status != LoadFailed && !glcWorld.isEmpty())
+    {
         status = LoadSuccess;
+        // Search if object contains a texture
+        for(int i = 0; i < glcWorld.listOfMaterials().size(); i++)
+            hasTexture |= glcWorld.listOfMaterials()[i]->hasTexture();
+    }
     delete loadThread;
     loadThread = NULL;
 }
@@ -232,17 +237,14 @@ void Object3D::DrawObject()
     }
     else
     {
-        // Search if object contains a texture
-        bool hasTexture = false;
-        for(int i = 0; i < glcWorld.listOfMaterials().size(); i++)
-            hasTexture |= glcWorld.listOfMaterials()[i]->hasTexture();
-
-        uint saveUnits = Object3D::tao->TextureUnits();
-
         // If object contains textures
         // then force activation of unit 0
+        uint saveUnits = 0;
         if(hasTexture)
+        {
+            saveUnits = Object3D::tao->TextureUnits();
             Object3D::tao->SetTextureUnits(saveUnits | 1);
+        }
 
         Object3D::tao->SetTextures();
 

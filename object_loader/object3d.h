@@ -103,6 +103,8 @@ private:
     int           complete;
     // Load start time
     QTime         loadTime;
+    // Textured object?
+    bool          hasTexture;
 
 public:
     // True if Draw should force use of current color/material
