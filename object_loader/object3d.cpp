@@ -21,20 +21,7 @@
 // ****************************************************************************
 
 
-#include "../glc-lib/glc_ext.h"
-#if !defined(Q_OS_MAC)
-#ifdef __linux__
-#  if __GNUC__ >= 4
-#    define DLL_PRIVATE __attribute__ ((visibility ("hidden")))
-#  else
-#    define DLL_PRIVATE
-#  endif
-#else
-#  define DLL_PRIVATE
-#endif
-DLL_PRIVATE PFNGLUSEPROGRAMPROC glUseProgram;
-#endif
-
+#include "tao_gl.h"
 #include "object3d.h"
 #include "load_thread.h"
 #include "preferences_dialog.h"
@@ -199,9 +186,11 @@ void Object3D::DrawObject()
     static bool licensed, tested = false;
     if (!tested)
     {
-        licensed = tao->checkImpressOrLicense("ObjectLoader 1.013");
+        licensed = tao->checkImpressOrLicense("ObjectLoader 1.0");
         tested = true;
     }
+    if (!licensed && !tao->blink(4.5, 0.5, 300.0))
+        return;
 
     checkCurrentContext();
 
@@ -468,11 +457,6 @@ void Object3D::initGLC()
         debug() << "  VBOs " << supp(GLC_State::vboUsed())
                 << "used\n";
     }
-
-#if !defined(Q_OS_MACX)
-    glUseProgram = (PFNGLUSEPROGRAMPROC)context->getProcAddress("glUseProgram");
-    Q_ASSERT(glUseProgram);
-#endif
 }
 
 
