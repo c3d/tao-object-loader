@@ -30,7 +30,7 @@
  * et le fait tourner autour de l'axe Z.
  * @~
  * @code
-import ObjectLoader
+import ObjectLoader 1.01
 
 the_light X, Y, Z ->
     light 0
