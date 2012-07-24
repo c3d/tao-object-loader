@@ -15,12 +15,12 @@
  * logiciels. Les formats supportés sont :
  *
  * @~
- *   @li OBJ (*.obj)
- *   @li 3DS (*.3ds)
- *   @li Collada V1.4 (*.dae)
- *   @li 3DXML ASCII V3 and V4 (*.3dxml)
- *   @li STL (ASCII and binary) (*.stl)
- *   @li OFF and COFF (*.off)
+ * @li OBJ (*.obj)
+ * @li 3DS (*.3ds)
+ * @li Collada V1.4 (*.dae)
+ * @li 3DXML ASCII V3 and V4 (*.3dxml)
+ * @li STL (ASCII and binary) (*.stl)
+ * @li OFF and COFF (*.off)
  *
  * @~english
  * For instance, the following Tao document will load a 3D model from
