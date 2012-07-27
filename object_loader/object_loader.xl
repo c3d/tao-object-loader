@@ -17,7 +17,7 @@ module_description
     import_name "ObjectLoader"
     author "Taodyne SAS"
     website "http://www.taodyne.com"
-    version 1.013
+    version 1.012
 
 module_description "fr",
     name "Lecteur de fichiers 3D"
