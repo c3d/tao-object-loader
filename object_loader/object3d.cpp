@@ -21,7 +21,11 @@
 // ****************************************************************************
 
 
-#include "tao_gl.h"
+#include "../glc-lib/glc_ext.h"
+#if !defined(Q_OS_MAC)
+extern PFNGLUSEPROGRAMPROC glUseProgram;
+#endif
+
 #include "object3d.h"
 #include "load_thread.h"
 #include "preferences_dialog.h"
