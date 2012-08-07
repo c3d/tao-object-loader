@@ -1,3 +1,3 @@
 MODINSTDIR = object_loader
 IMPORTNAME = ObjectLoader
-MODVERSION = 1.011
+MODVERSION = 1.012
