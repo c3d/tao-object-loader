@@ -23,7 +23,16 @@
 
 #include "../glc-lib/glc_ext.h"
 #if !defined(Q_OS_MAC)
-extern PFNGLUSEPROGRAMPROC glUseProgram;
+#ifdef __linux__
+#  if __GNUC__ >= 4
+#    define DLL_PRIVATE __attribute__ ((visibility ("hidden")))
+#  else
+#    define DLL_PRIVATE
+#  endif
+#else
+#  define DLL_PRIVATE
+#endif
+DLL_PRIVATE PFNGLUSEPROGRAMPROC glUseProgram;
 #endif
 
 #include "object3d.h"
@@ -459,6 +468,11 @@ void Object3D::initGLC()
         debug() << "  VBOs " << supp(GLC_State::vboUsed())
                 << "used\n";
     }
+
+#if !defined(Q_OS_MACX)
+    glUseProgram = (PFNGLUSEPROGRAMPROC)context->getProcAddress("glUseProgram");
+    Q_ASSERT(glUseProgram);
+#endif
 }
 
 
