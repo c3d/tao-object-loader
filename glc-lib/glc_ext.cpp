@@ -30,9 +30,20 @@
 
 #if !defined(Q_OS_MAC)
 
+// Define DLL_PRIVATE to avoid name clash with symbols from libGL.so
+#ifdef __linux__
+#  if __GNUC__ >= 4
+#    define DLL_PRIVATE __attribute__ ((visibility ("hidden")))
+#  else
+#    define DLL_PRIVATE
+#  endif
+#else
+#  define DLL_PRIVATE
+#endif
+
 // GL_point_parameters Point Sprite
-PFNGLPOINTPARAMETERFARBPROC			glPointParameterf		= NULL;
-PFNGLPOINTPARAMETERFVARBPROC		glPointParameterfv		= NULL;
+DLL_PRIVATE PFNGLPOINTPARAMETERFARBPROC  glPointParameterf  = NULL;
+DLL_PRIVATE PFNGLPOINTPARAMETERFVARBPROC glPointParameterfv = NULL;
 
 #endif
 
