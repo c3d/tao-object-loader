@@ -16,8 +16,6 @@ TAO_SDK = ../../..
 
 include($${TAO_SDK}/modules/modules.pri)
 
-DEFINES     += GLEW_STATIC
-
 HEADERS     = object_loader.h \
               object3d.h \
               object3d_drawing.h \
@@ -28,6 +26,10 @@ SOURCES     = object_loader.cpp \
               object3d_drawing.cpp \
               load_thread.cpp \
               preferences_dialog.cpp
+win32 {
+  DEFINES     += GLEW_STATIC
+  SOURCES     += $${TAOTOPSRC}/tao/include/tao/GL/glew.c
+}
 TBL_SOURCES = object_loader.tbl
 OTHER_FILES = object_loader.xl object_loader.tbl traces.tbl
 
@@ -40,7 +42,6 @@ DEPENDPATH  += ../glc-lib/include \
 QT          += core \
                gui \
                opengl
-!macx:SOURCES += $${TAOTOPSRC}/tao/include/tao/GL/glew.c
 win32:LIBS += -L../glc-lib/release -L../glc-lib/debug -lGLC_lib2
 unix:LIBS += -L../glc-lib -lGLC_lib
 

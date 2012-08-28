@@ -23,7 +23,6 @@
 //  (C) 2010 Taodyne SAS
 // ****************************************************************************
 
-#include "tao_gl.h"
 #include "object_loader.h"
 #include "main.h"
 #include "runtime.h"
@@ -36,6 +35,9 @@
 #include <QImage>
 #include <QGLWidget>
 
+#ifndef CONFIG_WIN32
+#define glewInit()
+#endif
 
 using namespace XL;
 
