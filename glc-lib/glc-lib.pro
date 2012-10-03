@@ -13,6 +13,12 @@ win32 {
     QMAKE_MKDIR = mkdir -p
     # Quick fix for in redefinition warnings in glext.h
     DEFINES += GL_EXT_geometry_shader4
+
+    # Remove the .a file after installation
+    postinstall.path     = $${MODINSTPATH}/lib
+    postinstall.depends  = install_target
+    postinstall.commands = rm $${MODINSTPATH}/lib/lib$${TARGET}?.a
+    INSTALLS += postinstall
 }
 
 # GLC_lib.pro may force a build mode (for instance: CONFIG += release).
