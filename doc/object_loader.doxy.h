@@ -1,7 +1,7 @@
 /**
  * @~english
  * @taomoduledescription{ObjectLoader, Object Loader}
- * <tt>import ObjectLoader</tt> - Loads 3D models from files.
+ * Loads 3D models from files.
  *
  * With this module, you can import 3D models exported from many popular
  * 3D software packages.
@@ -9,7 +9,7 @@
  *
  * @~french
  * @taomoduledescription{ObjectLoader, Lecteur de modèles 3D}
- * <tt>import ObjectLoader</tt> - Charge des fichiers 3D.
+ * Charge des fichiers 3D.
  *
  * Ce module vous permet d'afficher des modèles 3D exportés par de nombreux
  * logiciels. Les formats supportés sont :
@@ -79,19 +79,6 @@ object(text file);
 
 /**
  * @~english
- * Loads a 3D object from a file and shows it with a user-define color
- * @p file is a relative or absolute path to the model file.
- * No scaling or translation occurs: the model is drawn as defined in the file.
- * @~french
- * Charge un fichier 3D avec une couleur définie par l'utilisateur
- * @p file est un chemin relatif ou absolu vers le fichier.
- * Aucune translation ou changement d'échelle n'est fait. Le modèle 3D est
- * affiché tel que défini dans le fichier.
- */
-colored_object(text file);
-
-/**
- * @~english
  * Loads and translates a 3D object.
  * @p file is a relative or absolute path to the model file.
  * The object is shown centered at (@a x, @a y, @a z).
@@ -126,11 +113,12 @@ object(real x, real y, real z, real width, real height, real depth, text file);
 
 /**
  * @~english
- * Loads, translates and paints a 3D object with user-defined colors.
- * Forces the object to take the current color or material properties
- * even if the model file defines colors, materials or textures.
+ * Loads, translates and paints a 3D object.
+ * Forces the object to
+ * take the current color or material properties even if the model file defines
+ * colors, materials or textures.
  * @~french
- * Charge et positionne un fichier 3D avec une couleur définie par l'utilisateur
+ * Charge un fichier 3D, le positionne, permet la couleur.
  * Force l'utilisation des couleurs et textures activées avant l'utilisation
  * de cette primitive, même si le fichier modèle définit ses propres couleurs
  * ou textures.
@@ -143,12 +131,12 @@ colored_object(real x, real y, real z, text file);
 
 /**
  * @~english
- * Loads, scales, translates and paints a 3D object with a user-defined color
+ * Loads, scales, translates and paints a 3D object.
  * Forces the object to
  * take the current color or material properties even if the model file defines
  * colors, materials or textures.
  * @~french
- * Charge et affiche un fichier 3D dont la couleur est définie par l'utilisateur
+ * Charge un fichier 3D, le positionne, permet la couleur.
  * Force l'utilisation des couleurs et textures activées avant l'utilisation
  * de cette primitive, même si le fichier modèle définit ses propres couleurs
  * ou textures.

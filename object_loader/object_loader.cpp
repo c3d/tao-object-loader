@@ -43,20 +43,6 @@ using namespace XL;
 
 XL_DEFINE_TRACES
 
-static XL::Name_p logLoadError(Object3D *obj, Tree_p self)
-// ----------------------------------------------------------------------------
-//   Helper function: forward GLC load error message to Tao
-// ----------------------------------------------------------------------------
-{
-    Q_ASSERT(obj->status == Object3D::LoadFailed);
-    QString msg;
-    msg = QString("Could not load 3D object (corrupt file or "
-                  "unsupported format?): $1\n%1").arg(obj->errorStr);
-    Ooops(msg.toStdString(), self);
-    return XL::xl_false;
-}
-
-
 Tree_p object(Tree_p self,
               Real_p x, Real_p y, Real_p z,
               Real_p w, Real_p h, Real_p d,
@@ -70,14 +56,12 @@ Tree_p object(Tree_p self,
 
     try
     {
-        Object3D *obj = Object3D::Object(name, colored);
+        Object3D *obj = Object3D::Object(name);
         if (!obj)
         {
             Ooops("File not found or unreadable: $1", self);
             return XL::xl_false;
         }
-        if (obj->status == Object3D::LoadFailed)
-            return logLoadError(obj, self);
 
         Object3DDrawing *drawing = new Object3DDrawing(obj, x, y, z, w, h, d,
                                                        colored);
@@ -96,7 +80,7 @@ Tree_p object(Tree_p self,
 }
 
 
-Tree_p object(Tree_p self, Text_p name, bool colored)
+Tree_p object(Tree_p self, Text_p name)
 // ----------------------------------------------------------------------------
 //   Load a 3D object and show it as-is (not coordinate manipulation)
 // ----------------------------------------------------------------------------
@@ -106,14 +90,12 @@ Tree_p object(Tree_p self, Text_p name, bool colored)
 
     try
     {
-        Object3D *obj = Object3D::Object(name, colored);
+        Object3D *obj = Object3D::Object(name);
         if (!obj)
         {
             Ooops("File not found or unreadable: $1", self);
             return XL::xl_false;
         }
-        if (obj->status == Object3D::LoadFailed)
-            return logLoadError(obj, self);
 
         Object3D::tao->scheduleRender(Object3D::render_callback, obj);
     }

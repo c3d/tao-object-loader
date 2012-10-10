@@ -40,7 +40,7 @@ struct Object3D : public QObject
 // ----------------------------------------------------------------------------
 {
     // Constructor and destructor
-    Object3D(kstring name = NULL, bool colored = false);
+    Object3D(kstring name = NULL);
     ~Object3D();
 
     // Loading an objet file
@@ -54,7 +54,7 @@ struct Object3D : public QObject
     Tao::Box3         Bounds();
 
     // Object3D cache
-    static Object3D * Object(text name, bool colored);
+    static Object3D * Object(text name);
 
     // Call ((Object3D *)arg)->Draw()
     static void       render_callback(void *arg);
@@ -68,7 +68,7 @@ public:
     // Debug trace
     static std::ostream& debug();
 
-public:
+private:
     enum Status {
         NotStarted = 0,
         InProgress,
@@ -97,6 +97,8 @@ private:
     GLC_World     glcWorld;
     // Thread to load file asynchronously
     LoadThread *  loadThread;
+    // File load status
+    Status        status;
     // During load, percent complete
     int           complete;
     // Load start time
@@ -105,10 +107,6 @@ private:
     bool          hasTexture;
 
 public:
-    // File load status
-    Status        status;
-    // GLC_Lib error message in case status == LoadError
-    QString       errorStr;
     // True if Draw should force use of current color/material
     bool          colored;
 
