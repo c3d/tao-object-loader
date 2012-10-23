@@ -178,10 +178,8 @@ void Object3D::Identify()
     {
     case NotStarted:
     case InProgress:
-        DrawPlaceHolder();      break;
-
     case LoadFailed:
-        DrawErrorPlaceHolder(); break;
+        break;
 
     case LoadSuccess:
         IdentifyObject();       break;
@@ -302,14 +300,16 @@ void Object3D::IdentifyObject()
     glDisable(GL_POLYGON_OFFSET_LINE);
     glDisable(GL_POLYGON_OFFSET_POINT);
 
-    glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
+    glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 0);
 
-    glEnable(GL_NORMALIZE);
+    glDisable(GL_NORMALIZE);
 
     // Classic draw
     if(Object3D::tao->SetFillColor())
     {
+        glUseProgram(0);
         glcWorld.render(0, glc::ShadingFlag);
+        glUseProgram(0);
         glcWorld.render(0, glc::TransparentRenderFlag);
     }
 
