@@ -61,12 +61,12 @@ void Object3D::render_callback(void *arg)
 }
 
 
-Object3D::Object3D(kstring name, bool colored)
+Object3D::Object3D(kstring name)
 // ----------------------------------------------------------------------------
 //   Initialize an object. If a name is given, load the file
 // ----------------------------------------------------------------------------
-    : glcWorld(), loadThread(NULL), status(NotStarted), complete(0),
-      hasTexture(false), colored(colored)
+      : glcWorld(), loadThread(NULL), status(NotStarted), complete(0),
+        hasTexture(false), colored(false)
 {
     if (name)
         Load(name);
@@ -215,7 +215,6 @@ void Object3D::DrawObject()
 
     // If colored then use Tao materials
     // otherwise use object materials.
-    GLC_3DViewCollection *items = glcWorld.collection();
     if(colored)
     {
          Object3D::tao->SetTextures();
@@ -225,12 +224,12 @@ void Object3D::DrawObject()
         if(Object3D::tao->SetLineColor())
         {
             // Set wireframe mode
-            items->setPolygonModeForAll(GL_FRONT_AND_BACK, GL_LINE);
+            glcWorld.collection()->setPolygonModeForAll(GL_FRONT_AND_BACK, GL_LINE);
 
             glcWorld.render(0, glc::GeometryOnlyRenderFlag);
 
             // Reset polygon mode
-            items->setPolygonModeForAll(GL_FRONT_AND_BACK, GL_FILL);
+            glcWorld.collection()->setPolygonModeForAll(GL_FRONT_AND_BACK, GL_FILL);
         }
 
         // Classic draw with color
@@ -263,13 +262,13 @@ void Object3D::DrawObject()
         if(Object3D::tao->SetLineColor())
         {
             // Set wireframe mode
-            items->setPolygonModeForAll(GL_FRONT_AND_BACK, GL_LINE);
+            glcWorld.collection()->setPolygonModeForAll(GL_FRONT_AND_BACK, GL_LINE);
 
             glcWorld.render(0, glc::WireRenderFlag);
             glcWorld.render(0, glc::TransparentRenderFlag);
 
             // Reset polygon mode
-            items->setPolygonModeForAll(GL_FRONT_AND_BACK, GL_FILL);
+            glcWorld.collection()->setPolygonModeForAll(GL_FRONT_AND_BACK, GL_FILL);
         }
 
         // Classic draw
@@ -368,7 +367,7 @@ Box3 Object3D::Bounds()
 }
 
 
-Object3D *Object3D::Object(text name, bool colored)
+Object3D *Object3D::Object(text name)
 // ----------------------------------------------------------------------------
 //   Maintain a list of object files currently in use
 // ----------------------------------------------------------------------------
@@ -392,7 +391,7 @@ Object3D *Object3D::Object(text name, bool colored)
             found = loaded.find(path);
             if (found == loaded.end())
             {
-                Object3D *object = new Object3D(path.c_str(), colored);
+                Object3D *object = new Object3D(path.c_str());
                 loaded[name] = object;
                 loaded[path] = object;
             }

@@ -65,7 +65,6 @@ void Object3DDrawing::Draw()
     glPopMatrix();
 }
 
-
 void Object3DDrawing::Identify()
 // ----------------------------------------------------------------------------
 //   Identify object under cursor
