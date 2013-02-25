@@ -44,7 +44,7 @@ PREFIX(ObjectLoader_object_centered,  tree,  "object",
                    "proportionally so that it fits in a box of the specified "
                    "size."))
 
-PREFIX(ObjectLoader_colored_object_centered,  tree,  "colored_object",
+PREFIX(ObjectLoader_colored_object,  tree,  "colored_object",
        PARM(x, real, )
        PARM(y, real, )
        PARM(z, real, )
@@ -54,9 +54,13 @@ PREFIX(ObjectLoader_colored_object_centered,  tree,  "colored_object",
        PARM(file, text, ),
        return object(self, x, y, z, width, height, depth, file, true), /* */)
 
+PREFIX(ObjectLoader_colored_object_centered,  tree,  "colored_object",
+       PARM(file, text, ),
+       return object(self, file, true), /* */)
+
 PREFIX(ObjectLoader_object,  tree,  "object",
        PARM(file, text, ),
-       return object(self, file),
+       return object(self, file, false),
        GROUP(module.ObjectLoader)
        SYNOPSIS("Loads a 3D object from @a file")
        DESCRIPTION("Loads a 3D object from @a file. No scaling or translation "
