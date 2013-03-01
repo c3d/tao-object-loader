@@ -79,6 +79,19 @@ object(text file);
 
 /**
  * @~english
+ * Loads a 3D object from a file and shows it with a user-define color
+ * @p file is a relative or absolute path to the model file.
+ * No scaling or translation occurs: the model is drawn as defined in the file.
+ * @~french
+ * Charge un fichier 3D avec une couleur définie par l'utilisateur
+ * @p file est un chemin relatif ou absolu vers le fichier.
+ * Aucune translation ou changement d'échelle n'est fait. Le modèle 3D est
+ * affiché tel que défini dans le fichier.
+ */
+colored_object(text file);
+
+/**
+ * @~english
  * Loads and translates a 3D object.
  * @p file is a relative or absolute path to the model file.
  * The object is shown centered at (@a x, @a y, @a z).
@@ -113,12 +126,11 @@ object(real x, real y, real z, real width, real height, real depth, text file);
 
 /**
  * @~english
- * Loads, translates and paints a 3D object.
- * Forces the object to
- * take the current color or material properties even if the model file defines
- * colors, materials or textures.
+ * Loads, translates and paints a 3D object with user-defined colors.
+ * Forces the object to take the current color or material properties
+ * even if the model file defines colors, materials or textures.
  * @~french
- * Charge un fichier 3D, le positionne, permet la couleur.
+ * Charge et positionne un fichier 3D avec une couleur définie par l'utilisateur
  * Force l'utilisation des couleurs et textures activées avant l'utilisation
  * de cette primitive, même si le fichier modèle définit ses propres couleurs
  * ou textures.
@@ -131,12 +143,12 @@ colored_object(real x, real y, real z, text file);
 
 /**
  * @~english
- * Loads, scales, translates and paints a 3D object.
+ * Loads, scales, translates and paints a 3D object with a user-defined color
  * Forces the object to
  * take the current color or material properties even if the model file defines
  * colors, materials or textures.
  * @~french
- * Charge un fichier 3D, le positionne, permet la couleur.
+ * Charge et affiche un fichier 3D dont la couleur est définie par l'utilisateur
  * Force l'utilisation des couleurs et textures activées avant l'utilisation
  * de cette primitive, même si le fichier modèle définit ses propres couleurs
  * ou textures.
