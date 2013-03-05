@@ -65,8 +65,8 @@ Object3D::Object3D(kstring name, bool colored)
 // ----------------------------------------------------------------------------
 //   Initialize an object. If a name is given, load the file
 // ----------------------------------------------------------------------------
-    : glcWorld(), loadThread(NULL), complete(0), hasTexture(false),
-      status(NotStarted), colored(colored)
+    : glcWorld(), loadThread(NULL), status(NotStarted), complete(0),
+      hasTexture(false), colored(colored)
 {
     if (name)
         Load(name);
@@ -141,9 +141,8 @@ void Object3D::loadFailed()
 //   Show load error
 // ----------------------------------------------------------------------------
 {
-    errorStr = loadThread->error;
     IFTRACE(objloader)
-        debug() << "Load error: " << errorStr.toStdString() << "\n";
+        debug() << "Load error: " << loadThread->error.toStdString() << "\n";
     status = LoadFailed;
 }
 
@@ -258,6 +257,20 @@ void Object3D::DrawObject()
         }
 
         Object3D::tao->SetTextures();
+
+        // If color on lines is non transparent, then draw
+        // wireframe object
+        if(Object3D::tao->SetLineColor())
+        {
+            // Set wireframe mode
+            items->setPolygonModeForAll(GL_FRONT_AND_BACK, GL_LINE);
+
+            glcWorld.render(0, glc::WireRenderFlag);
+            glcWorld.render(0, glc::TransparentRenderFlag);
+
+            // Reset polygon mode
+            items->setPolygonModeForAll(GL_FRONT_AND_BACK, GL_FILL);
+        }
 
         // Classic draw
         if(Object3D::tao->SetFillColor())

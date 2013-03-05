@@ -20,14 +20,11 @@
 //  (C) 2010 Taodyne SAS
 // ****************************************************************************
 
-#include "tao/graphic_state.h"
+
 #include "object3d_drawing.h"
 
 using namespace Tao;
 
-
-DLL_PUBLIC Tao::GraphicState * graphic_state = NULL;
-#define GL (*graphic_state)
 
 
 void Object3DDrawing::render_callback(void *arg)
@@ -60,7 +57,6 @@ void Object3DDrawing::Draw()
 //   Draw object, centered at (x, y, z) and scaled to fit (w, h, d) size
 // ----------------------------------------------------------------------------
 {
-    GL.Sync();
     glPushMatrix();
     Transform();
 
@@ -75,7 +71,6 @@ void Object3DDrawing::Identify()
 //   Identify object under cursor
 // ----------------------------------------------------------------------------
 {
-    GL.Sync();
     glPushMatrix();
     Transform();
 
