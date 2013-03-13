@@ -56,7 +56,7 @@ Tree_p object(Tree_p self,
 
     try
     {
-        Object3D *obj = Object3D::Object(name);
+        Object3D *obj = Object3D::Object(name, colored);
         if (!obj)
         {
             Ooops("File not found or unreadable: $1", self);
@@ -80,7 +80,7 @@ Tree_p object(Tree_p self,
 }
 
 
-Tree_p object(Tree_p self, Text_p name)
+Tree_p object(Tree_p self, Text_p name, bool colored)
 // ----------------------------------------------------------------------------
 //   Load a 3D object and show it as-is (not coordinate manipulation)
 // ----------------------------------------------------------------------------
@@ -90,7 +90,7 @@ Tree_p object(Tree_p self, Text_p name)
 
     try
     {
-        Object3D *obj = Object3D::Object(name);
+        Object3D *obj = Object3D::Object(name, colored);
         if (!obj)
         {
             Ooops("File not found or unreadable: $1", self);

@@ -40,7 +40,7 @@ struct Object3D : public QObject
 // ----------------------------------------------------------------------------
 {
     // Constructor and destructor
-    Object3D(kstring name = NULL);
+    Object3D(kstring name = NULL, bool colored = false);
     ~Object3D();
 
     // Loading an objet file
@@ -54,7 +54,7 @@ struct Object3D : public QObject
     Tao::Box3         Bounds();
 
     // Object3D cache
-    static Object3D * Object(text name);
+    static Object3D * Object(text name, bool colored);
 
     // Call ((Object3D *)arg)->Draw()
     static void       render_callback(void *arg);
