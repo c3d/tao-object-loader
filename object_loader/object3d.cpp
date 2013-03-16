@@ -258,20 +258,6 @@ void Object3D::DrawObject()
 
         Object3D::tao->SetTextures();
 
-        // If color on lines is non transparent, then draw
-        // wireframe object
-        if(Object3D::tao->SetLineColor())
-        {
-            // Set wireframe mode
-            items->setPolygonModeForAll(GL_FRONT_AND_BACK, GL_LINE);
-
-            glcWorld.render(0, glc::WireRenderFlag);
-            glcWorld.render(0, glc::TransparentRenderFlag);
-
-            // Reset polygon mode
-            items->setPolygonModeForAll(GL_FRONT_AND_BACK, GL_FILL);
-        }
-
         // Classic draw
         if(Object3D::tao->SetFillColor())
         {
