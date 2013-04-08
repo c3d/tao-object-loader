@@ -68,7 +68,7 @@ public:
     // Debug trace
     static std::ostream& debug();
 
-private:
+public:
     enum Status {
         NotStarted = 0,
         InProgress,
@@ -97,8 +97,6 @@ private:
     GLC_World     glcWorld;
     // Thread to load file asynchronously
     LoadThread *  loadThread;
-    // File load status
-    Status        status;
     // During load, percent complete
     int           complete;
     // Load start time
@@ -107,6 +105,10 @@ private:
     bool          hasTexture;
 
 public:
+    // File load status
+    Status        status;
+    // GLC_Lib error message in case status == LoadError
+    QString       errorStr;
     // True if Draw should force use of current color/material
     bool          colored;
 
