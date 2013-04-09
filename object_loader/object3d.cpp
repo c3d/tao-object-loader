@@ -65,8 +65,8 @@ Object3D::Object3D(kstring name, bool colored)
 // ----------------------------------------------------------------------------
 //   Initialize an object. If a name is given, load the file
 // ----------------------------------------------------------------------------
-    : glcWorld(), loadThread(NULL), complete(0), hasTexture(false),
-      status(NotStarted), colored(colored)
+    : glcWorld(), loadThread(NULL), status(NotStarted), complete(0),
+      hasTexture(false), colored(colored)
 {
     if (name)
         Load(name);
@@ -141,9 +141,8 @@ void Object3D::loadFailed()
 //   Show load error
 // ----------------------------------------------------------------------------
 {
-    errorStr = loadThread->error;
     IFTRACE(objloader)
-        debug() << "Load error: " << errorStr.toStdString() << "\n";
+        debug() << "Load error: " << loadThread->error.toStdString() << "\n";
     status = LoadFailed;
 }
 
