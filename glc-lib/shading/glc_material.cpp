@@ -508,11 +508,6 @@ void GLC_Material::glExecute()
 				GLC_Shader::currentShaderHandle()->programShaderHandle()->setUniformValue("useTexture", true);
 			}
 		}
-		if (m_pTexture->hasAlphaChannel())
-		{
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			glEnable(GL_BLEND);
-		}
 
 	}
 	else
