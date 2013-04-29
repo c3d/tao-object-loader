@@ -198,7 +198,7 @@ void Object3D::DrawObject()
     static bool licensed, tested = false;
     if (!tested)
     {
-        licensed = tao->checkImpressOrLicense("ObjectLoader 1.013");
+        licensed = tao->checkImpressOrLicense("ObjectLoader 1.02");
         tested = true;
     }
 
