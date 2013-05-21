@@ -20,14 +20,11 @@
 //  (C) 2010 Taodyne SAS
 // ****************************************************************************
 
-#include "tao/graphic_state.h"
+
 #include "object3d_drawing.h"
 
 using namespace Tao;
 
-
-DLL_PUBLIC Tao::GraphicState * graphic_state = NULL;
-#define GL (*graphic_state)
 
 
 void Object3DDrawing::render_callback(void *arg)
@@ -60,27 +57,12 @@ void Object3DDrawing::Draw()
 //   Draw object, centered at (x, y, z) and scaled to fit (w, h, d) size
 // ----------------------------------------------------------------------------
 {
-    // Get current active texture
-    GLuint unit = GL.ActiveTextureUnitIndex();
-
-    // Active texture unit 0 to apply correctly
-    // object's texture
-    GL.ActiveTexture(GL_TEXTURE0);
-    GL.Sync();
-
     glPushMatrix();
-    glPushAttrib(GL_ENABLE_BIT | GL_LIGHTING_BIT | GL_TRANSFORM_BIT | GL_TEXTURE_BIT);
-
     Transform();
 
     object->colored = colored;
     object->Draw();
-
-    glPopAttrib();
     glPopMatrix();
-
-    // Restore texture unit
-    GL.ActiveTexture(unit);
 }
 
 
@@ -90,13 +72,9 @@ void Object3DDrawing::Identify()
 // ----------------------------------------------------------------------------
 {
     glPushMatrix();
-    glPushAttrib(GL_ENABLE_BIT | GL_LIGHTING_BIT | GL_TRANSFORM_BIT | GL_TEXTURE_BIT);
-
     Transform();
 
     object->Identify();
-
-    glPopAttrib();
     glPopMatrix();
 }
 
