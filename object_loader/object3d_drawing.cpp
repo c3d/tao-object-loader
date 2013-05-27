@@ -60,13 +60,23 @@ void Object3DDrawing::Draw()
 //   Draw object, centered at (x, y, z) and scaled to fit (w, h, d) size
 // ----------------------------------------------------------------------------
 {
+    // Get current active texture
+    GLuint unit = GL.ActiveTextureUnitIndex();
+
+    // Active texture unit 0 to apply correctly
+    // object's texture
+    GL.ActiveTexture(GL_TEXTURE0);
     GL.Sync();
+
     glPushMatrix();
     Transform();
 
     object->colored = colored;
     object->Draw();
     glPopMatrix();
+
+    // Restore texture unit
+    GL.ActiveTexture(unit);
 }
 
 
