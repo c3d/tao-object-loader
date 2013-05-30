@@ -198,7 +198,7 @@ void Object3D::DrawObject()
     static bool licensed, tested = false;
     if (!tested)
     {
-        licensed = tao->checkImpressOrLicense("ObjectLoader 1.013");
+        licensed = tao->checkImpressOrLicense("ObjectLoader 1.02");
         tested = true;
     }
 
@@ -219,6 +219,8 @@ void Object3D::DrawObject()
     GLC_3DViewCollection *items = glcWorld.collection();
     if(colored)
     {
+         Object3D::tao->SetTextures();
+
          // If color on lines is non transparent, then draw
          // wireframe object
         if(Object3D::tao->SetLineColor())
@@ -246,12 +248,27 @@ void Object3D::DrawObject()
     }
     else
     {
+        // If object contains textures
+        // then force activation of unit 0
+        uint saveUnits = 0;
+        if(hasTexture)
+        {
+            saveUnits = Object3D::tao->TextureUnits();
+            Object3D::tao->SetTextureUnits(saveUnits | 1);
+        }
+
+        Object3D::tao->SetTextures();
+
         // Classic draw
         if(Object3D::tao->SetFillColor())
         {
             glcWorld.render(0, glc::ShadingFlag);
             glcWorld.render(0, glc::TransparentRenderFlag);
         }
+
+        // Restore texture units
+        if(hasTexture)
+            Object3D::tao->SetTextureUnits(saveUnits);
     }
 
     glPopAttrib();
