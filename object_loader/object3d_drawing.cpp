@@ -69,10 +69,14 @@ void Object3DDrawing::Draw()
     GL.Sync();
 
     glPushMatrix();
+    glPushAttrib(GL_ENABLE_BIT | GL_LIGHTING_BIT | GL_TRANSFORM_BIT | GL_TEXTURE_BIT);
+
     Transform();
 
     object->colored = colored;
     object->Draw();
+
+    glPopAttrib();
     glPopMatrix();
 
     // Restore texture unit
@@ -85,11 +89,14 @@ void Object3DDrawing::Identify()
 //   Identify object under cursor
 // ----------------------------------------------------------------------------
 {
-    GL.Sync();
     glPushMatrix();
+    glPushAttrib(GL_ENABLE_BIT | GL_LIGHTING_BIT | GL_TRANSFORM_BIT | GL_TEXTURE_BIT);
+
     Transform();
 
     object->Identify();
+
+    glPopAttrib();
     glPopMatrix();
 }
 

@@ -204,8 +204,6 @@ void Object3D::DrawObject()
 
     checkCurrentContext();
 
-    glPushAttrib(GL_ENABLE_BIT | GL_LIGHTING_BIT | GL_TRANSFORM_BIT);
-
     glDisable(GL_POLYGON_OFFSET_FILL);
     glDisable(GL_POLYGON_OFFSET_LINE);
     glDisable(GL_POLYGON_OFFSET_POINT);
@@ -253,8 +251,6 @@ void Object3D::DrawObject()
             glcWorld.render(0, glc::TransparentRenderFlag);
         }
     }
-
-    glPopAttrib();
 }
 
 
@@ -264,8 +260,6 @@ void Object3D::IdentifyObject()
 // ----------------------------------------------------------------------------
 {
     checkCurrentContext();
-
-    glPushAttrib(GL_ENABLE_BIT | GL_LIGHTING_BIT | GL_TRANSFORM_BIT);
 
     glDisable(GL_POLYGON_OFFSET_FILL);
     glDisable(GL_POLYGON_OFFSET_LINE);
@@ -283,8 +277,6 @@ void Object3D::IdentifyObject()
         glUseProgram(0);
         glcWorld.render(0, glc::TransparentRenderFlag);
     }
-
-    glPopAttrib();
 }
 
 
