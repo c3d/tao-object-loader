@@ -195,13 +195,6 @@ void Object3D::DrawObject()
 //   Draw the 3D object
 // ----------------------------------------------------------------------------
 {
-    static bool licensed, tested = false;
-    if (!tested)
-    {
-        licensed = tao->checkImpressOrLicense("ObjectLoader 1.02");
-        tested = true;
-    }
-
     checkCurrentContext();
 
     glPushAttrib(GL_ENABLE_BIT | GL_LIGHTING_BIT | GL_TRANSFORM_BIT);
