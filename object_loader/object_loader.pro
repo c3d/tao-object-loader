@@ -57,6 +57,3 @@ include($${TAO_SDK}/translations.pri)
 translations.path = $$MODINSTPATH
 translations.files = *.qm
 INSTALLS += translations
-
-LICENSE_FILES = object_loader.taokey.notsigned
-exists(../../licenses.pri):include(../../licenses.pri)

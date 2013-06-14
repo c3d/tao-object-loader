@@ -195,13 +195,6 @@ void Object3D::DrawObject()
 //   Draw the 3D object
 // ----------------------------------------------------------------------------
 {
-    static bool licensed, tested = false;
-    if (!tested)
-    {
-        licensed = tao->checkImpressOrLicense("ObjectLoader 1.02");
-        tested = true;
-    }
-
     checkCurrentContext();
 
     glDisable(GL_POLYGON_OFFSET_FILL);
