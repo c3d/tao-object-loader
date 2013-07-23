@@ -1,7 +1,7 @@
 /**
  * @~english
  * @taomoduledescription{ObjectLoader, Object Loader}
- * <tt>import ObjectLoader</tt> - Loads 3D models from files.
+ * <tt>import ObjectLoader</tt> - Loads 3D models from files.@n
  *
  * With this module, you can import 3D models exported from many popular
  * 3D software packages.
@@ -9,7 +9,7 @@
  *
  * @~french
  * @taomoduledescription{ObjectLoader, Lecteur de modèles 3D}
- * <tt>import ObjectLoader</tt> - Charge des fichiers 3D.
+ * <tt>import ObjectLoader</tt> - Charge des fichiers 3D.@n
  *
  * Ce module vous permet d'afficher des modèles 3D exportés par de nombreux
  * logiciels. Les formats supportés sont :
