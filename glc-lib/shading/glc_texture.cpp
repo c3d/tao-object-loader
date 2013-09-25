@@ -86,8 +86,6 @@ GLC_Texture::GLC_Texture(const QFile &file)
 , m_HasAlphaChannel(m_textureImage.hasAlphaChannel())
 {
 	m_textureImage.load(const_cast<QFile*>(&file), QFileInfo(m_FileName).suffix().toLocal8Bit());
-        m_HasAlphaChannel = m_textureImage.hasAlphaChannel();
-
 	if (m_textureImage.isNull())
 	{
 		QString ErrorMess("GLC_Texture::GLC_Texture open image : ");
@@ -188,14 +186,6 @@ void GLC_Texture::setMaxTextureSize(const QSize& size)
 		qDebug() << "GLC_Texture::setMaxTextureSize m_MaxTextureSize set to m_MinTextureSize";
 		m_MaxTextureSize= m_MinTextureSize;
 	}
-}
-
-// Set the transparency map (implement map_D in .obj .mtl files)
-void GLC_Texture::setTransparency(const QFile &file)
-{
-    QImage alpha = loadFromFile(file.fileName());
-    m_textureImage.setAlphaChannel(alpha.scaled(m_textureImage.size()));
-    m_HasAlphaChannel = true;
 }
 
 //////////////////////////////////////////////////////////////////////

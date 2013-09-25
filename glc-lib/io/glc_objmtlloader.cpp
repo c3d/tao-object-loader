@@ -97,7 +97,7 @@ bool GLC_ObjMtlLoader::loadMaterials()
 	{
 		lineBuff= mtlStream.readLine();
 		//qDebug() << lineBuff;
-		QTextStream streamLine(lineBuff.toUtf8());
+		QTextStream streamLine(lineBuff.toAscii());
 
 		if ((streamLine >> header).status() ==QTextStream::Ok)
 		{
@@ -129,7 +129,7 @@ bool GLC_ObjMtlLoader::loadMaterials()
 			{
 				if (!extractOneValue(lineBuff)) return false;
 			}
-			else if ((header == "map_Kd") || (header == "map_Ka") || (header == "map_D") || (header == "map_d"))	// Texture
+			else if ((header == "map_Kd") || (header == "map_Ka"))	// Texture
 			{
 				//qDebug() << "Texture detected";
 				extractTextureFileName(lineBuff);
@@ -208,19 +208,6 @@ void GLC_ObjMtlLoader::extractTextureFileName(QString &ligne)
 			QStringList stringList(m_FileName);
 			stringList.append("Image : " + textureFileName + " not suported");
 			GLC_ErrorLog::addError(stringList);
-		}
-		else if (header == "map_D" || header == "map_d")
-		{
-			m_ListOfAttachedFileName << textureFileName;
-			GLC_Texture *pTexture = m_pCurrentMaterial->textureHandle();
-			if (!pTexture)
-			{
-				pTexture = new GLC_Texture(textureFile);
-				m_pCurrentMaterial->setTexture(pTexture);
-			}
-			pTexture->setTransparency(textureFile);
-            if (!m_pCurrentMaterial->isTransparent())
-                m_pCurrentMaterial->setOpacity(0.99);
 		}
 		else
 		{
@@ -385,7 +372,7 @@ QString GLC_ObjMtlLoader::getTextureName(QTextStream &inputStream, const QString
 		}
 		else
 		{
-			m_LoadStatus= "GLC_ObjToMesh2::extractString : Error occur when trying to decode map option";
+			m_LoadStatus== "GLC_ObjToMesh2::extractString : Error occur when trying to decode map option";
 			GLC_FileFormatException fileFormatException(m_LoadStatus, m_FileName, GLC_FileFormatException::WrongFileFormat);
 			throw(fileFormatException);
 		}
