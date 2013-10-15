@@ -29,7 +29,7 @@
  * Par exemple, le document qui suit charge le fichier @c conestoga.3ds
  * et le fait tourner autour de l'axe Z.
  * @~
- * @code
+@code
 import ObjectLoader
 
 the_light X, Y, Z ->
@@ -48,7 +48,7 @@ rotating_obj F ->
 
 the_light 300, 300, 300
 rotating_obj "conestoga.3ds"
- * @endcode
+@endcode
  *
  * @~english
  * Here is a screen capture:
