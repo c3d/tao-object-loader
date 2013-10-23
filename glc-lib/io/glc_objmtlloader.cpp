@@ -97,7 +97,7 @@ bool GLC_ObjMtlLoader::loadMaterials()
 	{
 		lineBuff= mtlStream.readLine();
 		//qDebug() << lineBuff;
-		QTextStream streamLine(lineBuff.toUtf8());
+		QTextStream streamLine(lineBuff.toAscii());
 
 		if ((streamLine >> header).status() ==QTextStream::Ok)
 		{
