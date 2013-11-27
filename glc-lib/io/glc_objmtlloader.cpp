@@ -219,6 +219,8 @@ void GLC_ObjMtlLoader::extractTextureFileName(QString &ligne)
 				m_pCurrentMaterial->setTexture(pTexture);
 			}
 			pTexture->setTransparency(textureFile);
+            if (!m_pCurrentMaterial->isTransparent())
+                m_pCurrentMaterial->setOpacity(0.99);
 		}
 		else
 		{
