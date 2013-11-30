@@ -129,7 +129,7 @@ bool GLC_ObjMtlLoader::loadMaterials()
 			{
 				if (!extractOneValue(lineBuff)) return false;
 			}
-			else if ((header == "map_Kd") || (header == "map_Ka") || (header == "map_D"))	// Texture
+			else if ((header == "map_Kd") || (header == "map_Ka") || (header == "map_D") || (header == "map_d"))	// Texture
 			{
 				//qDebug() << "Texture detected";
 				extractTextureFileName(lineBuff);
@@ -209,7 +209,7 @@ void GLC_ObjMtlLoader::extractTextureFileName(QString &ligne)
 			stringList.append("Image : " + textureFileName + " not suported");
 			GLC_ErrorLog::addError(stringList);
 		}
-		else if (header == "map_D")
+		else if (header == "map_D" || header == "map_d")
 		{
 			m_ListOfAttachedFileName << textureFileName;
 			GLC_Texture *pTexture = m_pCurrentMaterial->textureHandle();
