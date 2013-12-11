@@ -124,6 +124,9 @@ public:
 	// Set the maximum texture size
 	static void setMaxTextureSize(const QSize&);
 
+        // Set the transparency map
+        void setTransparency(const QFile &file);
+
 //@}
 //////////////////////////////////////////////////////////////////////
 /*! \name OpenGL Functions*/
