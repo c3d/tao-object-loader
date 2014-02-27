@@ -1,7 +1,7 @@
 /**
  * @~english
  * @taomoduledescription{ObjectLoader, Object Loader}
- * <tt>import ObjectLoader</tt> - Loads 3D models from files.
+ * <tt>import ObjectLoader</tt> - Loads 3D models from files.@n
  *
  * With this module, you can import 3D models exported from many popular
  * 3D software packages.
@@ -9,7 +9,7 @@
  *
  * @~french
  * @taomoduledescription{ObjectLoader, Lecteur de modèles 3D}
- * <tt>import ObjectLoader</tt> - Charge des fichiers 3D.
+ * <tt>import ObjectLoader</tt> - Charge des fichiers 3D.@n
  *
  * Ce module vous permet d'afficher des modèles 3D exportés par de nombreux
  * logiciels. Les formats supportés sont :
@@ -29,7 +29,7 @@
  * Par exemple, le document qui suit charge le fichier @c conestoga.3ds
  * et le fait tourner autour de l'axe Z.
  * @~
- * @code
+@code
 import ObjectLoader
 
 the_light X, Y, Z ->
@@ -48,7 +48,7 @@ rotating_obj F ->
 
 the_light 300, 300, 300
 rotating_obj "conestoga.3ds"
- * @endcode
+@endcode
  *
  * @~english
  * Here is a screen capture:
