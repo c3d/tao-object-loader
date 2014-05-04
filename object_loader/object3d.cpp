@@ -240,8 +240,10 @@ void Object3D::DrawObject()
         // Classic draw
         if(Object3D::tao->SetFillColor())
         {
+            glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT);
             glcWorld.render(0, glc::ShadingFlag);
             glcWorld.render(0, glc::TransparentRenderFlag);
+            glPopAttrib();
         }
     }
 }
