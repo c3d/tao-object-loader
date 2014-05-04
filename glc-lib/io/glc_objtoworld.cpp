@@ -53,6 +53,13 @@ GLC_ObjToWorld::GLC_ObjToWorld()
 , m_Positions()
 , m_Normals()
 , m_Texels()
+, m_VerticeIndex(0)
+, m_NormalIndex(0)
+, m_TextureIndex(0)
+, m_VerticeOffset(0)
+, m_NormalOffset(0)
+, m_TextureOffset(0)
+, m_ResetIndex(false)
 {
 }
 
@@ -159,6 +166,14 @@ GLC_World* GLC_ObjToWorld::CreateWorldFromObj(QFile &file)
 	//////////////////////////////////////////////////////////////////
 	emit currentQuantum(currentQuantumValue);
 	m_CurrentLineNumber= 0;
+	m_VerticeIndex= 0;
+	m_NormalIndex= 0;
+	m_TextureIndex= 0;
+
+	m_VerticeOffset= 0;
+	m_NormalOffset= 0;
+	m_TextureOffset= 0;
+
 	while (!objStream.atEnd())
 	{
 		++m_CurrentLineNumber;
@@ -234,9 +249,21 @@ void GLC_ObjToWorld::scanLigne(QString &line)
 	// Search Vertexs vectors
 	if (line.startsWith("v ")|| line.startsWith(QString("v") + QString(QChar(9))))
 	{
+		if (m_ResetIndex)
+		{
+			m_VerticeOffset+= m_VerticeIndex;
+			m_NormalOffset+= m_NormalIndex;
+			m_TextureOffset+= m_TextureIndex;
+
+			m_VerticeIndex= 0;
+			m_TextureIndex= 0;
+			m_NormalIndex= 0;
+			m_ResetIndex= false;
+		}
 		line.remove(0,2); // Remove first 2 char
 		m_Positions.append(extract3dVect(line));
 		m_FaceType = notSet;
+		++m_VerticeIndex;
 	}
 
 	// Search texture coordinate vectors
@@ -245,6 +272,7 @@ void GLC_ObjToWorld::scanLigne(QString &line)
 		line.remove(0,3); // Remove first 3 char
 		m_Texels.append(extract2dVect(line));
 		m_FaceType = notSet;
+		++m_TextureIndex;
 	}
 
 	// Search normals vectors
@@ -253,11 +281,13 @@ void GLC_ObjToWorld::scanLigne(QString &line)
 		line.remove(0,3); // Remove first 3 char
 		m_Normals.append(extract3dVect(line));
 		m_FaceType = notSet;
+		++m_NormalIndex;
 	}
 
 	// Search faces to update index
 	else if (line.startsWith("f ") || line.startsWith(QString("f") + QString(QChar(9))))
 	{
+		m_ResetIndex= true;
 		// If there is no group or object in the OBJ file
 		if (NULL == m_pCurrentObjMesh)
 			{
@@ -609,6 +639,12 @@ void GLC_ObjToWorld::extractVertexIndex(QString line, int &Coordinate, int &Norm
 				clear();
 				throw(fileFormatException);
 			}
+			if (Coordinate < 0)
+				Coordinate= m_VerticeIndex + m_VerticeOffset + Coordinate + 1;
+			if (Normal < 0)
+				Normal= m_NormalIndex + m_NormalOffset + Normal + 1;
+			if (TextureCoordinate < 0)
+				TextureCoordinate= m_TextureIndex + m_TextureOffset + TextureCoordinate + 1;
 		}
 		else
 		{
@@ -644,7 +680,11 @@ void GLC_ObjToWorld::extractVertexIndex(QString line, int &Coordinate, int &Norm
 				clear();
 				throw(fileFormatException);
 			}
-		}
+			if (Coordinate < 0)
+				Coordinate= m_VerticeIndex + m_VerticeOffset + Coordinate + 1;
+			if (TextureCoordinate < 0)
+				TextureCoordinate= m_TextureIndex + m_TextureOffset + TextureCoordinate + 1;
+ 		}
 		else
 		{
 			QString message= "GLC_ObjToWorld::extractVertexIndex " + m_FileName + " this Obj file type is not supported";
@@ -678,6 +718,11 @@ void GLC_ObjToWorld::extractVertexIndex(QString line, int &Coordinate, int &Norm
 				clear();
 				throw(fileFormatException);
 			}
+			if (Coordinate < 0)
+				Coordinate= m_VerticeIndex + m_VerticeOffset + Coordinate + 1;
+			if (Normal < 0)
+				Normal= m_NormalIndex + m_NormalOffset + Normal + 1;
+
 		}
 		else
 		{
@@ -709,6 +754,8 @@ void GLC_ObjToWorld::extractVertexIndex(QString line, int &Coordinate, int &Norm
 				clear();
 				throw(fileFormatException);
 			}
+			if (Coordinate < 0)
+				Coordinate= m_VerticeIndex + m_VerticeOffset + Coordinate + 1;
 		}
 		else
 		{
@@ -722,7 +769,7 @@ void GLC_ObjToWorld::extractVertexIndex(QString line, int &Coordinate, int &Norm
  	}
  	else
  	{
-		QString message= "GLC_ObjToWorld::extractVertexIndex OBJ file " + m_FileName + " not reconize";
+		QString message= "GLC_ObjToWorld::extractVertexIndex OBJ file " + m_FileName + " not recognized";
 		message.append("\nAt line : ");
 		message.append(QString::number(m_CurrentLineNumber));
 		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::FileNotSupported);
@@ -734,10 +781,10 @@ void GLC_ObjToWorld::extractVertexIndex(QString line, int &Coordinate, int &Norm
 // set the OBJ File type
 void GLC_ObjToWorld::setObjType(QString& ligne)
 {
-	const QRegExp coordinateOnlyRegExp("^\\d{1,}$"); // ex. 10
- 	const QRegExp coordinateTextureNormalRegExp("^\\d{1,}/\\d{1,}/\\d{1,}$"); // ex. 10/30/54
- 	const QRegExp coordinateNormalRegExp("^\\d{1,}//\\d{1,}$"); // ex. 10//54
- 	const QRegExp coordinateTextureRegExp("^\\d{1,}/\\d{1,}$"); // ex. 10/56
+	const QRegExp coordinateOnlyRegExp("^[-+]?\\d{1,}$"); // ex. 10
+	const QRegExp coordinateTextureNormalRegExp("^[-+]?\\d{1,}/[-+]?\\d{1,}/[-+]?\\d{1,}$"); // ex. 10/30/54
+	const QRegExp coordinateNormalRegExp("^[-+]?\\d{1,}//[-+]?\\d{1,}$"); // ex. 10//54
+	const QRegExp coordinateTextureRegExp("^[-+]?\\d{1,}/[-+]?\\d{1,}$"); // ex. 10/56
 
  	if (coordinateTextureNormalRegExp.exactMatch(ligne))
  	{
@@ -757,7 +804,7 @@ void GLC_ObjToWorld::setObjType(QString& ligne)
  	}
  	else
  	{
-		QString message= "GLC_ObjToWorld::setObjType OBJ file " + m_FileName + " not reconize";
+		QString message= "GLC_ObjToWorld::setObjType OBJ file " + m_FileName + " not recognized";
 		message.append("\nAt line : ");
 		message.append(QString::number(m_CurrentLineNumber));
 		GLC_FileFormatException fileFormatException(message, m_FileName, GLC_FileFormatException::FileNotSupported);
