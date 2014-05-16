@@ -226,13 +226,7 @@ void Object3D::DrawObject()
         // Classic draw with color
         if(Object3D::tao->SetFillColor())
         {
-            GLfloat color[4];
-            glGetFloatv(GL_CURRENT_COLOR, color);
-            if (color[3] != 1)
-                glDepthMask(GL_FALSE);
             glcWorld.render(0, glc::GeometryOnlyRenderFlag);
-            if (color[3] != 1)
-                glDepthMask(GL_TRUE);
         }
     }
     else
@@ -241,7 +235,7 @@ void Object3D::DrawObject()
         if(Object3D::tao->SetFillColor())
         {
             glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT);
-            if (!Object3D::tao->RenderingTransparency())
+            if(!Object3D::tao->RenderingTransparency())
                 glcWorld.render(0, glc::ShadingFlag);
             else
                 glcWorld.render(0, glc::TransparentRenderFlag);
