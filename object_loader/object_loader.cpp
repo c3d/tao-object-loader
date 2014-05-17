@@ -49,10 +49,8 @@ static XL::Name_p logLoadError(Object3D *obj, Tree_p self)
 // ----------------------------------------------------------------------------
 {
     Q_ASSERT(obj->status == Object3D::LoadFailed);
-    QString msg;
-    msg = QString("Could not load 3D object (corrupt file or "
-                  "unsupported format?): $1\n%1").arg(obj->errorStr);
-    Ooops(msg.toStdString(), self);
+    Ooops("ObjectLoader: Could not load 3D object in $1, $2", self)
+        .Arg(obj->errorStr.toStdString());
     return XL::xl_false;
 }
 
@@ -73,7 +71,8 @@ Tree_p object(Tree_p self,
         Object3D *obj = Object3D::Object(name, colored);
         if (!obj)
         {
-            Ooops("File not found or unreadable: $1", self);
+            Ooops("ObjectLoader: Unable to load $2 in $1",
+                  self, name);
             return XL::xl_false;
         }
         if (obj->status == Object3D::LoadFailed)
@@ -89,7 +88,9 @@ Tree_p object(Tree_p self,
     }
     catch (GLC_Exception e)
     {
-        return XL::Ooops(e.what(), self);
+        XL::Ooops("ObjectLoader: Error loading $2 in $1: $3", self, name)
+            .Arg(e.what());
+        return XL::xl_false;
     }
 
     return XL::xl_true;
@@ -109,7 +110,8 @@ Tree_p object(Tree_p self, Text_p name, bool colored)
         Object3D *obj = Object3D::Object(name, colored);
         if (!obj)
         {
-            Ooops("File not found or unreadable: $1", self);
+            Ooops("ObjectLoader: File $2 unreadable in $1", self)
+                .Arg((Tree *) name);
             return XL::xl_false;
         }
         if (obj->status == Object3D::LoadFailed)
@@ -119,7 +121,9 @@ Tree_p object(Tree_p self, Text_p name, bool colored)
     }
     catch (GLC_Exception e)
     {
-        return XL::Ooops(e.what(), self);
+        XL::Ooops("ObjectLoader: Error loading $2 in $1: $3", self)
+            .Arg((Tree *) name).Arg(e.what());
+        return XL::xl_false;
     }
 
     return XL::xl_true;
