@@ -5,7 +5,7 @@
 module_description
     id "4F6776FA-D116-4A88-A6F8-524D2B53AAD8"
     name "3D object loader"
-    description "Import 3D objects into Tao Presentations. " &
+    description "Import 3D objects into Tao3D. " &
                 "Supported formats include: " &
                 "Collada V1.4 (.dae), " &
                 "3DXML ASCII V3 and V4 (.3dxml), " &
