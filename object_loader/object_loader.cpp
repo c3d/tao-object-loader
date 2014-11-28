@@ -35,10 +35,6 @@
 #include <QImage>
 #include <QGLWidget>
 
-#ifndef CONFIG_WIN32
-#define glewInit()
-#endif
-
 using namespace XL;
 
 XL_DEFINE_TRACES
@@ -135,7 +131,6 @@ int module_init(const Tao::ModuleApi *api, const Tao::ModuleInfo *mod)
 //   Initialize the Tao module
 // ----------------------------------------------------------------------------
 {
-    glewInit();
     XL_INIT_TRACES();
     Object3D::tao = api;
 

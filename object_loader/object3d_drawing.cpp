@@ -27,7 +27,6 @@ using namespace Tao;
 
 
 DLL_PUBLIC Tao::GraphicState * graphic_state = NULL;
-#define GL (*graphic_state)
 
 
 void Object3DDrawing::render_callback(void *arg)
