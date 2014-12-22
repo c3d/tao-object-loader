@@ -232,15 +232,14 @@ void Object3D::DrawObject()
     else
     {
         // Classic draw
-        if(Object3D::tao->SetFillColor())
-        {
-            glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT);
-            if(!Object3D::tao->RenderingTransparency())
-                glcWorld.render(0, glc::ShadingFlag);
-            else
-                glcWorld.render(0, glc::TransparentRenderFlag);
-            glPopAttrib();
-        }
+        Object3D::tao->SetFillColor();
+
+        glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT);
+        if(!Object3D::tao->RenderingTransparency())
+            glcWorld.render(0, glc::ShadingFlag);
+        else
+            glcWorld.render(0, glc::TransparentRenderFlag);
+        glPopAttrib();
     }
 }
 
