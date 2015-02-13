@@ -14,3 +14,5 @@ moc_*.cpp
 /*.taokey
 doc/Doxyfile
 doc/output
+object_loader/
+glc-lib/
