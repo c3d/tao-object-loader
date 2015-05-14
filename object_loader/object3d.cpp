@@ -424,7 +424,7 @@ void Object3D::initGLC()
 
 #if !defined(Q_OS_MACX)
     glUseProgram = (PFNGLUSEPROGRAMPROC)context->getProcAddress("glUseProgram");
-    Q_ASSERT(glUseProgram);
+    XL_ASSERT(glUseProgram);
 #endif
 }
 

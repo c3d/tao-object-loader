@@ -44,7 +44,7 @@ static XL::Name_p logLoadError(Object3D *obj, Tree_p self)
 //   Helper function: forward GLC load error message to Tao
 // ----------------------------------------------------------------------------
 {
-    Q_ASSERT(obj->status == Object3D::LoadFailed);
+    XL_ASSERT(obj->status == Object3D::LoadFailed);
     Ooops("ObjectLoader: Could not load 3D object in $1, $2", self)
         .Arg(obj->errorStr.toStdString());
     return XL::xl_false;
