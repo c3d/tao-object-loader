@@ -476,25 +476,25 @@ void GLC_Material::glLoadTexture(QGLContext* pContext)
 void GLC_Material::glExecute()
 {
 
-	GLfloat pAmbientColor[4]= {ambientColor().redF(),
-								ambientColor().greenF(),
-								ambientColor().blueF(),
-								ambientColor().alphaF()};
+    GLfloat pAmbientColor[4]= { (GLfloat) ambientColor().redF(),
+                                (GLfloat) ambientColor().greenF(),
+								(GLfloat) ambientColor().blueF(),
+								(GLfloat) ambientColor().alphaF()};
 
-	GLfloat pDiffuseColor[4]= {diffuseColor().redF(),
-								diffuseColor().greenF(),
-								diffuseColor().blueF(),
-								diffuseColor().alphaF()};
+	GLfloat pDiffuseColor[4]= { (GLfloat) diffuseColor().redF(),
+								(GLfloat) diffuseColor().greenF(),
+								(GLfloat) diffuseColor().blueF(),
+                                (GLfloat) diffuseColor().alphaF()};
 
-	GLfloat pSpecularColor[4]= {specularColor().redF(),
-								specularColor().greenF(),
-								specularColor().blueF(),
-								specularColor().alphaF()};
+	GLfloat pSpecularColor[4]= {(GLfloat) specularColor().redF(),
+								(GLfloat) specularColor().greenF(),
+								(GLfloat) specularColor().blueF(),
+								(GLfloat) specularColor().alphaF()};
 
-	GLfloat pLightEmission[4]= {emissiveColor().redF(),
-								emissiveColor().greenF(),
-								emissiveColor().blueF(),
-								emissiveColor().alphaF()};
+	GLfloat pLightEmission[4]= {(GLfloat) emissiveColor().redF(),
+								(GLfloat) emissiveColor().greenF(),
+								(GLfloat) emissiveColor().blueF(),
+								(GLfloat) emissiveColor().alphaF()};
 
 	if (m_pTexture != NULL)
 	{
@@ -552,25 +552,25 @@ void GLC_Material::glExecute()
 // Execute OpenGL Material
 void GLC_Material::glExecute(float overwriteTransparency)
 {
-	GLfloat pAmbientColor[4]= {ambientColor().redF(),
-								ambientColor().greenF(),
-								ambientColor().blueF(),
-								overwriteTransparency};
+	GLfloat pAmbientColor[4]= { (GLfloat) ambientColor().redF(),
+								(GLfloat) ambientColor().greenF(),
+								(GLfloat) ambientColor().blueF(),
+								(GLfloat) overwriteTransparency};
 
-	GLfloat pDiffuseColor[4]= {diffuseColor().redF(),
-								diffuseColor().greenF(),
-								diffuseColor().blueF(),
-								overwriteTransparency};
+	GLfloat pDiffuseColor[4]= { (GLfloat) diffuseColor().redF(),
+								(GLfloat) diffuseColor().greenF(),
+								(GLfloat) diffuseColor().blueF(),
+								(GLfloat) overwriteTransparency};
 
-	GLfloat pSpecularColor[4]= {specularColor().redF(),
-								specularColor().greenF(),
-								specularColor().blueF(),
-								overwriteTransparency};
+	GLfloat pSpecularColor[4]= {(GLfloat) specularColor().redF(),
+								(GLfloat) specularColor().greenF(),
+								(GLfloat) specularColor().blueF(),
+								(GLfloat) overwriteTransparency};
 
-	GLfloat pLightEmission[4]= {emissiveColor().redF(),
-								emissiveColor().greenF(),
-								emissiveColor().blueF(),
-								overwriteTransparency};
+	GLfloat pLightEmission[4]= {(GLfloat) emissiveColor().redF(),
+								(GLfloat) emissiveColor().greenF(),
+								(GLfloat) emissiveColor().blueF(),
+								(GLfloat) overwriteTransparency};
 
 	if (m_pTexture != NULL)
 	{
