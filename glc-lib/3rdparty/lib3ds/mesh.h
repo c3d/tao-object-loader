@@ -1,5 +1,39 @@
-/* -*- c -*- */
 #ifndef INCLUDED_LIB3DS_MESH_H
+// *****************************************************************************
+// mesh.h                                                          Tao3D project
+// *****************************************************************************
+//
+// File description:
+//
+//
+//
+//
+//
+//
+//
+//
+// *****************************************************************************
+// This software is licensed under the GNU General Public License v3
+// (C) 2019, Christophe de Dinechin <christophe@dinechin.org>
+// (C) 2010, Jérôme Forissier <jerome@taodyne.com>
+// *****************************************************************************
+// This file is part of Tao3D
+//
+// Tao3D is free software: you can r redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Tao3D is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Tao3D, in a file named COPYING.
+// If not, see <https://www.gnu.org/licenses/>.
+// *****************************************************************************
+/* -*- c -*- */
 #define INCLUDED_LIB3DS_MESH_H
 /*
  * The 3D Studio File Format Library
@@ -7,13 +41,13 @@
  * All rights reserved.
  *
  * This program is  free  software;  you can redistribute it and/or modify it
- * under the terms of the  GNU Lesser General Public License  as published by 
- * the  Free Software Foundation;  either version 2.1 of the License,  or (at 
+ * under the terms of the  GNU Lesser General Public License  as published by
+ * the  Free Software Foundation;  either version 2.1 of the License,  or (at
  * your option) any later version.
  *
  * This  program  is  distributed in  the  hope that it will  be useful,  but
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or  FITNESS FOR A  PARTICULAR PURPOSE.  See the  GNU Lesser General Public  
+ * or  FITNESS FOR A  PARTICULAR PURPOSE.  See the  GNU Lesser General Public
  * License for more details.
  *
  * You should  have received  a copy of the GNU Lesser General Public License
@@ -56,8 +90,8 @@ struct Lib3dsFace {
 
 /**
  * Vertex flags
- * Meaning of _Lib3dsFace::flags. ABC are points of the current face 
- * (A: is 1st vertex, B is 2nd vertex, C is 3rd vertex) 
+ * Meaning of _Lib3dsFace::flags. ABC are points of the current face
+ * (A: is 1st vertex, B is 2nd vertex, C is 3rd vertex)
  */
 typedef enum {
   LIB3DS_FACE_FLAG_VIS_AC = 0x1,       /*!< Bit 0: Edge visibility AC */
@@ -119,7 +153,7 @@ struct Lib3dsMesh {
     Lib3dsUserData user;    	/*< Arbitrary user data */
     Lib3dsMesh *next;
     char name[64];		        /*< Mesh name. Don't use more than 8 characters  */
-    Lib3dsDword object_flags; /*< @see Lib3dsObjectFlags */ 
+    Lib3dsDword object_flags; /*< @see Lib3dsObjectFlags */
     Lib3dsByte color;
     Lib3dsMatrix matrix;    	/*< Transformation matrix for mesh data */
     Lib3dsDword points;		    /*< Number of points in point list */
@@ -132,7 +166,7 @@ struct Lib3dsMesh {
     Lib3dsFace *faceL;		    /*< Face list */
     Lib3dsBoxMap box_map;
     Lib3dsMapData map_data;
-}; 
+};
 
 extern LIB3DSAPI Lib3dsMesh* lib3ds_mesh_new(const char *name);
 extern LIB3DSAPI void lib3ds_mesh_free(Lib3dsMesh *mesh);

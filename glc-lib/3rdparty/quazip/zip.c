@@ -254,7 +254,7 @@ local int add_data_in_datablock(ll,buf,len)
 
 
 
-/****************************************************************************/
+// ============================================================================
 
 #ifndef NO_ADDFILEINEXISTINGZIP
 /* ===========================================================================
@@ -313,7 +313,7 @@ local void ziplocal_putValue_inmemory (dest, x, nbByte)
     }
 }
 
-/****************************************************************************/
+// ============================================================================
 
 
 local uLong ziplocal_TmzDateToDosDate(ptm,dosDate)
@@ -332,7 +332,7 @@ local uLong ziplocal_TmzDateToDosDate(ptm,dosDate)
 }
 
 
-/****************************************************************************/
+// ============================================================================
 
 local int ziplocal_getByte OF((
     const zlib_filefunc_def* pzlib_filefunc_def,
@@ -497,7 +497,7 @@ local uLong ziplocal_SearchCentralDir(pzlib_filefunc_def,filestream)
 }
 #endif /* !NO_ADDFILEINEXISTINGZIP*/
 
-/************************************************************/
+// ============================================================================
 extern zipFile ZEXPORT zipOpen2 (pathname, append, globalcomment, pzlib_filefunc_def)
     const char *pathname;
     int append;

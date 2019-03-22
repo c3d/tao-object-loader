@@ -1,3 +1,40 @@
+# ******************************************************************************
+# GLC_lib.pro                                                      Tao3D project
+# ******************************************************************************
+#
+# File description:
+#
+#
+#
+#
+#
+#
+#
+#
+# ******************************************************************************
+# This software is licensed under the GNU General Public License v3
+# (C) 2011, Baptiste Soulisse <baptiste@geonosis.local>
+# (C) 2011, Catherine Burvelle <catherine@taodyne.com>
+# (C) 2011,2019, Christophe de Dinechin <christophe@dinechin.org>
+# (C) 2010-2011, Jérôme Forissier <jerome@taodyne.com>
+# (C) 2011, Baptiste Soulisse <baptiste@geonosis.local>
+# ******************************************************************************
+# This file is part of Tao3D
+#
+# Tao3D is free software: you can r redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Tao3D is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Tao3D, in a file named COPYING.
+# If not, see <https://www.gnu.org/licenses/>.
+# ******************************************************************************
 # GLC_lib qmake configuration
 TEMPLATE = lib
 QT += opengl \
@@ -52,7 +89,7 @@ HEADERS_LIB3DS += 3rdparty/lib3ds/atmosphere.h \
            3rdparty/lib3ds/types.h \
            3rdparty/lib3ds/vector.h \
            3rdparty/lib3ds/viewport.h
-           
+
 HEADERS_GLEXT += 3rdparty/glext/glext.h
 
 HEADERS_GLC_MATHS += 	maths/glc_utils_maths.h \
@@ -160,7 +197,7 @@ HEADERS_GLC += glc_global.h \
            glc_errorlog.h \
            glc_tracelog.h \
            glc_openglstate.h
-           
+
 HEADERS_GLC_3DWIDGET += 3DWidget/glc_3dwidget.h \
 						3DWidget/glc_cuttingplane.h \
 						3DWidget/glc_3dwidgetmanager.h \
@@ -174,7 +211,7 @@ HEADERS_GLC_3DWIDGET += 3DWidget/glc_3dwidget.h \
 HEADERS += $${HEADERS_QUAZIP} $${HEADERS_LIB3DS} $${HEADERS_GLC_MATHS} $${HEADERS_GLC_IO}
 HEADERS += $${HEADERS_GLC} $${HEADERS_GLEXT} $${HEADERS_GLC_SCENEGRAPH} $${HEADERS_GLC_GEOMETRY}
 HEADERS += $${HEADERS_GLC_SHADING} $${HEADERS_GLC_VIEWPORT} $${HEADERS_GLC_3DWIDGET}
-		   
+		
 SOURCES += 3rdparty/zlib/adler32.c \
            3rdparty/zlib/compress.c \
            3rdparty/zlib/crc32.c \
@@ -212,7 +249,7 @@ SOURCES += 3rdparty/lib3ds/atmosphere.c \
            3rdparty/lib3ds/tracks.c \
            3rdparty/lib3ds/vector.c \
            3rdparty/lib3ds/viewport.c
-   
+
 SOURCES +=	maths/glc_matrix4x4.cpp \
 			maths/glc_vector4d.cpp \
 			maths/glc_interpolator.cpp \
@@ -319,7 +356,7 @@ SOURCES +=	3DWidget/glc_3dwidget.cpp \
 			3DWidget/glc_rotationmanipulator.cpp \
 			3DWidget/glc_axis.cpp
 			
-         
+
 # Windows compilation configuration
 win32:CONFIG *= dll
 
@@ -420,7 +457,7 @@ HEADERS_INST = include/GLC_BoundingBox \
     		   include/GLC_UserInput \
     		   include/GLC_TsrMover
 
-    			   
+    			
 # Linux and macx install configuration
 unix {
     # Location of HEADERS and library
@@ -442,7 +479,7 @@ unix {
 }
 
 # Windows Install configuration
-win32 { 
+win32 {
     # Location of HEADERS and library
     LIB_DIR = C:/GLC_lib/lib
     INCLUDE_DIR = C:/GLC_lib/include
@@ -457,7 +494,7 @@ win32 {
     include_glc_shading.path = $${INCLUDE_DIR}/shading
     include_glc_viewport.path = $${INCLUDE_DIR}/viewport
     include_glc_3dwidget.path = $${INCLUDE_DIR}/3DWidget
-}    
+}
 
 include.files = $${HEADERS_GLC} $${HEADERS_INST}
 include_lib3ds.files = $${HEADERS_LIB3DS}
@@ -473,7 +510,7 @@ include_glc_3dwidget.files = $${HEADERS_GLC_3DWIDGET}
 
 # install library
 target.path = $${LIB_DIR}
-   
+
 # "make install" configuration options
 INSTALLS += include_lib3ds include_glext include_quazip include_glc_maths include_glc_io
 INSTALLS += include_glc_scengraph include_glc_geometry include_glc_shading include_glc_viewport

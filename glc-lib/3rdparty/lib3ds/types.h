@@ -1,5 +1,39 @@
-/* -*- c -*- */
 #ifndef INCLUDED_LIB3DS_TYPES_H
+// *****************************************************************************
+// types.h                                                         Tao3D project
+// *****************************************************************************
+//
+// File description:
+//
+//
+//
+//
+//
+//
+//
+//
+// *****************************************************************************
+// This software is licensed under the GNU General Public License v3
+// (C) 2019, Christophe de Dinechin <christophe@dinechin.org>
+// (C) 2010, Jérôme Forissier <jerome@taodyne.com>
+// *****************************************************************************
+// This file is part of Tao3D
+//
+// Tao3D is free software: you can r redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Tao3D is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Tao3D, in a file named COPYING.
+// If not, see <https://www.gnu.org/licenses/>.
+// *****************************************************************************
+/* -*- c -*- */
 #define INCLUDED_LIB3DS_TYPES_H
 /*
  * The 3D Studio File Format Library
@@ -7,13 +41,13 @@
  * All rights reserved.
  *
  * This program is  free  software;  you can redistribute it and/or modify it
- * under the terms of the  GNU Lesser General Public License  as published by 
- * the  Free Software Foundation;  either version 2.1 of the License,  or (at 
+ * under the terms of the  GNU Lesser General Public License  as published by
+ * the  Free Software Foundation;  either version 2.1 of the License,  or (at
  * your option) any later version.
  *
  * This  program  is  distributed in  the  hope that it will  be useful,  but
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or  FITNESS FOR A  PARTICULAR PURPOSE.  See the  GNU Lesser General Public  
+ * or  FITNESS FOR A  PARTICULAR PURPOSE.  See the  GNU Lesser General Public
  * License for more details.
  *
  * You should  have received  a copy of the GNU Lesser General Public License
@@ -29,9 +63,9 @@ extern "C" {
 #ifdef _MSC_VER
 #ifdef LIB3DS_EXPORTS
 #define LIB3DSAPI __declspec(dllexport)
-#else               
+#else
 #define LIB3DSAPI __declspec(dllimport)
-#endif           
+#endif
 #else
 #define LIB3DSAPI
 #endif
@@ -74,7 +108,7 @@ typedef float Lib3dsRgba[4];
 #define LIB3DS_HALFPI (LIB3DS_PI/2.0)
 #define LIB3DS_RAD_TO_DEG(x) ((180.0/LIB3DS_PI)*(x))
 #define LIB3DS_DEG_TO_RAD(x) ((LIB3DS_PI/180.0)*(x))
-  
+
 #include <stdio.h>
 
 #ifdef _DEBUG
@@ -84,7 +118,7 @@ typedef float Lib3dsRgba[4];
   #endif
   #define LIB3DS_ERROR_LOG \
     {printf("\t***LIB3DS_ERROR_LOG*** %s : %d\n", __FILE__, __LINE__);}
-#else 
+#else
   #ifndef ASSERT
   #define ASSERT(__expr)
   #endif
@@ -98,9 +132,9 @@ typedef struct Lib3dsAtmosphere Lib3dsAtmosphere;
 typedef struct Lib3dsShadow Lib3dsShadow;
 typedef struct Lib3dsViewport Lib3dsViewport;
 typedef struct Lib3dsMaterial Lib3dsMaterial;
-typedef struct Lib3dsFace Lib3dsFace; 
-typedef struct Lib3dsBoxMap Lib3dsBoxMap; 
-typedef struct Lib3dsMapData Lib3dsMapData; 
+typedef struct Lib3dsFace Lib3dsFace;
+typedef struct Lib3dsBoxMap Lib3dsBoxMap;
+typedef struct Lib3dsMapData Lib3dsMapData;
 typedef struct Lib3dsMesh Lib3dsMesh;
 typedef struct Lib3dsCamera Lib3dsCamera;
 typedef struct Lib3dsLight Lib3dsLight;
@@ -114,7 +148,7 @@ typedef struct Lib3dsQuatKey Lib3dsQuatKey;
 typedef struct Lib3dsQuatTrack Lib3dsQuatTrack;
 typedef struct Lib3dsMorphKey Lib3dsMorphKey;
 typedef struct Lib3dsMorphTrack Lib3dsMorphTrack;
-               
+
 typedef enum Lib3dsNodeTypes {
   LIB3DS_UNKNOWN_NODE =0,
   LIB3DS_AMBIENT_NODE =1,
@@ -128,13 +162,13 @@ typedef enum Lib3dsNodeTypes {
 typedef struct Lib3dsNode Lib3dsNode;
 
 typedef enum Lib3dsObjectFlags {
-  LIB3DS_OBJECT_HIDDEN          =0x01, 
-  LIB3DS_OBJECT_VIS_LOFTER      =0x02, 
-  LIB3DS_OBJECT_DOESNT_CAST     =0x04, 
-  LIB3DS_OBJECT_MATTE           =0x08, 
-  LIB3DS_OBJECT_DONT_RCVSHADOW  =0x10, 
-  LIB3DS_OBJECT_FAST            =0x20, 
-  LIB3DS_OBJECT_FROZEN          =0x40 
+  LIB3DS_OBJECT_HIDDEN          =0x01,
+  LIB3DS_OBJECT_VIS_LOFTER      =0x02,
+  LIB3DS_OBJECT_DOESNT_CAST     =0x04,
+  LIB3DS_OBJECT_MATTE           =0x08,
+  LIB3DS_OBJECT_DONT_RCVSHADOW  =0x10,
+  LIB3DS_OBJECT_FAST            =0x20,
+  LIB3DS_OBJECT_FROZEN          =0x40
 } Lib3dsObjectFlags;
 
 typedef union Lib3dsUserData {

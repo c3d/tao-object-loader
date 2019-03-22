@@ -1,5 +1,39 @@
-/* -*- c -*- */
 #ifndef INCLUDED_LIB3DS_TRACKS_H
+// *****************************************************************************
+// tracks.h                                                        Tao3D project
+// *****************************************************************************
+//
+// File description:
+//
+//
+//
+//
+//
+//
+//
+//
+// *****************************************************************************
+// This software is licensed under the GNU General Public License v3
+// (C) 2019, Christophe de Dinechin <christophe@dinechin.org>
+// (C) 2010, Jérôme Forissier <jerome@taodyne.com>
+// *****************************************************************************
+// This file is part of Tao3D
+//
+// Tao3D is free software: you can r redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Tao3D is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Tao3D, in a file named COPYING.
+// If not, see <https://www.gnu.org/licenses/>.
+// *****************************************************************************
+/* -*- c -*- */
 #define INCLUDED_LIB3DS_TRACKS_H
 /*
  * The 3D Studio File Format Library
@@ -7,13 +41,13 @@
  * All rights reserved.
  *
  * This program is  free  software;  you can redistribute it and/or modify it
- * under the terms of the  GNU Lesser General Public License  as published by 
- * the  Free Software Foundation;  either version 2.1 of the License,  or (at 
+ * under the terms of the  GNU Lesser General Public License  as published by
+ * the  Free Software Foundation;  either version 2.1 of the License,  or (at
  * your option) any later version.
  *
  * This  program  is  distributed in  the  hope that it will  be useful,  but
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or  FITNESS FOR A  PARTICULAR PURPOSE.  See the  GNU Lesser General Public  
+ * or  FITNESS FOR A  PARTICULAR PURPOSE.  See the  GNU Lesser General Public
  * License for more details.
  *
  * You should  have received  a copy of the GNU Lesser General Public License
@@ -75,7 +109,7 @@ struct Lib3dsLin1Key {
     Lib3dsFloat dd;
     Lib3dsFloat ds;
 };
-  
+
 /**
  * Floating-point track
  * \ingroup tracks
@@ -91,12 +125,12 @@ struct Lib3dsLin1Track {
  */
 struct Lib3dsLin3Key {
     Lib3dsTcb tcb;
-    Lib3dsLin3Key *next;  
+    Lib3dsLin3Key *next;
     Lib3dsVector value;
     Lib3dsVector dd;
     Lib3dsVector ds;
 };
-  
+
 /**
  * Vector track
  * \ingroup tracks
@@ -112,16 +146,16 @@ struct Lib3dsLin3Track {
  */
 struct Lib3dsQuatKey {
     Lib3dsTcb tcb;
-    Lib3dsQuatKey *next;  
+    Lib3dsQuatKey *next;
     Lib3dsVector axis;
     Lib3dsFloat angle;
     Lib3dsQuat q;
     Lib3dsQuat dd;
     Lib3dsQuat ds;
 };
-  
+
 /**
- * Rotation track 
+ * Rotation track
  * \ingroup tracks
  */
 struct Lib3dsQuatTrack {
@@ -135,10 +169,10 @@ struct Lib3dsQuatTrack {
  */
 struct Lib3dsMorphKey {
     Lib3dsTcb tcb;
-    Lib3dsMorphKey *next;  
+    Lib3dsMorphKey *next;
     char name[64];
 };
-  
+
 /**
  * Morph track
  * \ingroup tracks

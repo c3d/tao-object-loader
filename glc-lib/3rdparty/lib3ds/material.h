@@ -1,5 +1,39 @@
-/* -*- c -*- */
 #ifndef INCLUDED_LIB3DS_MATERIAL_H
+// *****************************************************************************
+// material.h                                                      Tao3D project
+// *****************************************************************************
+//
+// File description:
+//
+//
+//
+//
+//
+//
+//
+//
+// *****************************************************************************
+// This software is licensed under the GNU General Public License v3
+// (C) 2019, Christophe de Dinechin <christophe@dinechin.org>
+// (C) 2010, Jérôme Forissier <jerome@taodyne.com>
+// *****************************************************************************
+// This file is part of Tao3D
+//
+// Tao3D is free software: you can r redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Tao3D is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Tao3D, in a file named COPYING.
+// If not, see <https://www.gnu.org/licenses/>.
+// *****************************************************************************
+/* -*- c -*- */
 #define INCLUDED_LIB3DS_MATERIAL_H
 /*
  * The 3D Studio File Format Library
@@ -7,13 +41,13 @@
  * All rights reserved.
  *
  * This program is  free  software;  you can redistribute it and/or modify it
- * under the terms of the  GNU Lesser General Public License  as published by 
- * the  Free Software Foundation;  either version 2.1 of the License,  or (at 
+ * under the terms of the  GNU Lesser General Public License  as published by
+ * the  Free Software Foundation;  either version 2.1 of the License,  or (at
  * your option) any later version.
  *
  * This  program  is  distributed in  the  hope that it will  be useful,  but
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or  FITNESS FOR A  PARTICULAR PURPOSE.  See the  GNU Lesser General Public  
+ * or  FITNESS FOR A  PARTICULAR PURPOSE.  See the  GNU Lesser General Public
  * License for more details.
  *
  * You should  have received  a copy of the GNU Lesser General Public License
@@ -32,7 +66,7 @@ extern "C" {
 #endif
 
 /**
- * \ingroup material 
+ * \ingroup material
  */
 typedef enum Lib3dsTextureMapFlags {
   LIB3DS_DECALE       =0x0001,
@@ -48,7 +82,7 @@ typedef enum Lib3dsTextureMapFlags {
 
 /**
  * Mateial texture map
- * \ingroup material 
+ * \ingroup material
  */
 typedef struct Lib3dsTextureMap {
     Lib3dsUserData user;
@@ -67,16 +101,16 @@ typedef struct Lib3dsTextureMap {
 } Lib3dsTextureMap;
 
 /**
- * \ingroup material 
+ * \ingroup material
  */
 typedef enum Lib3dsAutoReflMapFlags {
   LIB3DS_USE_REFL_MAP          =0x0001,
   LIB3DS_READ_FIRST_FRAME_ONLY =0x0004,
-  LIB3DS_FLAT_MIRROR           =0x0008 
+  LIB3DS_FLAT_MIRROR           =0x0008
 } Lib3dsAutoReflectionMapFlags;
 
 /**
- * \ingroup material 
+ * \ingroup material
  */
 typedef enum Lib3dsAutoReflMapAntiAliasLevel {
   LIB3DS_ANTI_ALIAS_NONE   =0,
@@ -87,7 +121,7 @@ typedef enum Lib3dsAutoReflMapAntiAliasLevel {
 
 /**
  * Auto reflection map settings
- * \ingroup material 
+ * \ingroup material
  */
 typedef struct Lib3dsAutoReflMap {
     Lib3dsDword flags;
@@ -97,19 +131,19 @@ typedef struct Lib3dsAutoReflMap {
 } Lib3dsAutoReflMap;
 
 /**
- * \ingroup material 
+ * \ingroup material
  */
 typedef enum Lib3dsMaterialShading {
   LIB3DS_WIRE_FRAME =0,
-  LIB3DS_FLAT       =1, 
-  LIB3DS_GOURAUD    =2, 
-  LIB3DS_PHONG      =3, 
+  LIB3DS_FLAT       =1,
+  LIB3DS_GOURAUD    =2,
+  LIB3DS_PHONG      =3,
   LIB3DS_METAL      =4
-} Lib3dsMaterialShading; 
+} Lib3dsMaterialShading;
 
 /**
  * Material
- * \ingroup material 
+ * \ingroup material
  */
 struct Lib3dsMaterial {
     Lib3dsUserData user;		/*! Arbitrary user data */
